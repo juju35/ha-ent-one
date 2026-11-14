@@ -4,22 +4,27 @@ from __future__ import annotations
 
 import hashlib
 import logging
+from functools import partial
+from http import HTTPStatus
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 import voluptuous as vol
+from aiohttp import web
 from homeassistant.components import frontend, panel_custom, websocket_api
 from homeassistant.components.frontend import add_extra_js_url
-from homeassistant.components.http import StaticPathConfig
+from homeassistant.components.http import KEY_HASS, HomeAssistantView, StaticPathConfig
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_URL, EVENT_HOMEASSISTANT_STARTED, Platform
-from homeassistant.core import Event, HomeAssistant, ServiceCall, callback
+from homeassistant.core import Event, HassJob, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ConfigEntryNotReady, HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.service import async_register_admin_service
 from homeassistant.helpers.typing import ConfigType
 
-from .api import EntApi, EntError
+from .api import EntApi, EntError, file_path
 from .config_flow import clean_options, new_session, notify_choices
 from .const import (
     ATTR_CHILD_ID,
@@ -46,6 +51,8 @@ from .secret import SecretNotFoundError, async_credentials
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = [Platform.CALENDAR, Platform.SENSOR, Platform.TODO]
+# Seconds before deciding on the panel after an unload: long enough for a reload to set the entry up again.
+PANEL_REMOVE_DELAY = 10
 FRONTEND_DIR = Path(__file__).parent / "frontend"
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -70,6 +77,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     websocket_api.async_register_command(hass, ws_settings)
     websocket_api.async_register_command(hass, ws_update_settings)
     websocket_api.async_register_command(hass, ws_homework_done)
+    websocket_api.async_register_command(hass, ws_message)
+    hass.http.register_view(EntFileView())
 
     async def refresh(call: ServiceCall) -> None:
         coordinator = _get_coordinator(hass, call.data.get(ATTR_CONFIG_ENTRY_ID))
@@ -195,12 +204,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: EntConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: EntConfigEntry) -> bool:
     unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unloaded:
-        # The entry is still LOADED here: decide on the panel without it.
-        others = [e for e in _loaded_entries(hass) if e.entry_id != entry.entry_id]
-        wanted = any(e.options.get(CONF_SHOW_PANEL, DEFAULT_SHOW_PANEL) for e in others)
-        if not wanted and PANEL_URL_PATH in hass.data.get(frontend.DATA_PANELS, {}):
-            frontend.async_remove_panel(hass, PANEL_URL_PATH)
+        # Not removed at once: a reload (options saved from the panel) unloads then sets the entry up again, and
+        # removing the panel in between sends the open panel back to the home page. Decided a moment later.
+        async_call_later(
+            hass, PANEL_REMOVE_DELAY, HassJob(partial(_async_check_panel_later, hass), cancel_on_shutdown=True)
+        )
     return unloaded
+
+
+@callback
+def _async_check_panel_later(hass: HomeAssistant, _now: Any) -> None:
+    """Remove the panel once no loaded account wants it any more (entry removed, panel option turned off)."""
+    wanted = any(e.options.get(CONF_SHOW_PANEL, DEFAULT_SHOW_PANEL) for e in _loaded_entries(hass))
+    if not wanted and PANEL_URL_PATH in hass.data.get(frontend.DATA_PANELS, {}):
+        frontend.async_remove_panel(hass, PANEL_URL_PATH)
 
 
 async def _async_reload(hass: HomeAssistant, entry: EntConfigEntry) -> None:
@@ -289,3 +306,62 @@ async def ws_homework_done(
         connection.send_error(msg["id"], "failed", str(err))
         return
     connection.send_result(msg["id"])
+
+
+@websocket_api.websocket_command(
+    {vol.Required("type"): "ent_one/message", vol.Required("config_entry_id"): str, vol.Required("message_id"): str}
+)
+@websocket_api.async_response
+async def ws_message(hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]) -> None:
+    """A message in full (text and attachments), read when the user unfolds it in the card or the panel."""
+    try:
+        coordinator = _get_coordinator(hass, msg["config_entry_id"])
+        message = await coordinator.async_message(msg["message_id"])
+    except (ServiceValidationError, EntError) as err:
+        connection.send_error(msg["id"], "failed", str(err))
+        return
+    connection.send_result(msg["id"], message)
+
+
+# Types a browser shows without running anything: opened in a tab, every other file is downloaded.
+INLINE_TYPES = frozenset({"application/pdf", "image/png", "image/jpeg", "image/gif", "image/webp", "text/plain"})
+
+
+class EntFileView(HomeAssistantView):
+    """An ENT file (word attachment, message attachment, workspace document) fetched with the account's session.
+
+    The browser has no ENT session of its own: the card asks Home Assistant for a signed URL of this view
+    (auth/sign_path) and opens it. Only the ENT's document and attachment routes can be fetched.
+    """
+
+    url = "/api/ent_one/file/{entry_id}"
+    name = "api:ent_one:file"
+    requires_auth = True
+
+    async def get(self, request: web.Request, entry_id: str) -> web.Response:
+        hass: HomeAssistant = request.app[KEY_HASS]
+        try:
+            path = file_path(request.query.get("path", ""))
+            coordinator = _get_coordinator(hass, entry_id)
+        except (EntError, ServiceValidationError) as err:
+            return web.Response(status=HTTPStatus.BAD_REQUEST, text=str(err))
+        try:
+            body, content_type, name = await coordinator.api.download(path)
+        except EntError as err:
+            _LOGGER.warning("ENT file %s not fetched: %s", path, err)
+            return web.Response(status=HTTPStatus.BAD_GATEWAY, text=str(err))
+        filename = (name or path.split("?")[0].rstrip("/").rsplit("/", 1)[-1] or "file").replace('"', "")
+        kind = content_type.split(";")[0].strip().lower()
+        # Served from Home Assistant's origin: only inert types open in the browser. Anything else (HTML, SVG,
+        # scripts) is a plain download, and the sandbox policy keeps any content from running scripts.
+        inline = kind in INLINE_TYPES
+        return web.Response(
+            body=body,
+            content_type=kind if inline else "application/octet-stream",
+            headers={
+                "Content-Disposition": f"{'inline' if inline else 'attachment'}; filename*=UTF-8''{quote(filename)}",
+                "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'",
+                "Cache-Control": "private, no-store",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )

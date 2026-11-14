@@ -50,6 +50,7 @@ COMMON = {
 
 # Material Design Icons used by the cards and the panel (@mdi/js).
 ICONS = {
+    "image-outline": "M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M13.96,12.29L11.21,15.83L9.25,13.47L6.5,17H17.5L13.96,12.29Z",
     "chevron-down": "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z",
     "close": "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",
     "school-outline": "M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3M18.82 9L12 12.72L5.18 9L12 5.28L18.82 9M17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z",
@@ -106,6 +107,10 @@ WORDS = [
         "child": "Alex",
         "title": "Museum trip on Friday",
         "text": "The class visits the natural history museum on Friday.\nPlease bring a packed lunch.",
+        "attachments": [
+            {"path": "/workspace/document/d1", "name": "Permission slip.pdf", "kind": "file"},
+            {"path": "/workspace/document/d2", "name": "Map", "kind": "image"},
+        ],
         "date": "2026-11-13T16:20:00+01:00",
         "author": "Ms Martin",
         "category": "Outing",
@@ -285,6 +290,9 @@ SHOTS = [
     # A word unfolded to its text, by a click on its row.
     {"file": "card-unfolded", "theme": "light", "config": {}, "click": '[data-toggle^="word:"]'},
     {"file": "card-unfolded-dark", "theme": "dark", "config": {}, "click": '[data-toggle^="word:"]'},
+    # A message unfolded: its text and attachments, read on demand.
+    {"file": "card-message", "theme": "light", "config": {}, "click": '[data-toggle="message:m1"]'},
+    {"file": "card-message-dark", "theme": "dark", "config": {}, "click": '[data-toggle="message:m1"]'},
     {"file": "mini-card", "theme": "light", "element": "ent-one-mini-card", "width": 300, "config": {}},
     {"file": "mini-card-dark", "theme": "dark", "element": "ent-one-mini-card", "width": 300, "config": {}},
     {"file": "panel", "theme": "light", "panel": "home", "width": 960},
@@ -354,7 +362,11 @@ def mount(context, shot):
     page.evaluate(
         """({config, states, element, tab}) => {
           const hass = {states, language: "en", locale: {language: "en", time_format: "24"}, user: {is_admin: true},
-                        callService: () => Promise.resolve(), callWS: () => Promise.resolve({})};
+                        callService: () => Promise.resolve(),
+                        callWS: (msg) => Promise.resolve(msg.type === "ent_one/message" ? {
+                          id: msg.message_id, text: "Swimming lessons start on Monday 30 November.\\nA swim cap is required.",
+                          attachments: [{path: "/conversation/message/m1/attachment/a1", name: "Equipment list.pdf", kind: "file"}],
+                        } : {})};
           const el = document.createElement(element);
           if (tab) {
             el._tab = tab;

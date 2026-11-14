@@ -14,7 +14,7 @@ from homeassistant.helpers.translation import async_get_translations
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .api import EntActionRequiredError, EntApi, EntAuthError, EntError, html_to_text
+from .api import EntActionRequiredError, EntApi, EntAuthError, EntError, html_files, html_to_text
 from .const import (
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
@@ -221,6 +221,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                         "child": child["first_name"],
                         "title": w.get("title") or "",
                         "text": html_to_text(w.get("text")),
+                        "attachments": html_files(w.get("text"), self.api.base_url),
                         "date": iso(w.get("sending_date")),
                         "author": w.get("owner_name"),
                         "category": w.get("category"),
@@ -260,6 +261,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                             "date": when.isoformat(),
                             "title": entry.get("title") or "",
                             "text": html_to_text(entry.get("value")),
+                            "attachments": html_files(entry.get("value"), self.api.base_url),
                             "done": entry_id in done,
                         }
                     )
@@ -272,6 +274,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                 "id": _str(n.get("id")),
                 "title": n.get("title") or "",
                 "text": html_to_text(n.get("content")),
+                "attachments": html_files(n.get("content"), self.api.base_url),
                 "date": iso(n.get("publicationDate") or n.get("publication_date") or n.get("created")),
                 "author": _person(n.get("owner")),
                 "headline": bool(n.get("headline")),
@@ -376,6 +379,34 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                 )
             except Exception:  # noqa: BLE001 - a broken notifier must not stop the others
                 _LOGGER.exception("Could not notify with notify.%s", target)
+
+    async def async_message(self, message_id: str) -> dict[str, Any]:
+        """A message in full, for the card and the panel. The ENT marks it read: the counts follow."""
+        m = await self.api.message(message_id)
+        message_id = _str(m.get("id") or message_id)
+        attachments = [
+            {
+                "path": f"/conversation/message/{message_id}/attachment/{_str(a.get('id'))}",
+                "name": a.get("filename") or a.get("name") or _str(a.get("id")),
+                "size": a.get("size"),
+                "kind": "file",
+            }
+            for a in m.get("attachments") or []
+            if isinstance(a, dict) and a.get("id")
+        ]
+        body = m.get("body") or ""
+        attachments += [
+            f for f in html_files(body, self.api.base_url) if f["path"] not in {a["path"] for a in attachments}
+        ]
+        await self.async_request_refresh()
+        return {
+            "id": message_id,
+            "subject": m.get("subject") or "",
+            "sender": _person(m.get("from")),
+            "date": iso(m.get("date")),
+            "text": html_to_text(body),
+            "attachments": attachments,
+        }
 
     async def async_sign_word(self, word_id: str, child_id: str) -> None:
         await self.api.sign_word(word_id, child_id)

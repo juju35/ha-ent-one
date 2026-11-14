@@ -30,3 +30,4 @@ _._attr_translation_placeholders  # unused attribute (custom_components/ent_one/
 _.todo_items  # unused property (custom_components/ent_one/todo.py:45)
 _.async_update_todo_item  # unused method (custom_components/ent_one/todo.py:62)
 _.async_step_reconfigure  # unused method (custom_components/ent_one/config_flow.py)
+_.requires_auth  # HomeAssistantView attribute (custom_components/ent_one/__init__.py, EntFileView)

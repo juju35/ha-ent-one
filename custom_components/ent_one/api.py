@@ -12,7 +12,7 @@ import json as jsonlib
 import re
 from html.parser import HTMLParser
 from typing import Any
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit
 
 import aiohttp
 from yarl import URL
@@ -28,6 +28,19 @@ ACTION_MARKERS = ("revalidate", "cgu", "mfa", "otp", "activation", "reset", "cha
 AUTH_MARKERS = ("/auth", "login", "/cas", "/sso", "oauth", "saml")
 
 _SAFE_SEGMENT = re.compile(r"^[A-Za-z0-9_-]+$")
+# Files the integration may fetch for the user: documents and attachments of the ENT's applications only.
+FILE_PREFIXES = (
+    "/workspace/document/",
+    "/workspace/pub/document/",
+    "/conversation/message/",
+    "/schoolbook/",
+    "/homeworks/",
+    "/actualites/",
+    "/blog/",
+)
+_SAFE_PATH = re.compile(r"^/[A-Za-z0-9/_.~%-]+(\?[A-Za-z0-9_.~%=&-]*)?$")
+# Largest file streamed through Home Assistant.
+MAX_FILE_SIZE = 25 * 1024 * 1024
 
 
 class EntError(Exception):
@@ -48,6 +61,13 @@ def segment(value: Any) -> str:
     if not _SAFE_SEGMENT.match(text):
         raise EntError(f"Invalid identifier: {text!r}")
     return text
+
+
+def file_path(path: str) -> str:
+    """An ENT file path the integration may fetch, or EntError: no other route, no other host, no way out."""
+    if not _SAFE_PATH.match(path or "") or ".." in path or "//" in path or not path.startswith(FILE_PREFIXES):
+        raise EntError(f"Not an ENT file: {path!r}")
+    return path
 
 
 def normalize_url(url: str) -> str:
@@ -80,6 +100,61 @@ class _TextExtractor(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         self.parts.append(data)
+
+
+class _LinkExtractor(HTMLParser):
+    """Links and images of an ENT text: the attachments of a word, a homework or a news item."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.files: list[dict[str, str]] = []
+        self._link: dict[str, str] | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        a = {k: v or "" for k, v in attrs}
+        if tag == "a" and a.get("href"):
+            self._link = {"path": a["href"], "name": a.get("title") or a.get("download") or ""}
+        elif tag == "img" and a.get("src"):
+            self.files.append({"path": a["src"], "name": a.get("alt") or a.get("title") or "", "kind": "image"})
+
+    def handle_data(self, data: str) -> None:
+        if self._link is not None and not self._link["name"]:
+            self._link["name"] = data.strip()
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "a" and self._link is not None:
+            self.files.append({**self._link, "kind": "file"})
+            self._link = None
+
+
+def html_files(html: str | None, base_url: str) -> list[dict[str, str]]:
+    """ENT files linked or shown in a text: [{path, name, kind}], only paths the integration may fetch."""
+    if not html:
+        return []
+    parser = _LinkExtractor()
+    try:
+        parser.feed(html)
+        parser.close()
+    except Exception:  # noqa: BLE001 - malformed HTML must never break an update
+        return []
+    host = urlsplit(base_url).netloc
+    files: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for f in parser.files:
+        parts = urlsplit(f["path"])
+        if parts.netloc and parts.netloc != host:
+            continue
+        path = parts.path + (f"?{parts.query}" if parts.query else "")
+        try:
+            file_path(path)
+        except EntError:
+            continue
+        if path in seen:
+            continue
+        seen.add(path)
+        name = f["name"] or path.rstrip("/").rsplit("/", 1)[-1]
+        files.append({"path": path, "name": name[:120], "kind": f["kind"]})
+    return files
 
 
 def html_to_text(html: str | None) -> str:
@@ -246,6 +321,49 @@ class EntApi:
 
     async def inbox(self, size: int) -> list[dict[str, Any]]:
         return await self._get_list("/conversation/api/folders/inbox/messages", {"page": "0", "page_size": str(size)})
+
+    async def message(self, message_id: str) -> dict[str, Any]:
+        """A message in full (reading it marks it read in the ENT, as in its web page)."""
+        data = await self._request("GET", f"/conversation/api/messages/{segment(message_id)}")
+        return data if isinstance(data, dict) else {}
+
+    async def download(self, path: str) -> tuple[bytes, str, str | None]:
+        """Content, content type and file name of an ENT file (attachment, workspace document)."""
+        path = file_path(path)
+        for attempt in range(2):
+            generation = self._generation
+            if generation == 0:
+                await self._relogin(generation)
+                generation = self._generation
+            try:
+                # Files may be served from another host (storage): redirects are followed, cookies stay per host.
+                async with self._session.get(self._url(path), timeout=TIMEOUT, allow_redirects=True) as resp:
+                    landed = urlsplit(str(resp.url))
+                    lost = resp.status == 401 or any(m in landed.path.lower() for m in AUTH_MARKERS)
+                    if lost:
+                        if attempt:
+                            raise EntError(f"Session expired again on {path}")
+                        await self._relogin(generation)
+                        continue
+                    if resp.status >= 400:
+                        raise EntError(f"HTTP {resp.status} on {path}")
+                    if (resp.content_length or 0) > MAX_FILE_SIZE:
+                        raise EntError(f"File too large ({resp.content_length} bytes)")
+                    body = await resp.content.read(MAX_FILE_SIZE + 1)
+                    if len(body) > MAX_FILE_SIZE:
+                        raise EntError("File too large")
+                    disposition = resp.headers.get("Content-Disposition", "")
+                    name = re.search(r'filename\*?=(?:UTF-8\'\')?"?([^";]+)"?', disposition)
+                    return (
+                        body,
+                        resp.content_type or "application/octet-stream",
+                        unquote(name.group(1)) if name else None,
+                    )
+            except TimeoutError as err:
+                raise EntError(f"Timeout on {path}") from err
+            except aiohttp.ClientError as err:
+                raise EntError(f"Cannot reach the ENT: {err}") from err
+        raise EntError(f"Session expired on {path}")
 
     # Liaison book (schoolbook)
 

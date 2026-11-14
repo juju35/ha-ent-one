@@ -12,6 +12,8 @@ from custom_components.ent_one.api import (
     EntApi,
     EntAuthError,
     EntError,
+    file_path,
+    html_files,
     html_to_text,
     normalize_url,
     segment,
@@ -34,6 +36,7 @@ class FakeEnt:
         app.router.add_get("/timeline/timeline", self.timeline)
         app.router.add_get("/auth/oauth2/userinfo", self.userinfo)
         app.router.add_put("/homeworks/{book}/entry/status", self.status)
+        app.router.add_get("/workspace/document/{doc}", self.document)
         return app
 
     async def login(self, request: web.Request) -> web.StreamResponse:
@@ -61,6 +64,14 @@ class FakeEnt:
     async def userinfo(self, request: web.Request) -> web.StreamResponse:
         self._check(request)
         return web.json_response({"userId": "u1", "username": "Parent", "children": {}})
+
+    async def document(self, request: web.Request) -> web.StreamResponse:
+        self._check(request)
+        return web.Response(
+            body=b"%PDF-1.4",
+            content_type="application/pdf",
+            headers={"Content-Disposition": 'attachment; filename="sortie.pdf"'},
+        )
 
     async def status(self, request: web.Request) -> web.StreamResponse:
         self._check(request)
@@ -132,3 +143,31 @@ def test_helpers() -> None:
     assert segment("abc-123_X") == "abc-123_X"
     with pytest.raises(EntError):
         segment("../auth/logout")
+
+
+async def test_download_relogs_and_names_the_file(ent) -> None:
+    fake, session, url = ent
+    api = EntApi(session, url, "parent", "secret")
+    await api.login()
+    fake.sessions.clear()
+    body, kind, name = await api.download("/workspace/document/abc-1")
+    assert (body, kind, name) == (b"%PDF-1.4", "application/pdf", "sortie.pdf")
+    assert fake.logins == 2
+
+
+def test_file_paths_and_attachments() -> None:
+    assert file_path("/workspace/document/abc?thumbnail=120x120") == "/workspace/document/abc?thumbnail=120x120"
+    for bad in ("/auth/logout", "/workspace/document/../../auth", "//evil.com/workspace/document/x", "https://x/y", ""):
+        with pytest.raises(EntError):
+            file_path(bad)
+    html = (
+        '<p>Voir <a href="/workspace/document/d1">Sortie.pdf</a> et '
+        '<a href="https://ent.example.fr/workspace/document/d2" title="Menu">ici</a>, '
+        '<img src="/workspace/document/d3?thumbnail=1" alt="Photo"> '
+        '<a href="https://autre.site/x">ailleurs</a> <a href="/auth/logout">piège</a></p>'
+    )
+    assert html_files(html, "https://ent.example.fr") == [
+        {"path": "/workspace/document/d1", "name": "Sortie.pdf", "kind": "file"},
+        {"path": "/workspace/document/d2", "name": "Menu", "kind": "file"},
+        {"path": "/workspace/document/d3?thumbnail=1", "name": "Photo", "kind": "image"},
+    ]

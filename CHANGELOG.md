@@ -1,7 +1,11 @@
 # Changelog
 
-## 1.0.1 (2026-11-14)
+## 1.1.0 (2026-11-14)
 
+- Attachments of the liaison book, homework and news, and links to the ENT's documents in their text, appear as buttons; they open through Home Assistant (signed link, PDF and images shown in the browser, other files downloaded).
+- Unfolding a message loads its full text and attachments.
+- Saving the settings no longer sends the panel back to the Home Assistant overview: the panel stays registered while the entry reloads.
+- The panel is drawn again once the translations are loaded, so it no longer stays in English.
 - The sidebar entry of the panel shows the panda (icon set `ent_one`, `ent_one:panda`) instead of a mortarboard.
 
 ## 1.0.0 (2026-11-14)
