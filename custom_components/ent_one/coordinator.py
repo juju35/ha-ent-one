@@ -22,12 +22,15 @@ from .api import (
     EntApi,
     EntAuthError,
     EntError,
+    EntUnavailableError,
+    file_path,
     html_content,
     html_files,
     html_to_text,
     without_file_names,
 )
 from .const import (
+    BLOG_KEPT,
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
     CONF_SCAN_INTERVAL,
@@ -58,7 +61,7 @@ HOMEWORK_PAST = timedelta(days=1)
 
 type EntConfigEntry = ConfigEntry[EntCoordinator]
 
-SECTIONS = ("messages", "words", "homework", "news", "events")
+SECTIONS = ("messages", "words", "homework", "news", "blog", "events")
 
 
 @dataclass
@@ -73,6 +76,7 @@ class EntData:
     homework: list[dict[str, Any]] = field(default_factory=list)
     books: dict[str, str] = field(default_factory=dict)
     news: list[dict[str, Any]] = field(default_factory=list)
+    blog: list[dict[str, Any]] = field(default_factory=list)
     events: list[dict[str, Any]] = field(default_factory=list)
     # Sections whose last read failed: their content is the one of the update before.
     stale: list[str] = field(default_factory=list)
@@ -106,6 +110,14 @@ def parse_when(value: Any) -> datetime | date | None:
         return dt_util.parse_date(text[:10])
     # The ENT sometimes stores local times without offset.
     return parsed if parsed.tzinfo else parsed.replace(tzinfo=dt_util.get_default_time_zone())
+
+
+def _thumbnail(value: Any) -> str:
+    """A blog's picture, when it is an ENT document the integration may fetch."""
+    try:
+        return file_path(_str(value)) if value else ""
+    except EntError:
+        return ""
 
 
 def iso(value: Any) -> str | None:
@@ -190,6 +202,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             "words": self._read_words,
             "homework": self._read_homework,
             "news": self._read_news,
+            "blog": self._read_blog,
             "events": self._read_events,
         }
         # The applications are read side by side (the client keeps a few requests at a time).
@@ -197,7 +210,11 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         for section, result in zip(readers, results, strict=True):
             if isinstance(result, (EntAuthError, EntActionRequiredError)):
                 raise result
-            if isinstance(result, EntError):
+            if isinstance(result, EntUnavailableError):
+                # An application this ENT does not have (a school without a blog): empty, not out of date.
+                _LOGGER.debug("ENT section %s not available: %s", section, result)
+                self._keep(section, EntData(), data)
+            elif isinstance(result, EntError):
                 # An application missing from this ENT, or a hiccup: keep that section as it was.
                 _LOGGER.debug("ENT section %s not updated: %s", section, result)
                 data.stale.append(section)
@@ -307,6 +324,31 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             }
             for n in await self.api.news(NEWS_KEPT)
         ]
+
+    async def _read_blog(self, data: EntData) -> None:
+        blogs = {_str(b.get("_id") or b.get("id")): b for b in await self.api.blogs()}
+        blogs.pop("", None)
+        lists = await asyncio.gather(*(self.api.blog_posts(i) for i in blogs))
+        posts: list[dict[str, Any]] = []
+        for (blog_id, blog), blog_posts in zip(blogs.items(), lists, strict=True):
+            for b in blog_posts:
+                author = b.get("author") if isinstance(b.get("author"), dict) else {}
+                posts.append(
+                    {
+                        "id": _str(b.get("_id") or b.get("id")),
+                        "blog_id": blog_id,
+                        "blog": blog.get("title") or "",
+                        "blog_thumbnail": _thumbnail(blog.get("thumbnail")),
+                        "title": b.get("title") or "",
+                        "text": (content := html_content(b.get("content"), self.api.base_url))[0],
+                        "attachments": content[1],
+                        "author": author.get("username") or "",
+                        "date": iso(b.get("firstPublishDate") or b.get("modified") or b.get("created")),
+                        "comments": b.get("nbComments") if isinstance(b.get("nbComments"), int) else 0,
+                    }
+                )
+        posts.sort(key=lambda p: p["date"] or "", reverse=True)
+        data.blog = posts[:BLOG_KEPT]
 
     async def _read_events(self, data: EntData) -> None:
         now = dt_util.now()

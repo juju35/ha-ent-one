@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 (2026-11-15)
+
+- Blog: the latest 20 posts of the class and school blogs, in a **Blog** sensor (title, blog, author, date, text, pictures, comment count).
+- Panel: a **Blog** tab organized like ONE's, with a filter per blog (with its picture), a feed of post cards (start of the text, pictures, comments, Read more) and the post read in full with a Back button. The chosen blog is remembered in this browser.
+- Card: an optional blog section (`show_blog`), each post unfolding to its start and pictures, with a Read link to the panel.
+- An application the ENT does not have (HTTP 403 or 404, a school without a blog) stays empty instead of marking the update as partial.
+
 ## 1.2.4 (2026-11-15)
 
 - French labels: the Liaison book tab is called « Carnet de liaison » (was « Carnet ») and the Messages tab and section « Messagerie » (was « Messages »).

@@ -49,6 +49,10 @@ class EntError(Exception):
     """Generic ENT error."""
 
 
+class EntUnavailableError(EntError):
+    """An application this ENT does not have, or that the account may not open (HTTP 403 or 404)."""
+
+
 class EntAuthError(EntError):
     """The ENT refused the credentials. Never retried on its own, so the account is not locked."""
 
@@ -333,6 +337,8 @@ class EntApi:
                             raise EntError(f"Session expired again on {path}")
                         await self._relogin(generation)
                         continue
+                    if resp.status in (403, 404):
+                        raise EntUnavailableError(f"HTTP {resp.status} on {path}")
                     if resp.status >= 400 or (read and resp.status >= 300):
                         raise EntError(f"HTTP {resp.status} on {path}")
                     body = await resp.read()
@@ -451,6 +457,18 @@ class EntApi:
 
     async def news(self, size: int) -> list[dict[str, Any]]:
         return await self._get_list("/actualites/api/v1/infos", {"page": "0", "pageSize": str(size)})
+
+    # Blogs (class and school blogs)
+
+    async def blogs(self) -> list[dict[str, Any]]:
+        return await self._get_list("/blog/list/all")
+
+    async def blog_posts(self, blog_id: str) -> list[dict[str, Any]]:
+        """Published posts of a blog, newest first, with their content."""
+        return await self._get_list(
+            f"/blog/post/list/all/{segment(blog_id)}",
+            {"page": "0", "content": "true", "comments": "false", "nbComments": "true"},
+        )
 
     async def calendars(self) -> list[dict[str, Any]]:
         return await self._get_list("/calendar/calendars")

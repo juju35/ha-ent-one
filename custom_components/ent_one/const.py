@@ -27,6 +27,8 @@ DEFAULT_HOMEWORK_DAYS: Final = 14
 # Items kept in the attributes: enough for a card, small enough for the state machine.
 MESSAGES_KEPT: Final = 10
 NEWS_KEPT: Final = 5
+# Blog posts kept, newest first, all blogs together.
+BLOG_KEPT: Final = 20
 
 SERVICE_REFRESH: Final = "refresh"
 SERVICE_SIGN_WORD: Final = "sign_word"

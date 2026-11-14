@@ -95,6 +95,9 @@
       "news": {
         "name": "Jaunumi"
       },
+      "blog": {
+        "name": "Emuārs"
+      },
       "last_update": {
         "name": "Pēdējā atjaunināšana"
       }

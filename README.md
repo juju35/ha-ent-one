@@ -23,7 +23,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 
 ## Features
 
-- **Unread messages**, **Words to sign**, **Homework to do** and **News** sensors: a count, with the items (title, author, date, text) as attributes
+- **Unread messages**, **Words to sign**, **Homework to do**, **News** and **Blog** sensors: a count, with the items (title, author, date, text) as attributes
 - **Last update** sensor with the account (school, classes, children) and the upcoming events of the ENT's calendars
 - **School** calendar: the ENT's events and every homework on its due date
 - One **to-do list per homework notebook**: ticking an item marks the homework done in the ENT, like its check box (a notebook gone from the ENT has its list removed)
@@ -31,7 +31,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 - `ent_one_new_message`, `ent_one_new_word` and `ent_one_new_homework` events for automations, and optional **notifications** to the notify actions of your choice
 - `custom:ent-one-card` card, **shipped with the integration** and loaded automatically: counts, words to sign (with confirmation), homework to tick, unread messages, calendar and news
 - `custom:ent-one-mini-card` compact card: the three counts, with a button to open the full card
-- **ENT ONE sidebar panel** with Home, Homework, Liaison book, Messages, News and Settings tabs
+- **ENT ONE sidebar panel** with Home, Homework, Liaison book, Messages, News, Blog and Settings tabs
 - Username and password stored in the entry or read from `secrets.yaml` at every update
 - Silent re-login when the ENT session expires; after refused credentials it never retries on its own, so the account is not locked
 - Diagnostics download with counts only: no name, message or word ever leaves Home Assistant
@@ -112,6 +112,7 @@ type: custom:ent-one-card
 | `show_messages` | `true` | Show the unread messages |
 | `show_events` | `true` | Show the upcoming events of the ENT's calendars |
 | `show_news` | `false` | Show the school news |
+| `show_blog` | `false` | Show the latest blog posts |
 | `show_empty` | `false` | Keep the sections with nothing to show (the homework section always stays) |
 | `max_items` | `5` | Items per section |
 | `language` | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
@@ -143,6 +144,7 @@ The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab pe
 | Liaison book | The recent words on the left, the one chosen on the right with its text, its attachments shown (images, PDF viewer) and the *Sign* button |
 | Messages | Like a mail client: the last messages of the inbox on the left, the one chosen on the right with its text and its attachments shown (images, PDF viewer), and a link to the ENT's messaging. On a phone, the message replaces the list (*Back* returns to it) |
 | News | The school news in full |
+| Blog | Like ONE's blog: a filter per blog, a feed of post cards (start of the text, pictures, comments) and the post read in full with *Read more* |
 | Settings | The account options; only administrators can change them |
 
 With several accounts, a menu in the header bar switches between them. The Homework filters are remembered in the browser, the Home rows unfold like the card's, and the tabs can be browsed with the arrow keys.
@@ -223,10 +225,12 @@ The panel, Home and Homework tabs:
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-homework.png" alt="panel homework" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-homework-dark.png" alt="panel homework dark" width="480"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-messages.png" alt="panel messages" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-messages-dark.png" alt="panel messages dark" width="480"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-words.png" alt="panel liaison book" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-words-dark.png" alt="panel liaison book dark" width="480"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-blog.png" alt="panel blog" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-blog-dark.png" alt="panel blog dark" width="480"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-blog-post.png" alt="panel blog post" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-blog-post-dark.png" alt="panel blog post dark" width="480"> |
 
 ## How it works
 
-The integration logs in like the ENT's web page (`POST /auth/login`, session cookie in its own cookie jar, `X-XSRF-TOKEN` on writes) and reads, at each update: the account (`/auth/oauth2/userinfo`), the unread count and last inbox messages (`/conversation`), the liaison book of each child (`/schoolbook`), the homework notebooks and their done statuses (`/homeworks`), the news (`/actualites`) and the calendars (`/calendar`). A message is read (`/conversation/api/messages/{id}`) only when you unfold it, and a file is fetched only when you open it, through `/api/ent_one/file/<entry_id>` (Home Assistant login required, only ENT document paths, 25 MB at most). A lost session (401 or a redirect) triggers one silent re-login and one replay; refused credentials stop every attempt and start a reauthentication. An application missing from an ENT, or failing once, keeps its last content and is listed in the sensors' `stale` attribute; the card then shows *Partly updated*.
+The integration logs in like the ENT's web page (`POST /auth/login`, session cookie in its own cookie jar, `X-XSRF-TOKEN` on writes) and reads, at each update: the account (`/auth/oauth2/userinfo`), the unread count and last inbox messages (`/conversation`), the liaison book of each child (`/schoolbook`), the homework notebooks and their done statuses (`/homeworks`), the news (`/actualites`), the blog posts (`/blog`) and the calendars (`/calendar`). An application the ENT does not have (HTTP 403 or 404) stays empty rather than out of date. A message is read (`/conversation/api/messages/{id}`) only when you unfold it, and a file is fetched only when you open it, through `/api/ent_one/file/<entry_id>` (Home Assistant login required, only ENT document paths, 25 MB at most). A lost session (401 or a redirect) triggers one silent re-login and one replay; refused credentials stop every attempt and start a reauthentication. An application missing from an ENT, or failing once, keeps its last content and is listed in the sensors' `stale` attribute; the card then shows *Partly updated*.
 
 ## Development
 

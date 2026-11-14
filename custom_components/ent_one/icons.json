@@ -5,6 +5,7 @@
       "words_to_sign": { "default": "mdi:notebook-edit-outline" },
       "homework": { "default": "mdi:pencil-outline" },
       "news": { "default": "mdi:newspaper-variant-outline" },
+      "blog": { "default": "mdi:post-outline" },
       "last_update": { "default": "mdi:school-outline" }
     },
     "calendar": {

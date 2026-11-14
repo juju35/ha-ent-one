@@ -73,6 +73,8 @@ ICONS = {
     "file-pdf-box": "M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M9.5 11.5C9.5 12.3 8.8 13 8 13H7V15H5.5V9H8C8.8 9 9.5 9.7 9.5 10.5V11.5M14.5 13.5C14.5 14.3 13.8 15 13 15H10.5V9H13C13.8 9 14.5 9.7 14.5 10.5V13.5M18.5 10.5H17V11.5H18.5V13H17V15H15.5V9H18.5V10.5M12 10.5H13V13.5H12V10.5M7 10.5H8V11.5H7V10.5Z",
     "notebook-outline": "M19 2C20.11 2 21 2.9 21 4V20C21 21.11 20.11 22 19 22H7C5.89 22 5 21.11 5 20V19H3V17H5V13H3V11H5V7H3V5H5V4C5 2.89 5.89 2 7 2H19M19 20V4H7V5H9V7H7V11H9V13H7V17H9V19H7V20H19Z",
     "download": "M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z",
+    "post-outline": "M19 5V19H5V5H19M21 3H3V21H21V3M17 17H7V16H17V17M17 15H7V14H17V15M17 12H7V7H17V12Z",
+    "comment-outline": "M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M10,16V19.08L13.08,16H20V4H4V16H10Z",
 }
 
 # What the signed file URLs show: a drawn map for images, a page of text for PDFs (mock content).
@@ -274,6 +276,44 @@ def _sensor(entity_id, state, **attributes):
     }
 
 
+BLOG = [
+    {
+        "id": "p1",
+        "blog_id": "bl1",
+        "blog": "Year 3 A blog",
+        "blog_thumbnail": "/workspace/document/th1",
+        "title": "Our visit to the museum",
+        "text": "The children discovered the dinosaur gallery and drew their favourite fossil.",
+        "attachments": [{"path": "/workspace/document/ph1", "name": "Dinosaur gallery", "kind": "image"}],
+        "author": "Ms Martin",
+        "date": "2026-11-13T17:05:00+01:00",
+        "comments": 2,
+    },
+    {
+        "id": "p2",
+        "blog_id": "bl1",
+        "blog": "Year 3 A blog",
+        "blog_thumbnail": "/workspace/document/th1",
+        "title": "Autumn leaves",
+        "text": "A collage made with the leaves gathered in the playground.",
+        "attachments": [],
+        "author": "Ms Martin",
+        "date": "2026-11-06T16:30:00+01:00",
+        "comments": 0,
+    },
+    {
+        "id": "p3",
+        "blog_id": "bl2",
+        "blog": "Parents' association",
+        "blog_thumbnail": "",
+        "title": "Cake sale on Friday",
+        "text": "Year 2 bakes for everyone at 4 pm. Bring some change or your cake card.",
+        "attachments": [],
+        "author": "Mrs Germain",
+        "date": "2026-11-12T09:10:00+01:00",
+        "comments": 0,
+    },
+]
 STATES = {
     s["entity_id"]: s
     for s in (
@@ -281,6 +321,7 @@ STATES = {
         _sensor("sensor.ent_one_words_to_sign", 1, words=WORDS),
         _sensor("sensor.ent_one_homework", 3, homework=HOMEWORK, books={"b1": "Year 3 A", "b2": "Year 5 B"}),
         _sensor("sensor.ent_one_news", 2, news=NEWS),
+        _sensor("sensor.ent_one_blog", 3, blog=sorted(BLOG, key=lambda p: p["date"], reverse=True)),
         _sensor(
             "sensor.ent_one_last_update",
             "2026-11-16T07:58:00+00:00",
@@ -325,6 +366,11 @@ SHOTS = [
     {"file": "panel-messages-dark", "theme": "dark", "panel": "messages", "item": "m1", "width": 1100},
     {"file": "panel-words", "theme": "light", "panel": "words", "item": "101:c1", "width": 1100},
     {"file": "panel-words-dark", "theme": "dark", "panel": "words", "item": "101:c1", "width": 1100},
+    # Blog like ONE's: the feed of posts with a filter per blog, and a post read in full.
+    {"file": "panel-blog", "theme": "light", "panel": "blog", "width": 1100},
+    {"file": "panel-blog-dark", "theme": "dark", "panel": "blog", "width": 1100},
+    {"file": "panel-blog-post", "theme": "light", "panel": "blog", "item": "bl1:p1", "width": 1100},
+    {"file": "panel-blog-post-dark", "theme": "dark", "panel": "blog", "item": "bl1:p1", "width": 1100},
 ]
 
 
@@ -380,9 +426,9 @@ def mount(context, shot):
     page = context.new_page()
     page.on("pageerror", lambda err, name=shot["file"]: print(f"{name}: page error: {err}"))
     page.clock.set_fixed_time(NOW)
-    if shot.get("item"):
-        # The mail layout fills the window's height.
-        page.set_viewport_size({"width": shot["width"], "height": 800})
+    if shot.get("panel"):
+        # The panel fills the window: as wide as the shot, and the mail layout as high as the window.
+        page.set_viewport_size({"width": shot["width"], "height": 800 if shot.get("item") else 2400})
     page.set_content(page_html(shot["theme"], shot.get("width", WIDTH), bool(shot.get("panel"))))
     page.add_script_tag(content=HA_ELEMENTS)
     page.add_script_tag(content=CARD_JS)
