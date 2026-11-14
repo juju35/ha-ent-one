@@ -8,7 +8,7 @@ from urllib.parse import urlsplit
 
 import aiohttp
 import voluptuous as vol
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_PASSWORD, CONF_URL, CONF_USERNAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
@@ -143,6 +143,15 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
             return "wrong_account"
         return None
 
+    def _update_and_abort(self, entry: ConfigEntry, data: Mapping[str, Any], reason: str) -> ConfigFlowResult:
+        """Save the new data and reload once: the update listener reloads a loaded entry whose data changed,
+        so reload here only when it won't (entry not loaded, or same data after an edited secret)."""
+        loaded = entry.state is ConfigEntryState.LOADED
+        changed = self.hass.config_entries.async_update_entry(entry, data=dict(data))
+        if not (loaded and changed):
+            self.hass.config_entries.async_schedule_reload(entry.entry_id)
+        return self.async_abort(reason=reason)
+
     def _new_data(self, entry: ConfigEntry, secret: Mapping[str, str]) -> dict[str, Any]:
         data = {k: v for k, v in entry.data.items() if k not in (CONF_PASSWORD, CONF_PASSWORD_SECRET)}
         return {**data, **secret}
@@ -160,8 +169,8 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
             if error == "wrong_account":
                 return self.async_abort(reason="wrong_account")
             if error is None:
-                return self.async_update_reload_and_abort(
-                    entry, data=self._new_data(entry, {CONF_PASSWORD: user_input[CONF_PASSWORD]})
+                return self._update_and_abort(
+                    entry, self._new_data(entry, {CONF_PASSWORD: user_input[CONF_PASSWORD]}), "reauth_successful"
                 )
             errors["base"] = error
         return self.async_show_form(
@@ -185,7 +194,7 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
                 if error == "wrong_account":
                     return self.async_abort(reason="wrong_account")
                 if error is None:
-                    return self.async_update_reload_and_abort(entry, data=dict(entry.data))
+                    return self._update_and_abort(entry, entry.data, "reauth_successful")
                 errors["base"] = error
         return self.async_show_form(
             step_id="reauth_secret",
@@ -206,7 +215,7 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
             if password is not None:
                 error = await self._check(entry, password)
             if password is not None and error is None:
-                return self.async_update_reload_and_abort(entry, data=self._new_data(entry, secret))
+                return self._update_and_abort(entry, self._new_data(entry, secret), "reconfigure_successful")
             errors["base"] = error or "cannot_connect"
         return self.async_show_form(
             step_id="reconfigure",
