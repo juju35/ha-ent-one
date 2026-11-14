@@ -1,0 +1,14 @@
+{
+  "domain": "ent_one",
+  "name": "ENT ONE",
+  "after_dependencies": ["lovelace"],
+  "codeowners": ["@juju35"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http", "panel_custom", "websocket_api"],
+  "documentation": "https://github.com/juju35/ha-ent-one",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/juju35/ha-ent-one/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

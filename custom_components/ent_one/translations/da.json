@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Log ind med dit ENT ONE-brugernavn og din adgangskode (ikke ÉduConnect). Adressen er dit akademis ENT, for eksempel {example}.",
+        "data": {
+          "url": "ENT-adresse",
+          "username": "Brugernavn",
+          "password": "Adgangskode"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT afviste adgangskoden for {username}. Angiv den nuværende.",
+        "data": {
+          "password": "Adgangskode"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Ugyldig adresse.",
+      "invalid_auth": "Ugyldigt brugernavn eller adgangskode.",
+      "action_required": "ENT kræver først en handling (nye vilkår, ny adgangskode). Log ind én gang i en browser, og prøv igen.",
+      "cannot_connect": "Kan ikke nå ENT. Kontroller adressen, og prøv igen."
+    },
+    "abort": {
+      "already_configured": "Denne konto er allerede konfigureret.",
+      "reauth_successful": "Adgangskoden er opdateret.",
+      "wrong_account": "Denne adgangskode hører til en anden konto."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT ONE-indstillinger",
+        "data": {
+          "scan_interval": "Opdateringsinterval",
+          "homework_days": "Lektieperiode",
+          "notify_services": "Notifikationshandlinger",
+          "show_panel": "Vis dette panel i sidebjælken"
+        },
+        "data_description": {
+          "scan_interval": "ENT deles af hele skolen: mindst 10 minutter.",
+          "homework_days": "Lektier med frist inden for så mange dage vises.",
+          "notify_services": "Nye beskeder, beskeder til underskrift og lektier sendes til disse handlinger."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Ulæste beskeder"
+      },
+      "words_to_sign": {
+        "name": "Beskeder til underskrift"
+      },
+      "homework": {
+        "name": "Lektier"
+      },
+      "news": {
+        "name": "Nyheder"
+      },
+      "last_update": {
+        "name": "Seneste opdatering"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Skole"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Lektier {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Opdater",
+      "description": "Læser ENT nu.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT-konto",
+          "description": "Kun nødvendig, når flere ENT-konti er konfigureret."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Underskriv en besked",
+      "description": "Underskriver en besked i kontaktbogen (læsekvittering) for et barn.",
+      "fields": {
+        "word_id": {
+          "name": "Besked",
+          "description": "Id for beskeden fra attributten words på sensoren Beskeder til underskrift."
+        },
+        "child_id": {
+          "name": "Barn",
+          "description": "Id for barnet, som beskeden er til, fra samme attribut."
+        },
+        "config_entry_id": {
+          "name": "ENT-konto",
+          "description": "Kun nødvendig, når flere ENT-konti er konfigureret."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Ingen ENT ONE-konto er indlæst."
+    },
+    "several_accounts": {
+      "message": "Flere ENT ONE-konti er konfigureret: angiv config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Opdatering mislykkedes: {error}"
+    },
+    "action_failed": {
+      "message": "ENT afviste handlingen: {error}"
+    },
+    "notify_new_message": {
+      "message": "Ny ENT-besked"
+    },
+    "notify_new_word": {
+      "message": "Til underskrift · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nye lektier"
+    }
+  }
+}

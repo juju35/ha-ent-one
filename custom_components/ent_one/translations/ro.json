@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Conectează-te cu numele de utilizator și parola ENT ONE (nu ÉduConnect). Adresa este cea a ENT-ului academiei tale, de exemplu {example}.",
+        "data": {
+          "url": "Adresa ENT",
+          "username": "Nume de utilizator",
+          "password": "Parolă"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT-ul a refuzat parola lui {username}. Introdu parola actuală.",
+        "data": {
+          "password": "Parolă"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Adresă nevalidă.",
+      "invalid_auth": "Nume de utilizator sau parolă nevalide.",
+      "action_required": "ENT-ul cere mai întâi o acțiune (condiții noi, schimbarea parolei). Conectează-te o dată într-un browser, apoi încearcă din nou.",
+      "cannot_connect": "ENT-ul nu poate fi contactat. Verifică adresa și încearcă din nou."
+    },
+    "abort": {
+      "already_configured": "Acest cont este deja configurat.",
+      "reauth_successful": "Parolă actualizată.",
+      "wrong_account": "Această parolă aparține altui cont."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opțiuni ENT ONE",
+        "data": {
+          "scan_interval": "Interval de actualizare",
+          "homework_days": "Perioada temelor",
+          "notify_services": "Acțiuni de notificare",
+          "show_panel": "Afișează acest panou în bara laterală"
+        },
+        "data_description": {
+          "scan_interval": "ENT-ul este folosit de toată școala: minimum 10 minute.",
+          "homework_days": "Sunt afișate temele cu termen în acest număr de zile.",
+          "notify_services": "Mesajele noi, mesajele de semnat și temele sunt trimise acestor acțiuni."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Mesaje necitite"
+      },
+      "words_to_sign": {
+        "name": "Mesaje de semnat"
+      },
+      "homework": {
+        "name": "Teme"
+      },
+      "news": {
+        "name": "Noutăți"
+      },
+      "last_update": {
+        "name": "Ultima actualizare"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Școală"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Teme {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Reîmprospătează",
+      "description": "Citește ENT-ul acum.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Cont ENT",
+          "description": "Necesar doar când sunt configurate mai multe conturi ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Semnează un mesaj",
+      "description": "Semnează un mesaj din carnetul de corespondență (confirmare de citire) pentru un copil.",
+      "fields": {
+        "word_id": {
+          "name": "Mesaj",
+          "description": "Id-ul mesajului, din atributul words al senzorului Mesaje de semnat."
+        },
+        "child_id": {
+          "name": "Copil",
+          "description": "Id-ul copilului căruia îi este destinat mesajul, din același atribut."
+        },
+        "config_entry_id": {
+          "name": "Cont ENT",
+          "description": "Necesar doar când sunt configurate mai multe conturi ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Niciun cont ENT ONE încărcat."
+    },
+    "several_accounts": {
+      "message": "Sunt configurate mai multe conturi ENT ONE: setează config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Reîmprospătare eșuată: {error}"
+    },
+    "action_failed": {
+      "message": "ENT-ul a refuzat acțiunea: {error}"
+    },
+    "notify_new_message": {
+      "message": "Mesaj nou în ENT"
+    },
+    "notify_new_word": {
+      "message": "De semnat · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Temă nouă"
+    }
+  }
+}

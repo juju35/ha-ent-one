@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Piesakieties ar savu ENT ONE lietotājvārdu un paroli (nevis ÉduConnect). Adrese ir jūsu akadēmijas ENT adrese, piemēram, {example}.",
+        "data": {
+          "url": "ENT adrese",
+          "username": "Lietotājvārds",
+          "password": "Parole"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT noraidīja lietotāja {username} paroli. Ievadiet pašreizējo.",
+        "data": {
+          "password": "Parole"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Nederīga adrese.",
+      "invalid_auth": "Nederīgs lietotājvārds vai parole.",
+      "action_required": "ENT vispirms pieprasa darbību (jauni noteikumi, paroles maiņa). Vienreiz piesakieties pārlūkā un mēģiniet vēlreiz.",
+      "cannot_connect": "Nevar sazināties ar ENT. Pārbaudiet adresi un mēģiniet vēlreiz."
+    },
+    "abort": {
+      "already_configured": "Šis konts jau ir iestatīts.",
+      "reauth_successful": "Parole atjaunināta.",
+      "wrong_account": "Šī parole pieder citam kontam."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT ONE opcijas",
+        "data": {
+          "scan_interval": "Atjaunināšanas intervāls",
+          "homework_days": "Mājasdarbu periods",
+          "notify_services": "Paziņojumu darbības",
+          "show_panel": "Rādīt šo paneli sānjoslā"
+        },
+        "data_description": {
+          "scan_interval": "ENT izmanto visa skola: vismaz 10 minūtes.",
+          "homework_days": "Tiek rādīti mājasdarbi, kuru termiņš ir šajā dienu skaitā.",
+          "notify_services": "Jauni ziņojumi, parakstāmi ieraksti un mājasdarbi tiek nosūtīti šīm darbībām."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Nelasīti ziņojumi"
+      },
+      "words_to_sign": {
+        "name": "Parakstāmi ieraksti"
+      },
+      "homework": {
+        "name": "Mājasdarbi"
+      },
+      "news": {
+        "name": "Jaunumi"
+      },
+      "last_update": {
+        "name": "Pēdējā atjaunināšana"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Skola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Mājasdarbi {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Atsvaidzināt",
+      "description": "Nolasa ENT tagad.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT konts",
+          "description": "Nepieciešams tikai tad, ja iestatīti vairāki ENT konti."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Parakstīt ierakstu",
+      "description": "Paraksta dienasgrāmatas ierakstu (izlasīšanas apstiprinājums) bērnam.",
+      "fields": {
+        "word_id": {
+          "name": "Ieraksts",
+          "description": "Ieraksta ID no sensora Parakstāmi ieraksti atribūta words."
+        },
+        "child_id": {
+          "name": "Bērns",
+          "description": "Bērna ID, kuram ieraksts paredzēts, no tā paša atribūta."
+        },
+        "config_entry_id": {
+          "name": "ENT konts",
+          "description": "Nepieciešams tikai tad, ja iestatīti vairāki ENT konti."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Nav ielādēts neviens ENT ONE konts."
+    },
+    "several_accounts": {
+      "message": "Iestatīti vairāki ENT ONE konti: iestatiet config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Neizdevās atsvaidzināt: {error}"
+    },
+    "action_failed": {
+      "message": "ENT noraidīja darbību: {error}"
+    },
+    "notify_new_message": {
+      "message": "Jauns ENT ziņojums"
+    },
+    "notify_new_word": {
+      "message": "Jāparaksta · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Jauns mājasdarbs"
+    }
+  }
+}

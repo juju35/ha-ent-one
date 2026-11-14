@@ -1,0 +1,8 @@
+{
+  "name": "ENT ONE",
+  "content_in_root": false,
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "ent_one.zip",
+  "homeassistant": "2024.12.0"
+}

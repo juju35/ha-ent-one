@@ -1,0 +1,22 @@
+refresh:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: ent_one
+
+sign_word:
+  fields:
+    word_id:
+      required: true
+      example: "1234"
+      selector:
+        text:
+    child_id:
+      required: true
+      selector:
+        text:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: ent_one

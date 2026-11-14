@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Přihlaste se uživatelským jménem a heslem ENT ONE (ne ÉduConnect). Adresa je adresa ENT vaší akademie, například {example}.",
+        "data": {
+          "url": "Adresa ENT",
+          "username": "Uživatelské jméno",
+          "password": "Heslo"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT odmítl heslo uživatele {username}. Zadejte aktuální.",
+        "data": {
+          "password": "Heslo"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Neplatná adresa.",
+      "invalid_auth": "Neplatné uživatelské jméno nebo heslo.",
+      "action_required": "ENT nejprve vyžaduje akci (nové podmínky, změna hesla). Jednou se přihlaste v prohlížeči a zkuste to znovu.",
+      "cannot_connect": "ENT není dostupný. Zkontrolujte adresu a zkuste to znovu."
+    },
+    "abort": {
+      "already_configured": "Tento účet je již nastaven.",
+      "reauth_successful": "Heslo bylo aktualizováno.",
+      "wrong_account": "Toto heslo patří jinému účtu."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti ENT ONE",
+        "data": {
+          "scan_interval": "Interval aktualizace",
+          "homework_days": "Období úkolů",
+          "notify_services": "Akce oznámení",
+          "show_panel": "Zobrazit tento panel v postranním panelu"
+        },
+        "data_description": {
+          "scan_interval": "ENT používá celá škola: minimálně 10 minut.",
+          "homework_days": "Zobrazují se úkoly s termínem v rámci tohoto počtu dní.",
+          "notify_services": "Nové zprávy, záznamy k podpisu a domácí úkoly se posílají těmto akcím."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Nepřečtené zprávy"
+      },
+      "words_to_sign": {
+        "name": "Záznamy k podpisu"
+      },
+      "homework": {
+        "name": "Domácí úkoly"
+      },
+      "news": {
+        "name": "Novinky"
+      },
+      "last_update": {
+        "name": "Poslední aktualizace"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Škola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Úkoly {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Obnovit",
+      "description": "Načte ENT nyní.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Účet ENT",
+          "description": "Potřeba jen při více nastavených účtech ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Podepsat záznam",
+      "description": "Podepíše záznam v žákovské knížce (potvrzení přečtení) pro dítě.",
+      "fields": {
+        "word_id": {
+          "name": "Záznam",
+          "description": "ID záznamu z atributu words senzoru Záznamy k podpisu."
+        },
+        "child_id": {
+          "name": "Dítě",
+          "description": "ID dítěte, kterému je záznam určen, ze stejného atributu."
+        },
+        "config_entry_id": {
+          "name": "Účet ENT",
+          "description": "Potřeba jen při více nastavených účtech ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Není načten žádný účet ENT ONE."
+    },
+    "several_accounts": {
+      "message": "Je nastaveno více účtů ENT ONE: nastavte config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Obnovení selhalo: {error}"
+    },
+    "action_failed": {
+      "message": "ENT akci odmítl: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nová zpráva ENT"
+    },
+    "notify_new_word": {
+      "message": "K podpisu · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nový domácí úkol"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Inicia sesión con tu usuario y contraseña de ENT ONE (no ÉduConnect). La dirección es la del ENT de tu academia, por ejemplo {example}.",
+        "data": {
+          "url": "Dirección del ENT",
+          "username": "Usuario",
+          "password": "Contraseña"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "El ENT rechazó la contraseña de {username}. Introduce la actual.",
+        "data": {
+          "password": "Contraseña"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Dirección no válida.",
+      "invalid_auth": "Usuario o contraseña no válidos.",
+      "action_required": "El ENT pide primero una acción (nuevas condiciones, cambio de contraseña). Inicia sesión una vez en un navegador y vuelve a intentarlo.",
+      "cannot_connect": "No se puede contactar con el ENT. Comprueba la dirección y vuelve a intentarlo."
+    },
+    "abort": {
+      "already_configured": "Esta cuenta ya está configurada.",
+      "reauth_successful": "Contraseña actualizada.",
+      "wrong_account": "Esta contraseña pertenece a otra cuenta."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de ENT ONE",
+        "data": {
+          "scan_interval": "Intervalo de actualización",
+          "homework_days": "Ventana de deberes",
+          "notify_services": "Acciones de notificación",
+          "show_panel": "Mostrar este panel en la barra lateral"
+        },
+        "data_description": {
+          "scan_interval": "El ENT lo comparte toda la escuela: 10 minutos como mínimo.",
+          "homework_days": "Se muestran los deberes para dentro de este número de días.",
+          "notify_services": "Los nuevos mensajes, notas por firmar y deberes se envían a estas acciones."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Mensajes sin leer"
+      },
+      "words_to_sign": {
+        "name": "Notas por firmar"
+      },
+      "homework": {
+        "name": "Deberes"
+      },
+      "news": {
+        "name": "Noticias"
+      },
+      "last_update": {
+        "name": "Última actualización"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Escuela"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Deberes {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Actualizar",
+      "description": "Lee el ENT ahora.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Cuenta ENT",
+          "description": "Solo es necesario si hay varias cuentas ENT configuradas."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Firmar una nota",
+      "description": "Firma una nota del cuaderno de enlace (acuse de lectura) para un hijo.",
+      "fields": {
+        "word_id": {
+          "name": "Nota",
+          "description": "Id de la nota, del atributo words del sensor Notas por firmar."
+        },
+        "child_id": {
+          "name": "Hijo",
+          "description": "Id del hijo al que va la nota, del mismo atributo."
+        },
+        "config_entry_id": {
+          "name": "Cuenta ENT",
+          "description": "Solo es necesario si hay varias cuentas ENT configuradas."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "No hay ninguna cuenta ENT ONE cargada."
+    },
+    "several_accounts": {
+      "message": "Hay varias cuentas ENT ONE configuradas: indica config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "No se pudo actualizar: {error}"
+    },
+    "action_failed": {
+      "message": "El ENT rechazó la acción: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nuevo mensaje del ENT"
+    },
+    "notify_new_word": {
+      "message": "Nota por firmar · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nuevos deberes"
+    }
+  }
+}

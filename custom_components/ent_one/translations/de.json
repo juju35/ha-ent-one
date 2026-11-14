@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Melde dich mit deinem ENT-ONE-Benutzernamen und Passwort an (nicht ÉduConnect). Die Adresse ist die des ENT deiner Akademie, zum Beispiel {example}.",
+        "data": {
+          "url": "ENT-Adresse",
+          "username": "Benutzername",
+          "password": "Passwort"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "Das ENT hat das Passwort von {username} abgelehnt. Gib das aktuelle ein.",
+        "data": {
+          "password": "Passwort"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Ungültige Adresse.",
+      "invalid_auth": "Ungültiger Benutzername oder ungültiges Passwort.",
+      "action_required": "Das ENT verlangt zuerst eine Aktion (neue Nutzungsbedingungen, Passwortänderung). Melde dich einmal im Browser an und versuche es erneut.",
+      "cannot_connect": "Das ENT ist nicht erreichbar. Prüfe die Adresse und versuche es erneut."
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits eingerichtet.",
+      "reauth_successful": "Passwort aktualisiert.",
+      "wrong_account": "Dieses Passwort gehört zu einem anderen Konto."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT-ONE-Optionen",
+        "data": {
+          "scan_interval": "Aktualisierungsintervall",
+          "homework_days": "Zeitraum für Hausaufgaben",
+          "notify_services": "Benachrichtigungsaktionen",
+          "show_panel": "Dieses Panel in der Seitenleiste anzeigen"
+        },
+        "data_description": {
+          "scan_interval": "Das ENT wird von der ganzen Schule genutzt: mindestens 10 Minuten.",
+          "homework_days": "Hausaufgaben, die innerhalb so vieler Tage fällig sind, werden angezeigt.",
+          "notify_services": "Neue Nachrichten, zu unterschreibende Mitteilungen und Hausaufgaben werden an diese Aktionen gesendet."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Ungelesene Nachrichten"
+      },
+      "words_to_sign": {
+        "name": "Zu unterschreibende Mitteilungen"
+      },
+      "homework": {
+        "name": "Hausaufgaben"
+      },
+      "news": {
+        "name": "Neuigkeiten"
+      },
+      "last_update": {
+        "name": "Letzte Aktualisierung"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Schule"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Hausaufgaben {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Aktualisieren",
+      "description": "Liest das ENT jetzt.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT-Konto",
+          "description": "Nur nötig, wenn mehrere ENT-Konten eingerichtet sind."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Mitteilung unterschreiben",
+      "description": "Unterschreibt eine Mitteilung im Mitteilungsheft (Lesebestätigung) für ein Kind.",
+      "fields": {
+        "word_id": {
+          "name": "Mitteilung",
+          "description": "ID der Mitteilung, aus dem Attribut words des Sensors Zu unterschreibende Mitteilungen."
+        },
+        "child_id": {
+          "name": "Kind",
+          "description": "ID des Kindes, für das die Mitteilung ist, aus demselben Attribut."
+        },
+        "config_entry_id": {
+          "name": "ENT-Konto",
+          "description": "Nur nötig, wenn mehrere ENT-Konten eingerichtet sind."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Kein ENT-ONE-Konto geladen."
+    },
+    "several_accounts": {
+      "message": "Mehrere ENT-ONE-Konten sind eingerichtet: setze config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Aktualisierung fehlgeschlagen: {error}"
+    },
+    "action_failed": {
+      "message": "Das ENT hat die Aktion abgelehnt: {error}"
+    },
+    "notify_new_message": {
+      "message": "Neue ENT-Nachricht"
+    },
+    "notify_new_word": {
+      "message": "Zu unterschreiben · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Neue Hausaufgabe"
+    }
+  }
+}

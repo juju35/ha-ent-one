@@ -1,0 +1,21 @@
+{
+  "entity": {
+    "sensor": {
+      "unread_messages": { "default": "mdi:email-outline" },
+      "words_to_sign": { "default": "mdi:notebook-edit-outline" },
+      "homework": { "default": "mdi:pencil-outline" },
+      "news": { "default": "mdi:newspaper-variant-outline" },
+      "last_update": { "default": "mdi:school-outline" }
+    },
+    "calendar": {
+      "school": { "default": "mdi:calendar-school" }
+    },
+    "todo": {
+      "homework_book": { "default": "mdi:book-open-variant-outline" }
+    }
+  },
+  "services": {
+    "refresh": { "service": "mdi:refresh" },
+    "sign_word": { "service": "mdi:draw-pen" }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Logga in med ditt ENT ONE-användarnamn och lösenord (inte ÉduConnect). Adressen är din akademis ENT, till exempel {example}.",
+        "data": {
+          "url": "ENT-adress",
+          "username": "Användarnamn",
+          "password": "Lösenord"
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT avvisade lösenordet för {username}. Ange det nuvarande.",
+        "data": {
+          "password": "Lösenord"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Ogiltig adress.",
+      "invalid_auth": "Ogiltigt användarnamn eller lösenord.",
+      "action_required": "ENT kräver först en åtgärd (nya villkor, lösenordsbyte). Logga in en gång i en webbläsare och försök igen.",
+      "cannot_connect": "Kan inte nå ENT. Kontrollera adressen och försök igen."
+    },
+    "abort": {
+      "already_configured": "Det här kontot är redan konfigurerat.",
+      "reauth_successful": "Lösenordet har uppdaterats.",
+      "wrong_account": "Det här lösenordet hör till ett annat konto."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT ONE-alternativ",
+        "data": {
+          "scan_interval": "Uppdateringsintervall",
+          "homework_days": "Läxperiod",
+          "notify_services": "Aviseringsåtgärder",
+          "show_panel": "Visa den här panelen i sidofältet"
+        },
+        "data_description": {
+          "scan_interval": "ENT delas av hela skolan: minst 10 minuter.",
+          "homework_days": "Läxor med deadline inom så många dagar visas.",
+          "notify_services": "Nya meddelanden, meddelanden att signera och läxor skickas till dessa åtgärder."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Olästa meddelanden"
+      },
+      "words_to_sign": {
+        "name": "Meddelanden att signera"
+      },
+      "homework": {
+        "name": "Läxor"
+      },
+      "news": {
+        "name": "Nyheter"
+      },
+      "last_update": {
+        "name": "Senaste uppdatering"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Skola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Läxor {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Uppdatera",
+      "description": "Läser ENT nu.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT-konto",
+          "description": "Behövs bara när flera ENT-konton är konfigurerade."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Signera ett meddelande",
+      "description": "Signerar ett meddelande i kontaktboken (läskvitto) för ett barn.",
+      "fields": {
+        "word_id": {
+          "name": "Meddelande",
+          "description": "Id för meddelandet, från attributet words på sensorn Meddelanden att signera."
+        },
+        "child_id": {
+          "name": "Barn",
+          "description": "Id för barnet som meddelandet gäller, från samma attribut."
+        },
+        "config_entry_id": {
+          "name": "ENT-konto",
+          "description": "Behövs bara när flera ENT-konton är konfigurerade."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Inget ENT ONE-konto är inläst."
+    },
+    "several_accounts": {
+      "message": "Flera ENT ONE-konton är konfigurerade: ange config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Uppdateringen misslyckades: {error}"
+    },
+    "action_failed": {
+      "message": "ENT avvisade åtgärden: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nytt ENT-meddelande"
+    },
+    "notify_new_word": {
+      "message": "Att signera · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Ny läxa"
+    }
+  }
+}
