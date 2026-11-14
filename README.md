@@ -116,7 +116,7 @@ type: custom:ent-one-card
 | `max_items` | `5` | Items per section |
 | `language` | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
-Click a row with a chevron to unfold it: the text of a word, a homework or a news item, the description of an event, the full text of a message (loaded when unfolded, which marks it read in the ENT); a click elsewhere folds it back. Attachments, and links to the ENT's documents in a text, appear as buttons: they open through Home Assistant with a link signed for two minutes, PDF and images in a new tab, other files as a download. A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
+Click a row with a chevron to unfold it: the start of a word, the text of a homework or a news item, the description of an event, with their attachments (images as thumbnails, other files as buttons); a click elsewhere folds it back. With the panel, a message opens in the panel's reading pane, and an unfolded word has a *Read* link to it; without the panel, a message unfolds to its start (loaded when unfolded, which marks it read in the ENT). Attachments, and links to the ENT's documents in a text, are fetched through Home Assistant with a signed link; a click opens them in a new tab (PDF and images shown, other files downloaded). A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
 
 **Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. It is shown to administrators only (a child with a Home Assistant account must not sign their own words); other users see the words to sign without the button. The check box of a homework marks it done (or not done) in the ENT.
 
@@ -140,8 +140,8 @@ The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab pe
 |---|---|
 | Home | The three counts, words to sign, next homework, calendar and news |
 | Homework | Homework by due day, filtered by notebook, with its text; done ones can be hidden |
-| Liaison book | Every recent word with its text, to sign |
-| Messages | The last messages of the inbox, unfolded to their text and attachments, and a link to the ENT's messaging |
+| Liaison book | The recent words on the left, the one chosen on the right with its text, its attachments shown (images, PDF viewer) and the *Sign* button |
+| Messages | Like a mail client: the last messages of the inbox on the left, the one chosen on the right with its text and its attachments shown (images, PDF viewer), and a link to the ENT's messaging. On a phone, the message replaces the list (*Back* returns to it) |
 | News | The school news in full |
 | Settings | The account options; only administrators can change them |
 
@@ -221,6 +221,8 @@ The panel, Home and Homework tabs:
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel.png" alt="panel" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-dark.png" alt="panel dark" width="480"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-homework.png" alt="panel homework" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-homework-dark.png" alt="panel homework dark" width="480"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-messages.png" alt="panel messages" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-messages-dark.png" alt="panel messages dark" width="480"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-words.png" alt="panel liaison book" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-words-dark.png" alt="panel liaison book dark" width="480"> |
 
 ## How it works
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 (2026-11-14)
+
+- Panel: the Messages and Liaison book tabs work like a mail client, the list on the left and the item chosen in a reading pane on the right (on a phone, the item replaces the list, Back returns to it); the item is kept in the address.
+- Attachments are shown instead of linked: images at full width, PDFs in a viewer with an Open button, other files as a download button; the card shows image thumbnails.
+- Attachments that did not open: PDFs were served with a sandbox policy browsers refuse to draw, and files the ENT serves as `application/octet-stream` were downloaded without a type or a name. Images and PDFs are now recognized by their content and keep the attachment's name.
+- The panel's Messages tab no longer stays empty (its message cache hid the tab's drawing method).
+- Card: a message opens in the panel's reading pane, an unfolded word shows its start with a Read link; without the panel, a message unfolds to its start only.
+
 ## 1.1.0 (2026-11-14)
 
 - Attachments of the liaison book, homework and news, and links to the ENT's documents in their text, appear as buttons; they open through Home Assistant (signed link, PDF and images shown in the browser, other files downloaded).

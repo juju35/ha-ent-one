@@ -69,7 +69,27 @@ ICONS = {
     "arrow-expand": "M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z",
     "arrow-collapse": "M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z",
     "menu": "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z",
+    "arrow-left": "M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z",
+    "file-pdf-box": "M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M9.5 11.5C9.5 12.3 8.8 13 8 13H7V15H5.5V9H8C8.8 9 9.5 9.7 9.5 10.5V11.5M14.5 13.5C14.5 14.3 13.8 15 13 15H10.5V9H13C13.8 9 14.5 9.7 14.5 10.5V13.5M18.5 10.5H17V11.5H18.5V13H17V15H15.5V9H18.5V10.5M12 10.5H13V13.5H12V10.5M7 10.5H8V11.5H7V10.5Z",
+    "notebook-outline": "M19 2C20.11 2 21 2.9 21 4V20C21 21.11 20.11 22 19 22H7C5.89 22 5 21.11 5 20V19H3V17H5V13H3V11H5V7H3V5H5V4C5 2.89 5.89 2 7 2H19M19 20V4H7V5H9V7H7V11H9V13H7V17H9V19H7V20H19Z",
+    "download": "M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z",
 }
+
+# What the signed file URLs show: a drawn map for images, a page of text for PDFs (mock content).
+MOCK_IMAGE = (
+    "data:image/svg+xml;utf8,"
+    + "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='360' viewBox='0 0 640 360'>"
+    + "<rect width='640' height='360' fill='%23e8f1e4'/><path d='M0 250 C160 200 260 300 420 230 S600 210 640 190 V360 H0Z' fill='%23b9d8f0'/>"
+    + "<path d='M60 0 L120 360 M0 120 L640 80 M380 0 L330 360' stroke='%23ffffff' stroke-width='14'/>"
+    + "<rect x='430' y='110' width='120' height='70' rx='6' fill='%23d9c3a5'/>"
+    + "<circle cx='490' cy='145' r='14' fill='%23f39c3c'/></svg>"
+)
+MOCK_PDF = (
+    "data:text/html;charset=utf-8,"
+    + "<body style='margin:0;background:%23525659;font-family:sans-serif'><div style='margin:24px auto;width:70%;background:white;padding:32px;"
+    + "box-shadow:0 2px 6px rgba(0,0,0,.4)'><h3 style='margin-top:0'>Swimming lessons: equipment</h3>"
+    + "<p>Swimsuit, swim cap, towel, goggles (optional).</p><p>Please write your child's name on every item.</p></div></body>"
+)
 
 # Minimal stand-ins for Home Assistant's <ha-card>, <ha-icon> and <ha-icon-button>.
 HA_ELEMENTS = """
@@ -299,6 +319,12 @@ SHOTS = [
     {"file": "panel-dark", "theme": "dark", "panel": "home", "width": 960},
     {"file": "panel-homework", "theme": "light", "panel": "homework", "width": 960},
     {"file": "panel-homework-dark", "theme": "dark", "panel": "homework", "width": 960},
+    # Messages and liaison book read like a mail client: the list, and the item chosen in the reading pane with
+    # its attachments shown (images, PDF viewer).
+    {"file": "panel-messages", "theme": "light", "panel": "messages", "item": "m1", "width": 1100},
+    {"file": "panel-messages-dark", "theme": "dark", "panel": "messages", "item": "m1", "width": 1100},
+    {"file": "panel-words", "theme": "light", "panel": "words", "item": "101:c1", "width": 1100},
+    {"file": "panel-words-dark", "theme": "dark", "panel": "words", "item": "101:c1", "width": 1100},
 ]
 
 
@@ -354,22 +380,28 @@ def mount(context, shot):
     page = context.new_page()
     page.on("pageerror", lambda err, name=shot["file"]: print(f"{name}: page error: {err}"))
     page.clock.set_fixed_time(NOW)
+    if shot.get("item"):
+        # The mail layout fills the window's height.
+        page.set_viewport_size({"width": shot["width"], "height": 800})
     page.set_content(page_html(shot["theme"], shot.get("width", WIDTH), bool(shot.get("panel"))))
     page.add_script_tag(content=HA_ELEMENTS)
     page.add_script_tag(content=CARD_JS)
     if shot.get("panel"):
         page.add_script_tag(content=PANEL_JS)
     page.evaluate(
-        """({config, states, element, tab}) => {
+        """({config, states, element, tab, item, mockImage, mockPdf}) => {
           const hass = {states, language: "en", locale: {language: "en", time_format: "24"}, user: {is_admin: true},
                         callService: () => Promise.resolve(),
                         callWS: (msg) => Promise.resolve(msg.type === "ent_one/message" ? {
-                          id: msg.message_id, text: "Swimming lessons start on Monday 30 November.\\nA swim cap is required.",
-                          attachments: [{path: "/conversation/message/m1/attachment/a1", name: "Equipment list.pdf", kind: "file"}],
-                        } : {})};
+                          id: msg.message_id, sender: "Ms Martin", date: "2026-11-16T07:45:00+01:00",
+                          text: "Swimming lessons start on Monday 30 November.\\nA swim cap is required.",
+                          attachments: [{path: "/conversation/message/m1/attachment/a1", name: "Equipment list.pdf", kind: "file"},
+                                        {path: "/conversation/message/m1/attachment/a2", name: "Pool.jpg", kind: "file"}],
+                        } : msg.type === "auth/sign_path" ? {path: decodeURIComponent(msg.path).includes(".pdf") ? mockPdf : mockImage} : {})};
           const el = document.createElement(element);
           if (tab) {
             el._tab = tab;
+            el._item = item || "";
             el.panel = {config: {}};
             el.narrow = false;
           } else {
@@ -383,11 +415,16 @@ def mount(context, shot):
             "states": STATES,
             "element": "ent-one-panel" if shot.get("panel") else shot.get("element", "ent-one-card"),
             "tab": shot.get("panel"),
+            "item": shot.get("item"),
+            "mockImage": MOCK_IMAGE,
+            "mockPdf": MOCK_PDF,
         },
     )
     if shot.get("click"):
         page.locator(shot["click"]).first.click()
         page.mouse.move(0, 0)
+    # Signed sources and the frames they load.
+    page.wait_for_timeout(300)
     return page
 
 

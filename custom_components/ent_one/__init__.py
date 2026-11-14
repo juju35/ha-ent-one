@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import re
 from functools import partial
 from http import HTTPStatus
 from pathlib import Path
@@ -323,15 +324,48 @@ async def ws_message(hass: HomeAssistant, connection: websocket_api.ActiveConnec
     connection.send_result(msg["id"], message)
 
 
-# Types a browser shows without running anything: opened in a tab, every other file is downloaded.
+# Types a browser shows without running anything: shown in the card and the panel, every other file is downloaded.
 INLINE_TYPES = frozenset({"application/pdf", "image/png", "image/jpeg", "image/gif", "image/webp", "text/plain"})
+SANDBOX_POLICY = "sandbox; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'"
+# Signatures of the inline types: the ENT often serves attachments as application/octet-stream.
+MAGIC_TYPES = (
+    (b"%PDF-", "application/pdf"),
+    (b"\x89PNG\r\n\x1a\n", "image/png"),
+    (b"\xff\xd8\xff", "image/jpeg"),
+    (b"GIF87a", "image/gif"),
+    (b"GIF89a", "image/gif"),
+)
+
+
+def sniff_type(body: bytes, declared: str, filename: str) -> str:
+    """Type a file is served as: its signature first, then the ENT's type, then its extension."""
+    for magic, kind in MAGIC_TYPES:
+        if body.startswith(magic):
+            return kind
+    if body[:4] == b"RIFF" and body[8:12] == b"WEBP":
+        return "image/webp"
+    declared = declared.split(";")[0].strip().lower()
+    if declared and declared != "application/octet-stream":
+        return declared
+    # Without a signature, an image or a PDF is not one: only text is taken on its extension.
+    return "text/plain" if filename.lower().endswith(".txt") else "application/octet-stream"
+
+
+def file_name(name: str | None, hint: str, path: str) -> str:
+    """Name of a served file: the ENT's, else the one the card knows, else the last part of the path."""
+    for candidate in (name, hint, path.split("?")[0].rstrip("/").rsplit("/", 1)[-1]):
+        cleaned = re.sub(r'[\x00-\x1f"\\/]', "", candidate or "").strip()[:150]
+        if cleaned:
+            return cleaned
+    return "file"
 
 
 class EntFileView(HomeAssistantView):
     """An ENT file (word attachment, message attachment, workspace document) fetched with the account's session.
 
     The browser has no ENT session of its own: the card asks Home Assistant for a signed URL of this view
-    (auth/sign_path) and opens it. Only the ENT's document and attachment routes can be fetched.
+    (auth/sign_path) and shows it (image, PDF) or downloads it. Only the ENT's document and attachment routes
+    can be fetched.
     """
 
     url = "/api/ent_one/file/{entry_id}"
@@ -350,18 +384,16 @@ class EntFileView(HomeAssistantView):
         except EntError as err:
             _LOGGER.warning("ENT file %s not fetched: %s", path, err)
             return web.Response(status=HTTPStatus.BAD_GATEWAY, text=str(err))
-        filename = (name or path.split("?")[0].rstrip("/").rsplit("/", 1)[-1] or "file").replace('"', "")
-        kind = content_type.split(";")[0].strip().lower()
-        # Served from Home Assistant's origin: only inert types open in the browser. Anything else (HTML, SVG,
-        # scripts) is a plain download, and the sandbox policy keeps any content from running scripts.
+        filename = file_name(name, request.query.get("name", ""), path)
+        kind = sniff_type(body, content_type, filename)
+        # Served from Home Assistant's origin: only inert types are shown. Anything else (HTML, SVG, scripts) is a
+        # plain download under a sandbox policy. A PDF gets no sandbox: browsers refuse to draw a sandboxed PDF.
         inline = kind in INLINE_TYPES
-        return web.Response(
-            body=body,
-            content_type=kind if inline else "application/octet-stream",
-            headers={
-                "Content-Disposition": f"{'inline' if inline else 'attachment'}; filename*=UTF-8''{quote(filename)}",
-                "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'",
-                "Cache-Control": "private, no-store",
-                "X-Content-Type-Options": "nosniff",
-            },
-        )
+        headers = {
+            "Content-Disposition": f"{'inline' if inline else 'attachment'}; filename*=UTF-8''{quote(filename)}",
+            "Cache-Control": "private, max-age=3600",
+            "X-Content-Type-Options": "nosniff",
+        }
+        if kind != "application/pdf":
+            headers["Content-Security-Policy"] = SANDBOX_POLICY
+        return web.Response(body=body, content_type=kind if inline else "application/octet-stream", headers=headers)
