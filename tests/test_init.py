@@ -14,7 +14,7 @@ from homeassistant.core import Context, HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.exceptions import Unauthorized
 from homeassistant.util import dt as dt_util
-from pytest_homeassistant_custom_component.common import MockConfigEntry, async_capture_events
+from pytest_homeassistant_custom_component.common import MockConfigEntry, async_capture_events, async_fire_time_changed
 
 from custom_components.ent_one.api import EntAuthError, EntError
 from custom_components.ent_one.const import DOMAIN, EVENT_NEW_WORD, PANEL_URL_PATH
@@ -40,7 +40,7 @@ class FakeApi:
             {
                 "id": 11,
                 "title": "Sortie au musée",
-                "text": "<p>Merci de signer</p>",
+                "text": '<p>Merci de signer</p><a href="/workspace/document/d1">Autorisation.pdf</a>',
                 "sending_date": "2026-11-10",
                 "owner_name": "Mme Martin",
                 "acknowledgments": [],
@@ -86,6 +86,19 @@ class FakeApi:
         if self.words_fail:
             raise EntError("HTTP 500 on /schoolbook")
         return list(self.words_list)
+
+    async def message(self, message_id: str) -> dict[str, Any]:
+        return {
+            "id": message_id,
+            "subject": "Piscine",
+            "body": "<p>Bonnet obligatoire</p>",
+            "attachments": [{"id": "a1", "filename": "liste.pdf", "size": 1200}],
+        }
+
+    async def download(self, path: str) -> tuple[bytes, str, str | None]:
+        if path.endswith("page"):
+            return b"<script>alert(1)</script>", "text/html", "page.html"
+        return b"%PDF", "application/pdf", "liste.pdf"
 
     async def sign_word(self, word_id: str, child_id: str) -> None:
         self.signed.append((word_id, child_id))
@@ -180,7 +193,7 @@ async def test_setup_entities(hass: HomeAssistant, api, entry) -> None:
     assert hass.states.get(_entity(hass, "sensor", "unread_messages")).state == "2"
     words = hass.states.get(_entity(hass, "sensor", "words_to_sign"))
     assert words.state == "1"
-    assert words.attributes["words"][0]["text"] == "Merci de signer"
+    assert words.attributes["words"][0]["text"].startswith("Merci de signer")
     homework = hass.states.get(_entity(hass, "sensor", "homework"))
     assert homework.state == "1"
     assert [h["id"] for h in homework.attributes["homework"]] == ["e1"]
@@ -260,7 +273,22 @@ async def test_settings_websocket(hass: HomeAssistant, api, entry, hass_ws_clien
     msg = await client.receive_json()
     assert msg["success"]
     await hass.async_block_till_done()
+    # The reload keeps the panel for a moment (an open panel must not jump to the home page), then removes it.
+    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=11))
+    await hass.async_block_till_done()
     assert PANEL_URL_PATH not in hass.data[frontend.DATA_PANELS]
+
+
+async def test_reload_keeps_the_panel(hass: HomeAssistant, api, entry) -> None:
+    await _setup(hass, entry)
+    removed = []
+    with patch.object(frontend, "async_remove_panel", side_effect=lambda *a, **k: removed.append(a)):
+        await hass.config_entries.async_reload(entry.entry_id)
+        await hass.async_block_till_done()
+        async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=11))
+        await hass.async_block_till_done()
+    assert removed == []
+    assert PANEL_URL_PATH in hass.data[frontend.DATA_PANELS]
 
 
 def _secrets(hass: HomeAssistant, text: str) -> None:
@@ -435,3 +463,44 @@ def test_all_day_end() -> None:
     assert (late.start, late.end) == (date(2026, 12, 19), date(2026, 12, 20))
     days = school_event({"id": "z", "title": "Holidays", "all_day": True, "start": "2026-12-19", "end": "2027-01-03"})
     assert (days.start, days.end) == (date(2026, 12, 19), date(2027, 1, 4))
+
+
+async def test_panel_uses_the_panda_icon_set(hass: HomeAssistant, api, entry, stub_frontend) -> None:
+    await _setup(hass, entry)
+    assert hass.data[frontend.DATA_PANELS][PANEL_URL_PATH].sidebar_icon == "ent_one:panda"
+    assert any("/ent_one_static/ent-one-icons.js?v=" in str(c.args[1]) for c in stub_frontend.call_args_list)
+
+
+async def test_word_attachments_in_attributes(hass: HomeAssistant, api, entry) -> None:
+    await _setup(hass, entry)
+    word = hass.states.get(_entity(hass, "sensor", "words_to_sign")).attributes["words"][0]
+    assert word["attachments"] == [{"path": "/workspace/document/d1", "name": "Autorisation.pdf", "kind": "file"}]
+
+
+async def test_message_websocket(hass: HomeAssistant, api, entry, hass_ws_client) -> None:
+    await _setup(hass, entry)
+    client = await hass_ws_client(hass)
+    await client.send_json({"id": 1, "type": "ent_one/message", "config_entry_id": entry.entry_id, "message_id": "m1"})
+    msg = await client.receive_json()
+    assert msg["result"]["text"] == "Bonnet obligatoire"
+    assert msg["result"]["attachments"] == [
+        {"path": "/conversation/message/m1/attachment/a1", "name": "liste.pdf", "size": 1200, "kind": "file"}
+    ]
+
+
+async def test_file_view(hass: HomeAssistant, api, entry, hass_client) -> None:
+    await _setup(hass, entry)
+    client = await hass_client()
+    ok = await client.get(
+        f"/api/ent_one/file/{entry.entry_id}", params={"path": "/conversation/message/m1/attachment/a1"}
+    )
+    assert ok.status == 200
+    assert ok.headers["Content-Type"] == "application/pdf"
+    assert ok.headers["Content-Disposition"].startswith("inline;")
+    # HTML is never served as such from Home Assistant's origin.
+    html = await client.get(f"/api/ent_one/file/{entry.entry_id}", params={"path": "/workspace/document/page"})
+    assert html.headers["Content-Type"] == "application/octet-stream"
+    assert html.headers["Content-Disposition"].startswith("attachment;")
+    assert "sandbox" in html.headers["Content-Security-Policy"]
+    refused = await client.get(f"/api/ent_one/file/{entry.entry_id}", params={"path": "/auth/logout"})
+    assert refused.status == 400

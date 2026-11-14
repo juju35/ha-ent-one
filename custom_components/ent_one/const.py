@@ -46,4 +46,6 @@ DEFAULT_SHOW_PANEL: Final = True
 FRONTEND_URL: Final = "/ent_one_static"
 CARD_FILENAME: Final = "ent-one-card.js"
 PANEL_FILENAME: Final = "ent-one-panel.js"
+ICONS_FILENAME: Final = "ent-one-icons.js"
+PANEL_ICON: Final = "ent_one:panda"
 PANEL_URL_PATH: Final = "ent-one"

@@ -10,6 +10,8 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/custom_components/ent_one/brand/icon.png" alt="ENT ONE" width="120"></p>
 
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/docs/one-logo.png" alt="ONE" height="60"></p>
+
 Home Assistant integration for **ENT ONE**, the digital workspace of French primary schools built on the [Edifice](https://edifice.io) platform: liaison book, homework, messages, news and school calendar, with a Lovelace card and a sidebar panel included.
 
 [![Open your Home Assistant instance and open a repository inside the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-ent-one&category=integration)
@@ -114,7 +116,7 @@ type: custom:ent-one-card
 | `max_items` | `5` | Items per section |
 | `language` | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
-Click a row with a chevron to unfold it: the text of a word, a homework or a news item, the description of an event, a link to the ENT messaging for a message (its body is not read, which would mark it read in the ENT); a click elsewhere folds it back. A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
+Click a row with a chevron to unfold it: the text of a word, a homework or a news item, the description of an event, the full text of a message (loaded when unfolded, which marks it read in the ENT); a click elsewhere folds it back. Attachments, and links to the ENT's documents in a text, appear as buttons: they open through Home Assistant with a link signed for two minutes, PDF and images in a new tab, other files as a download. A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
 
 **Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. It is shown to administrators only (a child with a Home Assistant account must not sign their own words); other users see the words to sign without the button. The check box of a homework marks it done (or not done) in the ENT.
 
@@ -139,7 +141,7 @@ The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab pe
 | Home | The three counts, words to sign, next homework, calendar and news |
 | Homework | Homework by due day, filtered by notebook, with its text; done ones can be hidden |
 | Liaison book | Every recent word with its text, to sign |
-| Messages | The last messages of the inbox, and a link to the ENT's messaging |
+| Messages | The last messages of the inbox, unfolded to their text and attachments, and a link to the ENT's messaging |
 | News | The school news in full |
 | Settings | The account options; only administrators can change them |
 
@@ -222,7 +224,7 @@ The panel, Home and Homework tabs:
 
 ## How it works
 
-The integration logs in like the ENT's web page (`POST /auth/login`, session cookie in its own cookie jar, `X-XSRF-TOKEN` on writes) and reads, at each update: the account (`/auth/oauth2/userinfo`), the unread count and last inbox messages (`/conversation`), the liaison book of each child (`/schoolbook`), the homework notebooks and their done statuses (`/homeworks`), the news (`/actualites`) and the calendars (`/calendar`). A lost session (401 or a redirect) triggers one silent re-login and one replay; refused credentials stop every attempt and start a reauthentication. An application missing from an ENT, or failing once, keeps its last content and is listed in the sensors' `stale` attribute; the card then shows *Partly updated*.
+The integration logs in like the ENT's web page (`POST /auth/login`, session cookie in its own cookie jar, `X-XSRF-TOKEN` on writes) and reads, at each update: the account (`/auth/oauth2/userinfo`), the unread count and last inbox messages (`/conversation`), the liaison book of each child (`/schoolbook`), the homework notebooks and their done statuses (`/homeworks`), the news (`/actualites`) and the calendars (`/calendar`). A message is read (`/conversation/api/messages/{id}`) only when you unfold it, and a file is fetched only when you open it, through `/api/ent_one/file/<entry_id>` (Home Assistant login required, only ENT document paths, 25 MB at most). A lost session (401 or a redirect) triggers one silent re-login and one replay; refused credentials stop every attempt and start a reauthentication. An application missing from an ENT, or failing once, keeps its last content and is listed in the sensors' `stale` attribute; the card then shows *Partly updated*.
 
 ## Development
 
