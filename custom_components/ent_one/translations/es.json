@@ -7,7 +7,12 @@
         "data": {
           "url": "Dirección del ENT",
           "username": "Usuario",
-          "password": "Contraseña"
+          "password": "Contraseña",
+          "password_secret": "Secreto de la contraseña"
+        },
+        "data_description": {
+          "password": "Déjalo vacío para leerla de secrets.yaml.",
+          "password_secret": "Nombre de la entrada de secrets.yaml que contiene la contraseña, por ejemplo ent_one_password. Se vuelve a leer en cada actualización: tras un cambio de contraseña, basta con editar el secreto."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Contraseña"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "El ENT rechazó la contraseña del secreto {secret} ({username}). Actualízala en secrets.yaml y confirma."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Cambia la contraseña de {username} o la entrada de secrets.yaml que la contiene.",
+        "data": {
+          "password": "Contraseña",
+          "password_secret": "Secreto de la contraseña"
+        },
+        "data_description": {
+          "password": "Déjalo vacío para leerla de secrets.yaml.",
+          "password_secret": "Nombre de la entrada de secrets.yaml que contiene la contraseña, por ejemplo ent_one_password. Se vuelve a leer en cada actualización: tras un cambio de contraseña, basta con editar el secreto."
+        }
       }
     },
     "error": {
       "invalid_url": "Dirección no válida.",
       "invalid_auth": "Usuario o contraseña no válidos.",
       "action_required": "El ENT pide primero una acción (nuevas condiciones, cambio de contraseña). Inicia sesión una vez en un navegador y vuelve a intentarlo.",
-      "cannot_connect": "No se puede contactar con el ENT. Comprueba la dirección y vuelve a intentarlo."
+      "cannot_connect": "No se puede contactar con el ENT. Comprueba la dirección y vuelve a intentarlo.",
+      "password_or_secret": "Introduce una contraseña o un nombre de secreto, no ambos.",
+      "secret_not_found": "Esta entrada no está en secrets.yaml.",
+      "wrong_account": "Esta contraseña pertenece a otra cuenta."
     },
     "abort": {
       "already_configured": "Esta cuenta ya está configurada.",
       "reauth_successful": "Contraseña actualizada.",
-      "wrong_account": "Esta contraseña pertenece a otra cuenta."
+      "wrong_account": "Esta contraseña pertenece a otra cuenta.",
+      "reconfigure_successful": "Ajustes de contraseña actualizados."
     }
   },
   "options": {

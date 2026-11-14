@@ -46,6 +46,9 @@ class FakeApi:
         ]
         self.news_fails = False
 
+    def update_password(self, password: str) -> None:
+        self.password = password
+
     async def login(self) -> None:
         if self.password != "secret":
             raise EntAuthError("refused")
@@ -252,3 +255,63 @@ async def test_settings_websocket(hass: HomeAssistant, api, entry, hass_ws_clien
     assert msg["success"]
     await hass.async_block_till_done()
     assert PANEL_URL_PATH not in hass.data[frontend.DATA_PANELS]
+
+
+def _secrets(hass: HomeAssistant, text: str) -> None:
+    with open(hass.config.path("secrets.yaml"), "w", encoding="utf-8") as f:
+        f.write(text)
+
+
+async def test_config_flow_with_secret(hass: HomeAssistant, api) -> None:
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    both = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {CONF_URL: URL, CONF_USERNAME: "parent", CONF_PASSWORD: "secret", "password_secret": "ent_one_password"},
+    )
+    assert both["errors"] == {"base": "password_or_secret"}
+    missing = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_URL: URL, CONF_USERNAME: "parent", "password_secret": "ent_one_password"}
+    )
+    assert missing["errors"] == {"base": "secret_not_found"}
+    await hass.async_add_executor_job(_secrets, hass, "ent_one_password: secret\n")
+    with patch("custom_components.ent_one.async_setup_entry", return_value=True):
+        ok = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {CONF_URL: URL, CONF_USERNAME: "parent", "password_secret": "!secret ent_one_password"}
+        )
+    assert ok["type"] is FlowResultType.CREATE_ENTRY
+    assert ok["data"] == {CONF_URL: URL, CONF_USERNAME: "parent", "password_secret": "ent_one_password"}
+
+
+async def test_secret_read_again_at_each_update(hass: HomeAssistant, api) -> None:
+    """A refused password stops the account until the secret is edited; the next update then works alone."""
+    await hass.async_add_executor_job(_secrets, hass, "ent_one_password: secret\n")
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={CONF_URL: URL, CONF_USERNAME: "parent", "password_secret": "ent_one_password"},
+        unique_id="ent.example.fr_u1",
+    )
+    entry.add_to_hass(hass)
+    await _setup(hass, entry)
+    assert entry.state is ConfigEntryState.LOADED
+    coordinator = entry.runtime_data
+    await hass.async_add_executor_job(_secrets, hass, "ent_one_password: old\n")
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert not coordinator.last_update_success
+    flows = hass.config_entries.flow.async_progress_by_handler(DOMAIN)
+    assert [f["step_id"] for f in flows] == ["reauth_secret"]
+    await hass.async_add_executor_job(_secrets, hass, "ent_one_password: secret\n")
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert coordinator.last_update_success
+    assert hass.config_entries.flow.async_progress_by_handler(DOMAIN) == []
+
+
+async def test_reconfigure_switches_to_a_secret(hass: HomeAssistant, api, entry) -> None:
+    await _setup(hass, entry)
+    await hass.async_add_executor_job(_secrets, hass, "ent_pw: secret\n")
+    result = await entry.start_reconfigure_flow(hass)
+    done = await hass.config_entries.flow.async_configure(result["flow_id"], {"password_secret": "ent_pw"})
+    assert done["reason"] == "reconfigure_successful"
+    assert CONF_PASSWORD not in entry.data
+    assert entry.data["password_secret"] == "ent_pw"

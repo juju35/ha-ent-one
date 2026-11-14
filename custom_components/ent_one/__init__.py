@@ -12,9 +12,9 @@ from homeassistant.components import frontend, panel_custom, websocket_api
 from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import CONF_PASSWORD, CONF_URL, CONF_USERNAME, EVENT_HOMEASSISTANT_STARTED, Platform
+from homeassistant.const import CONF_URL, CONF_USERNAME, EVENT_HOMEASSISTANT_STARTED, Platform
 from homeassistant.core import Event, HomeAssistant, ServiceCall, callback
-from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
+from homeassistant.exceptions import ConfigEntryNotReady, HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
@@ -35,6 +35,7 @@ from .const import (
     SERVICE_SIGN_WORD,
 )
 from .coordinator import EntConfigEntry, EntCoordinator
+from .secret import SecretNotFoundError, async_password
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -164,8 +165,12 @@ async def _async_update_panel(hass: HomeAssistant, setting_up: EntConfigEntry) -
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: EntConfigEntry) -> bool:
+    try:
+        password = await async_password(hass, entry.data)
+    except SecretNotFoundError as err:
+        raise ConfigEntryNotReady(str(err)) from err
     session = new_session(hass)
-    api = EntApi(session, entry.data[CONF_URL], entry.data[CONF_USERNAME], entry.data[CONF_PASSWORD])
+    api = EntApi(session, entry.data[CONF_URL], entry.data[CONF_USERNAME], password)
     coordinator = EntCoordinator(hass, entry, api)
     # Created during the entry setup, the session is detached by Home Assistant when the entry unloads.
     await coordinator.async_config_entry_first_refresh()

@@ -29,6 +29,7 @@ from .const import (
     MIN_SCAN_INTERVAL,
     NEWS_KEPT,
 )
+from .secret import SecretNotFoundError, async_password
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -116,17 +117,33 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         self.notify_services: list[str] = list(entry.options.get(CONF_NOTIFY, []))
         # Ids already seen per kind; None until the first successful update, so nothing fires at startup.
         self._seen: dict[str, set[str]] | None = None
+        self._auth_failed = False
 
     async def _async_update_data(self) -> EntData:
         try:
-            return await self._read()
-        except EntAuthError as err:
-            # The client won't log in again on its own: a reauth with new credentials is needed.
-            raise ConfigEntryAuthFailed(str(err)) from err
-        except EntActionRequiredError as err:
+            # A password kept in secrets.yaml is read again each time: editing the secret is enough after a change.
+            self.api.update_password(await async_password(self.hass, self.config_entry.data))
+        except SecretNotFoundError as err:
             raise UpdateFailed(str(err)) from err
+        try:
+            data = await self._read()
+        except EntAuthError as err:
+            # The client won't log in again with the same password: a reauth (or an edited secret) is needed.
+            self._auth_failed = True
+            raise ConfigEntryAuthFailed(str(err)) from err
         except EntError as err:
             raise UpdateFailed(str(err)) from err
+        if self._auth_failed:
+            # Back in after a refusal (the secret was edited): the waiting reauth form is no longer needed.
+            self._auth_failed = False
+            self._abort_reauth()
+        return data
+
+    def _abort_reauth(self) -> None:
+        for flow in self.hass.config_entries.flow.async_progress_by_handler(DOMAIN):
+            context = flow["context"]
+            if context.get("source") == "reauth" and context.get("entry_id") == self.config_entry.entry_id:
+                self.hass.config_entries.flow.async_abort(flow["flow_id"])
 
     async def _read(self) -> EntData:
         previous = self.data or EntData()

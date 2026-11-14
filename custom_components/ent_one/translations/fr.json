@@ -7,7 +7,12 @@
         "data": {
           "url": "Adresse de l'ENT",
           "username": "Identifiant",
-          "password": "Mot de passe"
+          "password": "Mot de passe",
+          "password_secret": "Secret du mot de passe"
+        },
+        "data_description": {
+          "password": "Laissez vide pour le lire dans secrets.yaml.",
+          "password_secret": "Nom de l'entrée de secrets.yaml qui contient le mot de passe, par exemple ent_one_password. Il est relu à chaque mise à jour : après un changement de mot de passe, il suffit de modifier le secret."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Mot de passe"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "L'ENT a refusé le mot de passe du secret {secret} ({username}). Mettez-le à jour dans secrets.yaml, puis validez."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Modifiez le mot de passe de {username}, ou l'entrée de secrets.yaml qui le contient.",
+        "data": {
+          "password": "Mot de passe",
+          "password_secret": "Secret du mot de passe"
+        },
+        "data_description": {
+          "password": "Laissez vide pour le lire dans secrets.yaml.",
+          "password_secret": "Nom de l'entrée de secrets.yaml qui contient le mot de passe, par exemple ent_one_password. Il est relu à chaque mise à jour : après un changement de mot de passe, il suffit de modifier le secret."
+        }
       }
     },
     "error": {
       "invalid_url": "Adresse invalide.",
       "invalid_auth": "Identifiant ou mot de passe invalide.",
       "action_required": "L'ENT demande d'abord une action (nouvelles conditions, changement de mot de passe). Connectez-vous une fois dans un navigateur, puis réessayez.",
-      "cannot_connect": "Impossible de joindre l'ENT. Vérifiez l'adresse et réessayez."
+      "cannot_connect": "Impossible de joindre l'ENT. Vérifiez l'adresse et réessayez.",
+      "password_or_secret": "Saisissez soit un mot de passe, soit un nom de secret.",
+      "secret_not_found": "Cette entrée est absente de secrets.yaml.",
+      "wrong_account": "Ce mot de passe appartient à un autre compte."
     },
     "abort": {
       "already_configured": "Ce compte est déjà configuré.",
       "reauth_successful": "Mot de passe mis à jour.",
-      "wrong_account": "Ce mot de passe appartient à un autre compte."
+      "wrong_account": "Ce mot de passe appartient à un autre compte.",
+      "reconfigure_successful": "Mot de passe mis à jour."
     }
   },
   "options": {

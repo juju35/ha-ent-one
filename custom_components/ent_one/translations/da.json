@@ -7,7 +7,12 @@
         "data": {
           "url": "ENT-adresse",
           "username": "Brugernavn",
-          "password": "Adgangskode"
+          "password": "Adgangskode",
+          "password_secret": "Adgangskode-secret"
+        },
+        "data_description": {
+          "password": "Lad stå tomt for at læse den fra secrets.yaml.",
+          "password_secret": "Navnet på posten i secrets.yaml med adgangskoden, for eksempel ent_one_password. Den læses igen ved hver opdatering: efter en ny adgangskode er det nok at ændre secret."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Adgangskode"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT afviste adgangskoden i secret {secret} ({username}). Opdater den i secrets.yaml, og bekræft."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Skift adgangskoden for {username} eller posten i secrets.yaml, der indeholder den.",
+        "data": {
+          "password": "Adgangskode",
+          "password_secret": "Adgangskode-secret"
+        },
+        "data_description": {
+          "password": "Lad stå tomt for at læse den fra secrets.yaml.",
+          "password_secret": "Navnet på posten i secrets.yaml med adgangskoden, for eksempel ent_one_password. Den læses igen ved hver opdatering: efter en ny adgangskode er det nok at ændre secret."
+        }
       }
     },
     "error": {
       "invalid_url": "Ugyldig adresse.",
       "invalid_auth": "Ugyldigt brugernavn eller adgangskode.",
       "action_required": "ENT kræver først en handling (nye vilkår, ny adgangskode). Log ind én gang i en browser, og prøv igen.",
-      "cannot_connect": "Kan ikke nå ENT. Kontroller adressen, og prøv igen."
+      "cannot_connect": "Kan ikke nå ENT. Kontroller adressen, og prøv igen.",
+      "password_or_secret": "Angiv enten en adgangskode eller et secret-navn.",
+      "secret_not_found": "Denne post mangler i secrets.yaml.",
+      "wrong_account": "Denne adgangskode hører til en anden konto."
     },
     "abort": {
       "already_configured": "Denne konto er allerede konfigureret.",
       "reauth_successful": "Adgangskoden er opdateret.",
-      "wrong_account": "Denne adgangskode hører til en anden konto."
+      "wrong_account": "Denne adgangskode hører til en anden konto.",
+      "reconfigure_successful": "Adgangskodeindstillinger opdateret."
     }
   },
   "options": {

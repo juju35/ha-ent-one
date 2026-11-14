@@ -16,12 +16,14 @@ custom_components/ent_one/
 ├── sensor.py        # unread_messages, words_to_sign, homework, news (count + list attribute), last_update (account, children, events, url)
 ├── calendar.py      # School: ENT calendar events + homework on its due date (all-day)
 ├── todo.py          # One to-do list per homework notebook (added when a new notebook shows up); ticking calls PUT /homeworks/{book}/entry/status
-├── config_flow.py   # URL + username + password, reauth (password), options (scan_interval ≥ 10, homework_days, notify_services, show_panel)
+├── secret.py        # async_password(): the stored password, or the secrets.yaml entry named by password_secret (read at every update)
+├── config_flow.py   # URL + username + password or password_secret, reauth (password, or reauth_secret: just confirm), reconfigure, options (scan_interval ≥ 10, homework_days, notify_services, show_panel)
 ├── diagnostics.py   # Counts only: no names, no contents
 └── frontend/        # Vanilla JS, no dependencies. The panel imports the card file and reuses window.EntOne (helpers, i18n, row renderers)
 ```
 
 ## ENT routes
+- With password_secret, the coordinator calls api.update_password() before each update: an edited secret clears the refusal flag, and a success after a refusal aborts the pending reauth flow.
 - Login `POST /auth/login` form `email`, `password`, `callBack`, `details`, no redirect follow. Redirect to `/auth/login` or a 200 = refused credentials (flag set, no retry until reauth). A redirect containing revalidate/cgu/mfa/… = action required in a browser. The `XSRF-TOKEN` cookie comes with `/timeline/timeline`.
 - Session lost: 401, or on a read any redirect to the ENT itself or to an auth page; on a write only 401 or an auth page.
 - `GET /auth/oauth2/userinfo` (userId, username, type, children {id: {firstName, lastName}}, structureNames, classNames — may be null).

@@ -9,6 +9,10 @@ DOMAIN: Final = "ent_one"
 # Instance of the académie de La Réunion, the one ent1-mcp is tested on: only a placeholder in the form.
 DEFAULT_URL: Final = "https://ent1d.ac-reunion.fr"
 
+# Name of a secrets.yaml entry holding the password, read again at every update (instead of storing the password).
+CONF_PASSWORD_SECRET: Final = "password_secret"
+SECRETS_FILE: Final = "secrets.yaml"
+
 CONF_SCAN_INTERVAL: Final = "scan_interval"
 CONF_HOMEWORK_DAYS: Final = "homework_days"
 # Notify actions (notify.mobile_app_…) told about new messages, words of the liaison book and homework.

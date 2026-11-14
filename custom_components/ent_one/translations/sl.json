@@ -7,7 +7,12 @@
         "data": {
           "url": "Naslov ENT",
           "username": "Uporabniško ime",
-          "password": "Geslo"
+          "password": "Geslo",
+          "password_secret": "Skrivnost gesla"
+        },
+        "data_description": {
+          "password": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "password_secret": "Ime vnosa v secrets.yaml z geslom, na primer ent_one_password. Prebere se ob vsaki posodobitvi: po spremembi gesla je dovolj urediti skrivnost."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Geslo"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT je zavrnil geslo iz skrivnosti {secret} ({username}). Posodobite ga v secrets.yaml in potrdite."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Spremenite geslo za {username} ali vnos v secrets.yaml, ki ga vsebuje.",
+        "data": {
+          "password": "Geslo",
+          "password_secret": "Skrivnost gesla"
+        },
+        "data_description": {
+          "password": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "password_secret": "Ime vnosa v secrets.yaml z geslom, na primer ent_one_password. Prebere se ob vsaki posodobitvi: po spremembi gesla je dovolj urediti skrivnost."
+        }
       }
     },
     "error": {
       "invalid_url": "Neveljaven naslov.",
       "invalid_auth": "Neveljavno uporabniško ime ali geslo.",
       "action_required": "ENT najprej zahteva dejanje (novi pogoji, sprememba gesla). Enkrat se prijavite v brskalniku in poskusite znova.",
-      "cannot_connect": "ENT ni dosegljiv. Preverite naslov in poskusite znova."
+      "cannot_connect": "ENT ni dosegljiv. Preverite naslov in poskusite znova.",
+      "password_or_secret": "Vnesite geslo ali ime skrivnosti.",
+      "secret_not_found": "Tega vnosa ni v secrets.yaml.",
+      "wrong_account": "To geslo pripada drugemu računu."
     },
     "abort": {
       "already_configured": "Ta račun je že nastavljen.",
       "reauth_successful": "Geslo posodobljeno.",
-      "wrong_account": "To geslo pripada drugemu računu."
+      "wrong_account": "To geslo pripada drugemu računu.",
+      "reconfigure_successful": "Nastavitve gesla posodobljene."
     }
   },
   "options": {

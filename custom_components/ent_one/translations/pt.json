@@ -7,7 +7,12 @@
         "data": {
           "url": "Endereço do ENT",
           "username": "Utilizador",
-          "password": "Palavra-passe"
+          "password": "Palavra-passe",
+          "password_secret": "Segredo da palavra-passe"
+        },
+        "data_description": {
+          "password": "Deixe vazio para a ler de secrets.yaml.",
+          "password_secret": "Nome da entrada de secrets.yaml que contém a palavra-passe, por exemplo ent_one_password. É lida de novo a cada atualização: depois de mudar a palavra-passe, basta editar o segredo."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Palavra-passe"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "O ENT recusou a palavra-passe do segredo {secret} ({username}). Atualize-a em secrets.yaml e confirme."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Altere a palavra-passe de {username}, ou a entrada de secrets.yaml que a contém.",
+        "data": {
+          "password": "Palavra-passe",
+          "password_secret": "Segredo da palavra-passe"
+        },
+        "data_description": {
+          "password": "Deixe vazio para a ler de secrets.yaml.",
+          "password_secret": "Nome da entrada de secrets.yaml que contém a palavra-passe, por exemplo ent_one_password. É lida de novo a cada atualização: depois de mudar a palavra-passe, basta editar o segredo."
+        }
       }
     },
     "error": {
       "invalid_url": "Endereço inválido.",
       "invalid_auth": "Utilizador ou palavra-passe inválidos.",
       "action_required": "O ENT pede primeiro uma ação (novas condições, alteração da palavra-passe). Inicie sessão uma vez num navegador e tente de novo.",
-      "cannot_connect": "Não é possível contactar o ENT. Verifique o endereço e tente de novo."
+      "cannot_connect": "Não é possível contactar o ENT. Verifique o endereço e tente de novo.",
+      "password_or_secret": "Introduza uma palavra-passe ou o nome de um segredo.",
+      "secret_not_found": "Esta entrada não existe em secrets.yaml.",
+      "wrong_account": "Esta palavra-passe pertence a outra conta."
     },
     "abort": {
       "already_configured": "Esta conta já está configurada.",
       "reauth_successful": "Palavra-passe atualizada.",
-      "wrong_account": "Esta palavra-passe pertence a outra conta."
+      "wrong_account": "Esta palavra-passe pertence a outra conta.",
+      "reconfigure_successful": "Definições da palavra-passe atualizadas."
     }
   },
   "options": {

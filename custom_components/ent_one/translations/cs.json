@@ -7,7 +7,12 @@
         "data": {
           "url": "Adresa ENT",
           "username": "Uživatelské jméno",
-          "password": "Heslo"
+          "password": "Heslo",
+          "password_secret": "Tajemství hesla"
+        },
+        "data_description": {
+          "password": "Ponechte prázdné, chcete-li ho číst ze secrets.yaml.",
+          "password_secret": "Název položky v secrets.yaml s heslem, například ent_one_password. Čte se při každé aktualizaci: po změně hesla stačí upravit tajemství."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Heslo"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT odmítl heslo z tajemství {secret} ({username}). Aktualizujte ho v secrets.yaml a potvrďte."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Změňte heslo uživatele {username} nebo položku v secrets.yaml, která ho obsahuje.",
+        "data": {
+          "password": "Heslo",
+          "password_secret": "Tajemství hesla"
+        },
+        "data_description": {
+          "password": "Ponechte prázdné, chcete-li ho číst ze secrets.yaml.",
+          "password_secret": "Název položky v secrets.yaml s heslem, například ent_one_password. Čte se při každé aktualizaci: po změně hesla stačí upravit tajemství."
+        }
       }
     },
     "error": {
       "invalid_url": "Neplatná adresa.",
       "invalid_auth": "Neplatné uživatelské jméno nebo heslo.",
       "action_required": "ENT nejprve vyžaduje akci (nové podmínky, změna hesla). Jednou se přihlaste v prohlížeči a zkuste to znovu.",
-      "cannot_connect": "ENT není dostupný. Zkontrolujte adresu a zkuste to znovu."
+      "cannot_connect": "ENT není dostupný. Zkontrolujte adresu a zkuste to znovu.",
+      "password_or_secret": "Zadejte buď heslo, nebo název tajemství.",
+      "secret_not_found": "Tato položka v secrets.yaml chybí.",
+      "wrong_account": "Toto heslo patří jinému účtu."
     },
     "abort": {
       "already_configured": "Tento účet je již nastaven.",
       "reauth_successful": "Heslo bylo aktualizováno.",
-      "wrong_account": "Toto heslo patří jinému účtu."
+      "wrong_account": "Toto heslo patří jinému účtu.",
+      "reconfigure_successful": "Nastavení hesla bylo aktualizováno."
     }
   },
   "options": {

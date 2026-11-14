@@ -7,7 +7,12 @@
         "data": {
           "url": "Adresa ENT",
           "username": "Nume de utilizator",
-          "password": "Parolă"
+          "password": "Parolă",
+          "password_secret": "Secretul parolei"
+        },
+        "data_description": {
+          "password": "Lasă gol pentru a o citi din secrets.yaml.",
+          "password_secret": "Numele intrării din secrets.yaml care conține parola, de exemplu ent_one_password. Este recitită la fiecare actualizare: după schimbarea parolei, ajunge să modifici secretul."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Parolă"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT-ul a refuzat parola din secretul {secret} ({username}). Actualizeaz-o în secrets.yaml, apoi confirmă."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Schimbă parola lui {username} sau intrarea din secrets.yaml care o conține.",
+        "data": {
+          "password": "Parolă",
+          "password_secret": "Secretul parolei"
+        },
+        "data_description": {
+          "password": "Lasă gol pentru a o citi din secrets.yaml.",
+          "password_secret": "Numele intrării din secrets.yaml care conține parola, de exemplu ent_one_password. Este recitită la fiecare actualizare: după schimbarea parolei, ajunge să modifici secretul."
+        }
       }
     },
     "error": {
       "invalid_url": "Adresă nevalidă.",
       "invalid_auth": "Nume de utilizator sau parolă nevalide.",
       "action_required": "ENT-ul cere mai întâi o acțiune (condiții noi, schimbarea parolei). Conectează-te o dată într-un browser, apoi încearcă din nou.",
-      "cannot_connect": "ENT-ul nu poate fi contactat. Verifică adresa și încearcă din nou."
+      "cannot_connect": "ENT-ul nu poate fi contactat. Verifică adresa și încearcă din nou.",
+      "password_or_secret": "Introdu fie o parolă, fie numele unui secret.",
+      "secret_not_found": "Această intrare lipsește din secrets.yaml.",
+      "wrong_account": "Această parolă aparține altui cont."
     },
     "abort": {
       "already_configured": "Acest cont este deja configurat.",
       "reauth_successful": "Parolă actualizată.",
-      "wrong_account": "Această parolă aparține altui cont."
+      "wrong_account": "Această parolă aparține altui cont.",
+      "reconfigure_successful": "Setările parolei au fost actualizate."
     }
   },
   "options": {

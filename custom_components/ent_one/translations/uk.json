@@ -7,7 +7,12 @@
         "data": {
           "url": "Адреса ENT",
           "username": "Ім'я користувача",
-          "password": "Пароль"
+          "password": "Пароль",
+          "password_secret": "Секрет пароля"
+        },
+        "data_description": {
+          "password": "Залиште порожнім, щоб читати його з secrets.yaml.",
+          "password_secret": "Ім'я запису в secrets.yaml з паролем, наприклад ent_one_password. Він перечитується під час кожного оновлення: після зміни пароля досить змінити секрет."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Пароль"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT відхилив пароль із секрету {secret} ({username}). Оновіть його в secrets.yaml і підтвердьте."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Змініть пароль {username} або запис у secrets.yaml, де він зберігається.",
+        "data": {
+          "password": "Пароль",
+          "password_secret": "Секрет пароля"
+        },
+        "data_description": {
+          "password": "Залиште порожнім, щоб читати його з secrets.yaml.",
+          "password_secret": "Ім'я запису в secrets.yaml з паролем, наприклад ent_one_password. Він перечитується під час кожного оновлення: після зміни пароля досить змінити секрет."
+        }
       }
     },
     "error": {
       "invalid_url": "Неправильна адреса.",
       "invalid_auth": "Неправильне ім'я користувача або пароль.",
       "action_required": "ENT спершу вимагає дію (нові умови, зміна пароля). Увійдіть один раз у браузері й повторіть спробу.",
-      "cannot_connect": "Не вдається зв'язатися з ENT. Перевірте адресу й повторіть спробу."
+      "cannot_connect": "Не вдається зв'язатися з ENT. Перевірте адресу й повторіть спробу.",
+      "password_or_secret": "Введіть або пароль, або ім'я секрету.",
+      "secret_not_found": "Цього запису немає в secrets.yaml.",
+      "wrong_account": "Цей пароль належить іншому обліковому запису."
     },
     "abort": {
       "already_configured": "Цей обліковий запис уже налаштовано.",
       "reauth_successful": "Пароль оновлено.",
-      "wrong_account": "Цей пароль належить іншому обліковому запису."
+      "wrong_account": "Цей пароль належить іншому обліковому запису.",
+      "reconfigure_successful": "Налаштування пароля оновлено."
     }
   },
   "options": {

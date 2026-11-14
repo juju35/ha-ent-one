@@ -7,7 +7,12 @@
         "data": {
           "url": "Adres ENT",
           "username": "Nazwa użytkownika",
-          "password": "Hasło"
+          "password": "Hasło",
+          "password_secret": "Sekret hasła"
+        },
+        "data_description": {
+          "password": "Pozostaw puste, aby odczytać je z secrets.yaml.",
+          "password_secret": "Nazwa wpisu w secrets.yaml z hasłem, na przykład ent_one_password. Jest odczytywany przy każdej aktualizacji: po zmianie hasła wystarczy zmienić sekret."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Hasło"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT odrzucił hasło z sekretu {secret} ({username}). Zaktualizuj je w secrets.yaml i zatwierdź."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Zmień hasło użytkownika {username} lub wpis w secrets.yaml, który je zawiera.",
+        "data": {
+          "password": "Hasło",
+          "password_secret": "Sekret hasła"
+        },
+        "data_description": {
+          "password": "Pozostaw puste, aby odczytać je z secrets.yaml.",
+          "password_secret": "Nazwa wpisu w secrets.yaml z hasłem, na przykład ent_one_password. Jest odczytywany przy każdej aktualizacji: po zmianie hasła wystarczy zmienić sekret."
+        }
       }
     },
     "error": {
       "invalid_url": "Nieprawidłowy adres.",
       "invalid_auth": "Nieprawidłowa nazwa użytkownika lub hasło.",
       "action_required": "ENT wymaga najpierw działania (nowy regulamin, zmiana hasła). Zaloguj się raz w przeglądarce i spróbuj ponownie.",
-      "cannot_connect": "Nie można połączyć się z ENT. Sprawdź adres i spróbuj ponownie."
+      "cannot_connect": "Nie można połączyć się z ENT. Sprawdź adres i spróbuj ponownie.",
+      "password_or_secret": "Wpisz hasło albo nazwę sekretu.",
+      "secret_not_found": "Tego wpisu brakuje w secrets.yaml.",
+      "wrong_account": "To hasło należy do innego konta."
     },
     "abort": {
       "already_configured": "To konto jest już skonfigurowane.",
       "reauth_successful": "Hasło zaktualizowane.",
-      "wrong_account": "To hasło należy do innego konta."
+      "wrong_account": "To hasło należy do innego konta.",
+      "reconfigure_successful": "Ustawienia hasła zaktualizowane."
     }
   },
   "options": {

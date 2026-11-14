@@ -7,7 +7,12 @@
         "data": {
           "url": "ENT címe",
           "username": "Felhasználónév",
-          "password": "Jelszó"
+          "password": "Jelszó",
+          "password_secret": "Jelszó titok"
+        },
+        "data_description": {
+          "password": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "password_secret": "A jelszót tartalmazó secrets.yaml bejegyzés neve, például ent_one_password. Minden frissítéskor újraolvassa: jelszócsere után elég a titkot módosítani."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Jelszó"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "Az ENT elutasította a(z) {secret} titok jelszavát ({username}). Frissítsd a secrets.yaml fájlban, majd küldd el."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Módosítsd {username} jelszavát, vagy a jelszót tartalmazó secrets.yaml bejegyzést.",
+        "data": {
+          "password": "Jelszó",
+          "password_secret": "Jelszó titok"
+        },
+        "data_description": {
+          "password": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "password_secret": "A jelszót tartalmazó secrets.yaml bejegyzés neve, például ent_one_password. Minden frissítéskor újraolvassa: jelszócsere után elég a titkot módosítani."
+        }
       }
     },
     "error": {
       "invalid_url": "Érvénytelen cím.",
       "invalid_auth": "Érvénytelen felhasználónév vagy jelszó.",
       "action_required": "Az ENT előbb egy műveletet kér (új feltételek, jelszócsere). Jelentkezz be egyszer böngészőben, majd próbáld újra.",
-      "cannot_connect": "Az ENT nem érhető el. Ellenőrizd a címet, és próbáld újra."
+      "cannot_connect": "Az ENT nem érhető el. Ellenőrizd a címet, és próbáld újra.",
+      "password_or_secret": "Adj meg vagy egy jelszót, vagy egy titok nevét.",
+      "secret_not_found": "Ez a bejegyzés hiányzik a secrets.yaml fájlból.",
+      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik."
     },
     "abort": {
       "already_configured": "Ez a fiók már be van állítva.",
       "reauth_successful": "Jelszó frissítve.",
-      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik."
+      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik.",
+      "reconfigure_successful": "A jelszó beállításai frissítve."
     }
   },
   "options": {

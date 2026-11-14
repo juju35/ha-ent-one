@@ -7,7 +7,12 @@
         "data": {
           "url": "Адрес на ENT",
           "username": "Потребителско име",
-          "password": "Парола"
+          "password": "Парола",
+          "password_secret": "Таен ключ за паролата"
+        },
+        "data_description": {
+          "password": "Оставете празно, за да се чете от secrets.yaml.",
+          "password_secret": "Име на записа в secrets.yaml с паролата, например ent_one_password. Чете се отново при всяко обновяване: след смяна на паролата е достатъчно да промените записа."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Парола"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT отказа паролата от записа {secret} ({username}). Обновете я в secrets.yaml и потвърдете."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Сменете паролата на {username} или записа в secrets.yaml, който я съдържа.",
+        "data": {
+          "password": "Парола",
+          "password_secret": "Таен ключ за паролата"
+        },
+        "data_description": {
+          "password": "Оставете празно, за да се чете от secrets.yaml.",
+          "password_secret": "Име на записа в secrets.yaml с паролата, например ent_one_password. Чете се отново при всяко обновяване: след смяна на паролата е достатъчно да промените записа."
+        }
       }
     },
     "error": {
       "invalid_url": "Невалиден адрес.",
       "invalid_auth": "Невалидно потребителско име или парола.",
       "action_required": "ENT първо изисква действие (нови условия, смяна на паролата). Влезте веднъж в браузър и опитайте отново.",
-      "cannot_connect": "Няма връзка с ENT. Проверете адреса и опитайте отново."
+      "cannot_connect": "Няма връзка с ENT. Проверете адреса и опитайте отново.",
+      "password_or_secret": "Въведете или парола, или име на запис.",
+      "secret_not_found": "Този запис липсва в secrets.yaml.",
+      "wrong_account": "Тази парола принадлежи на друг акаунт."
     },
     "abort": {
       "already_configured": "Този акаунт вече е настроен.",
       "reauth_successful": "Паролата е обновена.",
-      "wrong_account": "Тази парола принадлежи на друг акаунт."
+      "wrong_account": "Тази парола принадлежи на друг акаунт.",
+      "reconfigure_successful": "Настройките на паролата са обновени."
     }
   },
   "options": {

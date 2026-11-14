@@ -7,7 +7,12 @@
         "data": {
           "url": "ENT-adress",
           "username": "Användarnamn",
-          "password": "Lösenord"
+          "password": "Lösenord",
+          "password_secret": "Lösenordshemlighet"
+        },
+        "data_description": {
+          "password": "Lämna tomt för att läsa det från secrets.yaml.",
+          "password_secret": "Namnet på posten i secrets.yaml med lösenordet, till exempel ent_one_password. Den läses om vid varje uppdatering: efter ett lösenordsbyte räcker det att ändra hemligheten."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Lösenord"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT avvisade lösenordet i hemligheten {secret} ({username}). Uppdatera det i secrets.yaml och bekräfta."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Ändra lösenordet för {username} eller posten i secrets.yaml som innehåller det.",
+        "data": {
+          "password": "Lösenord",
+          "password_secret": "Lösenordshemlighet"
+        },
+        "data_description": {
+          "password": "Lämna tomt för att läsa det från secrets.yaml.",
+          "password_secret": "Namnet på posten i secrets.yaml med lösenordet, till exempel ent_one_password. Den läses om vid varje uppdatering: efter ett lösenordsbyte räcker det att ändra hemligheten."
+        }
       }
     },
     "error": {
       "invalid_url": "Ogiltig adress.",
       "invalid_auth": "Ogiltigt användarnamn eller lösenord.",
       "action_required": "ENT kräver först en åtgärd (nya villkor, lösenordsbyte). Logga in en gång i en webbläsare och försök igen.",
-      "cannot_connect": "Kan inte nå ENT. Kontrollera adressen och försök igen."
+      "cannot_connect": "Kan inte nå ENT. Kontrollera adressen och försök igen.",
+      "password_or_secret": "Ange antingen ett lösenord eller ett hemlighetsnamn.",
+      "secret_not_found": "Posten saknas i secrets.yaml.",
+      "wrong_account": "Det här lösenordet hör till ett annat konto."
     },
     "abort": {
       "already_configured": "Det här kontot är redan konfigurerat.",
       "reauth_successful": "Lösenordet har uppdaterats.",
-      "wrong_account": "Det här lösenordet hör till ett annat konto."
+      "wrong_account": "Det här lösenordet hör till ett annat konto.",
+      "reconfigure_successful": "Lösenordsinställningarna har uppdaterats."
     }
   },
   "options": {

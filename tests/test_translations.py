@@ -13,7 +13,7 @@ LATIN = re.compile(r"[A-Za-z]")
 # Proper names, brands, codes and units that stay in Latin letters in the Cyrillic text.
 LATIN_IN_CYRILLIC = re.compile(
     r"Home Assistant|ENT ONE|ENT|ÉduConnect|ID|words|config_entry_id|\{\w+\}"
-    r"|notify\.mobile_app_"
+    r"|notify\.mobile_app_|secrets\.yaml|ent_one_password"
 )
 
 

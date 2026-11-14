@@ -7,7 +7,12 @@
         "data": {
           "url": "Adresa ENT-a",
           "username": "Korisničko ime",
-          "password": "Lozinka"
+          "password": "Lozinka",
+          "password_secret": "Tajna lozinke"
+        },
+        "data_description": {
+          "password": "Ostavite prazno da bi se čitala iz secrets.yaml.",
+          "password_secret": "Naziv unosa u secrets.yaml sa lozinkom, na primer ent_one_password. Ponovo se čita pri svakom ažuriranju: posle promene lozinke dovoljno je izmeniti tajnu."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Lozinka"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT je odbio lozinku iz tajne {secret} ({username}). Ažurirajte je u secrets.yaml, pa potvrdite."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Promenite lozinku korisnika {username} ili unos u secrets.yaml koji je sadrži.",
+        "data": {
+          "password": "Lozinka",
+          "password_secret": "Tajna lozinke"
+        },
+        "data_description": {
+          "password": "Ostavite prazno da bi se čitala iz secrets.yaml.",
+          "password_secret": "Naziv unosa u secrets.yaml sa lozinkom, na primer ent_one_password. Ponovo se čita pri svakom ažuriranju: posle promene lozinke dovoljno je izmeniti tajnu."
+        }
       }
     },
     "error": {
       "invalid_url": "Nevažeća adresa.",
       "invalid_auth": "Nevažeće korisničko ime ili lozinka.",
       "action_required": "ENT prvo zahteva radnju (novi uslovi, promena lozinke). Prijavite se jednom u pregledaču i pokušajte ponovo.",
-      "cannot_connect": "ENT nije dostupan. Proverite adresu i pokušajte ponovo."
+      "cannot_connect": "ENT nije dostupan. Proverite adresu i pokušajte ponovo.",
+      "password_or_secret": "Unesite ili lozinku ili naziv tajne.",
+      "secret_not_found": "Ovaj unos nedostaje u secrets.yaml.",
+      "wrong_account": "Ova lozinka pripada drugom nalogu."
     },
     "abort": {
       "already_configured": "Ovaj nalog je već podešen.",
       "reauth_successful": "Lozinka je ažurirana.",
-      "wrong_account": "Ova lozinka pripada drugom nalogu."
+      "wrong_account": "Ova lozinka pripada drugom nalogu.",
+      "reconfigure_successful": "Podešavanja lozinke su ažurirana."
     }
   },
   "options": {

@@ -7,7 +7,12 @@
         "data": {
           "url": "Indirizzo dell'ENT",
           "username": "Nome utente",
-          "password": "Password"
+          "password": "Password",
+          "password_secret": "Segreto della password"
+        },
+        "data_description": {
+          "password": "Lascia vuoto per leggerla da secrets.yaml.",
+          "password_secret": "Nome della voce di secrets.yaml che contiene la password, per esempio ent_one_password. Viene riletta a ogni aggiornamento: dopo un cambio di password basta modificare il segreto."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Password"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "L'ENT ha rifiutato la password del segreto {secret} ({username}). Aggiornala in secrets.yaml, poi conferma."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Modifica la password di {username} o la voce di secrets.yaml che la contiene.",
+        "data": {
+          "password": "Password",
+          "password_secret": "Segreto della password"
+        },
+        "data_description": {
+          "password": "Lascia vuoto per leggerla da secrets.yaml.",
+          "password_secret": "Nome della voce di secrets.yaml che contiene la password, per esempio ent_one_password. Viene riletta a ogni aggiornamento: dopo un cambio di password basta modificare il segreto."
+        }
       }
     },
     "error": {
       "invalid_url": "Indirizzo non valido.",
       "invalid_auth": "Nome utente o password non validi.",
       "action_required": "L'ENT chiede prima un'azione (nuove condizioni, cambio password). Accedi una volta da un browser e riprova.",
-      "cannot_connect": "Impossibile raggiungere l'ENT. Controlla l'indirizzo e riprova."
+      "cannot_connect": "Impossibile raggiungere l'ENT. Controlla l'indirizzo e riprova.",
+      "password_or_secret": "Inserisci una password oppure il nome di un segreto.",
+      "secret_not_found": "Questa voce manca in secrets.yaml.",
+      "wrong_account": "Questa password appartiene a un altro account."
     },
     "abort": {
       "already_configured": "Questo account è già configurato.",
       "reauth_successful": "Password aggiornata.",
-      "wrong_account": "Questa password appartiene a un altro account."
+      "wrong_account": "Questa password appartiene a un altro account.",
+      "reconfigure_successful": "Impostazioni della password aggiornate."
     }
   },
   "options": {

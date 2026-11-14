@@ -7,7 +7,12 @@
         "data": {
           "url": "ENT-Adresse",
           "username": "Benutzername",
-          "password": "Passwort"
+          "password": "Passwort",
+          "password_secret": "Passwort-Secret"
+        },
+        "data_description": {
+          "password": "Leer lassen, um es stattdessen aus secrets.yaml zu lesen.",
+          "password_secret": "Name des Eintrags in secrets.yaml mit dem Passwort, zum Beispiel ent_one_password. Er wird bei jeder Aktualisierung neu gelesen: Nach einer Passwortänderung genügt es, das Secret zu ändern."
         }
       },
       "reauth_confirm": {
@@ -16,18 +21,38 @@
         "data": {
           "password": "Passwort"
         }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "Das ENT hat das Passwort des Secrets {secret} ({username}) abgelehnt. Aktualisiere es in secrets.yaml und bestätige dann."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Ändere das Passwort von {username} oder den Eintrag in secrets.yaml, der es enthält.",
+        "data": {
+          "password": "Passwort",
+          "password_secret": "Passwort-Secret"
+        },
+        "data_description": {
+          "password": "Leer lassen, um es stattdessen aus secrets.yaml zu lesen.",
+          "password_secret": "Name des Eintrags in secrets.yaml mit dem Passwort, zum Beispiel ent_one_password. Er wird bei jeder Aktualisierung neu gelesen: Nach einer Passwortänderung genügt es, das Secret zu ändern."
+        }
       }
     },
     "error": {
       "invalid_url": "Ungültige Adresse.",
       "invalid_auth": "Ungültiger Benutzername oder ungültiges Passwort.",
       "action_required": "Das ENT verlangt zuerst eine Aktion (neue Nutzungsbedingungen, Passwortänderung). Melde dich einmal im Browser an und versuche es erneut.",
-      "cannot_connect": "Das ENT ist nicht erreichbar. Prüfe die Adresse und versuche es erneut."
+      "cannot_connect": "Das ENT ist nicht erreichbar. Prüfe die Adresse und versuche es erneut.",
+      "password_or_secret": "Gib entweder ein Passwort oder einen Secret-Namen ein.",
+      "secret_not_found": "Dieser Eintrag fehlt in secrets.yaml.",
+      "wrong_account": "Dieses Passwort gehört zu einem anderen Konto."
     },
     "abort": {
       "already_configured": "Dieses Konto ist bereits eingerichtet.",
       "reauth_successful": "Passwort aktualisiert.",
-      "wrong_account": "Dieses Passwort gehört zu einem anderen Konto."
+      "wrong_account": "Dieses Passwort gehört zu einem anderen Konto.",
+      "reconfigure_successful": "Passworteinstellungen aktualisiert."
     }
   },
   "options": {
