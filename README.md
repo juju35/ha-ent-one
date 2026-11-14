@@ -10,6 +10,8 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/custom_components/ent_one/brand/icon.png" alt="ENT ONE" width="120"></p>
 
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/docs/one-logo.png" alt="ONE" height="60"></p>
+
 Home Assistant integration for **ENT ONE**, the digital workspace of French primary schools built on the [Edifice](https://edifice.io) platform: liaison book, homework, messages, news and school calendar, with a Lovelace card and a sidebar panel included.
 
 [![Open your Home Assistant instance and open a repository inside the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=juju35&repository=ha-ent-one&category=integration)
