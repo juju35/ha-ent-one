@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 (2026-11-14)
+
+- Images and PDFs of the reading pane are fetched by the page and drawn from the file itself: a reverse proxy or Home Assistant that forbids framing (`X-Frame-Options`) left the PDF viewer white and could leave images empty.
+- An attachment that cannot be fetched or drawn says why in its place (HTTP status, or the type received) instead of an empty frame.
+
 ## 1.2.1 (2026-11-14)
 
 - Attachments with an accented name (a PDF shown as a white page, for instance) failed with a server error: the ENT writes the name as raw bytes, now decoded again, and the name known from the message or the word comes first.

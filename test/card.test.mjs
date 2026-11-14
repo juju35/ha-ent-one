@@ -156,7 +156,7 @@ test('attachments are shown: images, PDF viewer in the reading pane, other files
   ];
   const full = E.entOneFiles(files, t, 'abc', true);
   assert.match(full, /<iframe title="slip.pdf" data-ent-src="\/workspace\/document\/d1"/);
-  assert.match(full, /<img alt="Map" loading="lazy" data-ent-src="\/workspace\/document\/d2"/);
+  assert.match(full, /<img alt="Map" data-ent-src="\/workspace\/document\/d2"/);
   assert.match(full, /data-path="\/workspace\/document\/d3" data-name="sheet.docx"/);
   const card = E.entOneFiles(files, t, 'abc', false);
   assert.doesNotMatch(card, /<iframe/);
