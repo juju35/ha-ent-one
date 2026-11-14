@@ -346,7 +346,17 @@ def mount(context, shot):
     page = context.new_page()
     page.on("pageerror", lambda err, name=shot["file"]: print(f"{name}: page error: {err}"))
     page.clock.set_fixed_time(NOW)
-    page.set_content(page_html(shot["theme"], shot.get("width", WIDTH), bool(shot.get("panel"))))
+    # A fake origin, so that the header logo served by the integration (/ent_one_static/…) comes from the repository.
+    html = page_html(shot["theme"], shot.get("width", WIDTH), bool(shot.get("panel")))
+    page.route(
+        "http://ent-one.test/**",
+        lambda route: (
+            route.fulfill(path=str(FRONTEND / "ent-one-logo.png"))
+            if route.request.url.endswith("/ent_one_static/ent-one-logo.png")
+            else route.fulfill(body=html, content_type="text/html")
+        ),
+    )
+    page.goto("http://ent-one.test/")
     page.add_script_tag(content=HA_ELEMENTS)
     page.add_script_tag(content=CARD_JS)
     if shot.get("panel"):

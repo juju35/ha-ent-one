@@ -17,7 +17,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card.png" alt="ent-one-card" width="380">
 
 > [!IMPORTANT]
-> Unofficial community project, neither made nor endorsed by Edifice, the Éducation nationale or an académie. The ENT has no public API: the integration calls the routes its web application uses, as [ent1-mcp](https://github.com/edouard-claude/ent1-mcp) does, and an ENT update can break it.
+> Unofficial community project, neither made nor endorsed by Edifice, the Éducation nationale or an académie. The ENT has no public API: the integration calls the routes its web application uses, as [ent1-mcp](https://github.com/edouard-claude/ent1-mcp) does, and an ENT update can break it. The ONE panda logo used for the icon and the card belongs to Edifice.
 
 ## Features
 

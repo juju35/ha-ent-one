@@ -1,7 +1,9 @@
 var ENT_ONE_CARD_VERSION = '1.0.0';
 
-// ── Header icon: tinted round icon, the orange of the "e" of the ONE logo (16 % tint like the other cards) ─────
+// ── Header logo: the ONE panda (brand logo kept in a 40 px container, like the Free logo), served by the
+// integration next to this file. Accent: the orange of the "e" of the ONE logo.
 var ENT_ONE_ACCENT = '#f39c3c';
+var ENT_ONE_LOGO = '/ent_one_static/ent-one-logo.png';
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
 // One table for the cards and the panel (the panel loads this file). Flat keys, so every language splits out.
@@ -2122,6 +2124,7 @@ function entOneItemStyles(accent) {
 window.EntOne = {
   version: ENT_ONE_CARD_VERSION,
   accent: ENT_ONE_ACCENT,
+  logo: ENT_ONE_LOGO,
   i18n: EntOneI18n,
   t: entOneT,
   lang: entOneLang,
@@ -2297,7 +2300,7 @@ class EntOneCard extends HTMLElement {
       ? '<div class="sub error"><span>' + entOneEsc(this._error) + '</span><button class="dismiss" data-action="dismiss" aria-label="' + entOneEsc(t.close) + '" title="' + entOneEsc(t.close) + '"><ha-icon icon="mdi:close"></ha-icon></button></div>'
       : who ? '<div class="sub">' + entOneEsc(who) + '</div>' : '';
     header.innerHTML =
-      '<div class="title"><div class="logo" aria-hidden="true"><ha-icon icon="mdi:school-outline"></ha-icon></div>' +
+      '<div class="title"><div class="logo" aria-hidden="true"><img src="' + ENT_ONE_LOGO + '" alt=""></div>' +
       '<div class="titles"><div class="name">' + entOneEsc(title) + '</div>' + sub + '</div></div>' +
       pill + (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
   }
@@ -2477,8 +2480,8 @@ class EntOneCard extends HTMLElement {
       'ha-card { padding: 0 0 10px; overflow: hidden; container-type: inline-size; }',
       '.header { display: flex; align-items: center; gap: 10px; padding: 12px 10px 8px 12px; min-height: 40px; }',
       '.title { flex: 1 1 0; min-width: calc(5ch + 50px); display: flex; align-items: center; gap: 10px; }',
-      '.logo { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
-      '.logo ha-icon { --mdc-icon-size: 24px; }',
+      '.logo { width: 40px; height: 40px; flex: none; display: grid; place-items: center; }',
+      '.logo img { width: 40px; height: 40px; object-fit: contain; }',
       '.titles { flex: 1 1 0; min-width: 5ch; overflow: hidden; }',
       ':host([hide-title]) .titles > .name { display: none; }',
       '.name { font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',

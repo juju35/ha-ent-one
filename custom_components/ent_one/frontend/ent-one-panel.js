@@ -102,7 +102,7 @@ class EntOnePanel extends HTMLElement {
     this._root = this.attachShadow({ mode: 'open' });
     this._root.innerHTML =
       '<style>' + EntOnePanel._styles(window.EntOne.accent) + window.EntOne.itemStyles(window.EntOne.accent) + '</style>' +
-      '<div class="toolbar"><ha-menu-button></ha-menu-button><div class="logo"><ha-icon icon="mdi:school-outline"></ha-icon></div>' +
+      '<div class="toolbar"><ha-menu-button></ha-menu-button><img class="logo" src="' + window.EntOne.logo + '" alt="">' +
       '<div class="tb-title"></div><div class="tb-side"></div></div><div class="tabs" role="tablist"></div><div class="content"></div>';
     this._root.addEventListener('click', this._onClick.bind(this));
     this._root.addEventListener('change', this._onChange.bind(this));
@@ -471,7 +471,7 @@ class EntOnePanel extends HTMLElement {
       ':host { display: block; min-height: 100vh; background: var(--primary-background-color); color: var(--primary-text-color); font-family: var(--paper-font-body1_-_font-family, inherit); }',
       '.toolbar { display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 12px; background: var(--app-header-background-color, var(--primary-background-color));' +
         ' color: var(--app-header-text-color, var(--primary-text-color)); border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
-      '.logo { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 16%, transparent); --mdc-icon-size: 20px; }',
+      '.logo { width: 32px; height: 32px; flex: none; object-fit: contain; }',
       '.tb-title { flex: 1; min-width: 0; font-size: 20px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.tb-side { display: flex; align-items: center; gap: 4px; flex: none; }',
       '.tb-side ha-icon-button { --mdc-icon-button-size: 40px; color: var(--secondary-text-color); }',
