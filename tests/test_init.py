@@ -312,6 +312,9 @@ async def test_reconfigure_switches_to_a_secret(hass: HomeAssistant, api, entry)
     await hass.async_add_executor_job(_secrets, hass, "ent_pw: secret\n")
     result = await entry.start_reconfigure_flow(hass)
     done = await hass.config_entries.flow.async_configure(result["flow_id"], {"password_secret": "ent_pw"})
+    # The update listener reloads the entry: let the reload finish before the test ends.
+    await hass.async_block_till_done()
     assert done["reason"] == "reconfigure_successful"
+    assert entry.state is ConfigEntryState.LOADED
     assert CONF_PASSWORD not in entry.data
     assert entry.data["password_secret"] == "ent_pw"
