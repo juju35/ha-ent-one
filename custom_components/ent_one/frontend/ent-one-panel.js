@@ -7,9 +7,17 @@ class EntOnePanel extends HTMLElement {
   constructor() {
     super();
     this._tab = this._tabFromUrl();
-    this._book = '';
-    this._hideDone = false;
+    // Homework filters are remembered in this browser (storage can be missing or refuse: then they are not).
+    var saved = {};
+    try {
+      saved = JSON.parse(window.localStorage.getItem('ent-one-panel') || '{}') || {};
+    } catch (_e) {
+      saved = {};
+    }
+    this._book = typeof saved.book === 'string' ? saved.book : '';
+    this._hideDone = saved.hideDone === true;
     this._entry = '';
+    this._open = {};
   }
 
   set panel(panel) {
@@ -70,6 +78,14 @@ class EntOnePanel extends HTMLElement {
       });
   }
 
+  _saveFilters() {
+    try {
+      window.localStorage.setItem('ent-one-panel', JSON.stringify({ book: this._book, hideDone: this._hideDone }));
+    } catch (_e) {
+      /* private mode, quota: not remembered */
+    }
+  }
+
   _setTab(tab) {
     if (tab === this._tab) return;
     this._tab = tab;
@@ -90,12 +106,28 @@ class EntOnePanel extends HTMLElement {
       '<div class="tb-title"></div><div class="tb-side"></div></div><div class="tabs" role="tablist"></div><div class="content"></div>';
     this._root.addEventListener('click', this._onClick.bind(this));
     this._root.addEventListener('change', this._onChange.bind(this));
+    this._root.addEventListener('keydown', (ev) => {
+      if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.hasAttribute?.('data-toggle')) {
+        ev.preventDefault();
+        ev.target.click();
+      }
+    });
+    // Tabs: arrows, Home and End move between them (WAI-ARIA tabs pattern).
+    this._root.querySelector('.tabs').addEventListener('keydown', (ev) => {
+      var i = ENT_ONE_PANEL_TABS.indexOf(this._tab);
+      var next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: ENT_ONE_PANEL_TABS.length - 1 }[ev.key];
+      if (next === undefined) return;
+      ev.preventDefault();
+      this._setTab(ENT_ONE_PANEL_TABS[(next + ENT_ONE_PANEL_TABS.length) % ENT_ONE_PANEL_TABS.length]);
+      this._root.querySelector('.tab.on')?.focus();
+    });
   }
 
   _render() {
     if (!this._hass || !window.EntOne) return;
     this._ensureShell();
     var E = window.EntOne;
+    E.setTimeFormat(this._hass);
     var t = E.t(this._hass);
     this._lang = E.lang(this._hass);
     var menu = this._root.querySelector('ha-menu-button');
@@ -122,7 +154,8 @@ class EntOnePanel extends HTMLElement {
       (data?.url ? '<ha-icon-button data-action="open" label="' + E.esc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></ha-icon-button>' : '');
     this._root.querySelector('.tabs').innerHTML = ENT_ONE_PANEL_TABS.map((tab) => {
       var count = data ? this._count(tab, data) : 0;
-      return '<button role="tab" class="tab' + (tab === this._tab ? ' on' : '') + '" aria-selected="' + (tab === this._tab) + '" data-tab="' + tab + '">' +
+      var on = tab === this._tab;
+      return '<button role="tab" class="tab' + (on ? ' on' : '') + '" aria-selected="' + on + '" tabindex="' + (on ? 0 : -1) + '" data-tab="' + tab + '">' +
         E.esc(t[ENT_ONE_TAB_KEYS[tab]]) + (count ? ' <span class="badge">' + count + '</span>' : '') + '</button>';
     }).join('');
     var content = this._root.querySelector('.content');
@@ -150,14 +183,7 @@ class EntOnePanel extends HTMLElement {
   }
 
   _time(iso) {
-    var d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return '';
-    var locale = window.EntOne.locale(this._hass);
-    try {
-      return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
-    } catch (_e) {
-      return d.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
-    }
+    return window.EntOne.time(iso, window.EntOne.locale(this._hass));
   }
 
   _box(title, body, wide) {
@@ -172,6 +198,7 @@ class EntOnePanel extends HTMLElement {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
     var R = E.rows;
+    var isOpen = (key) => !!this._open[key];
     var toSign = data.words.filter((w) => !w.signed);
     var todo = E.sortedHomework(data.homework, false).slice(0, 6);
     var tiles =
@@ -183,10 +210,10 @@ class EntOnePanel extends HTMLElement {
       ].map((x) => '<button class="tile' + (x[3] === 'words' && x[0] ? ' hot' : '') + '" data-tab="' + x[3] + '"><span class="v"><ha-icon icon="' + x[2] + '"></ha-icon>' + x[0] + '</span><span class="l">' + E.esc(x[1]) + '</span></button>').join('') +
       '</div>';
     return tiles + '<div class="grid">' +
-      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass) })), t.no_words)) +
-      this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale)), t.no_homework)) +
-      this._box(t.section_events, this._list(E.upcomingEvents(data.events).slice(0, 6).map((e) => R.event(e, t, locale)), t.no_events)) +
-      this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale)), t.no_news)) +
+      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen })), t.no_words)) +
+      this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale, { isOpen: isOpen })), t.no_homework)) +
+      this._box(t.section_events, this._list(E.upcomingEvents(data.events).slice(0, 6).map((e) => R.event(e, t, locale, { isOpen: isOpen })), t.no_events)) +
+      this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen })), t.no_news)) +
       '</div>';
   }
 
@@ -225,7 +252,7 @@ class EntOnePanel extends HTMLElement {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
     var link = data.url ? '<button class="act" data-action="open-messages">' + E.esc(t.open_ent) + '</button>' : '';
-    return '<div class="filters">' + link + '</div>' + this._box('', this._list(data.messages.map((m) => E.rows.message(m, t, locale)), t.no_messages), true);
+    return '<div class="filters">' + link + '</div>' + this._box('', this._list(data.messages.map((m) => E.rows.message(m, t, locale, { url: data.url, full: true })), t.no_messages), true);
   }
 
   _news(t, data) {
@@ -253,6 +280,7 @@ class EntOnePanel extends HTMLElement {
         .callWS({ type: 'ent_one/settings' })
         .then((res) => {
           this._settings = res;
+          this._drafts = {};
           this._render();
         })
         .catch((err) => {
@@ -271,42 +299,57 @@ class EntOnePanel extends HTMLElement {
       content.innerHTML = '<div class="page"><div class="empty">' + E.esc(t.no_account) + '</div></div>';
       return;
     }
-    var dis = s.admin ? '' : ' disabled';
+    // Home Assistant's own form, with the selectors of the options flow: same look and checks as everywhere else.
     content.innerHTML = '<div class="page">' + (s.admin ? '' : '<div class="empty">' + E.esc(t.admin_only) + '</div>') +
-      s.accounts.map((acc) => {
-        var o = acc.options;
-        var notify = s.notify_services.concat(o.notify_services.filter((n) => s.notify_services.indexOf(n) === -1));
-        return this._box(acc.title,
-          '<form class="settings" data-entry="' + E.esc(acc.entry_id) + '">' +
-          '<div class="url">' + E.esc(acc.url) + '</div>' +
-          '<label>' + E.esc(t.settings_scan) + '<input type="number" name="scan_interval" min="10" max="360" step="5" value="' + E.esc(o.scan_interval) + '"' + dis + '>' +
-          '<span class="hint">' + E.esc(t.settings_scan_hint) + '</span></label>' +
-          '<label>' + E.esc(t.settings_days) + '<input type="number" name="homework_days" min="1" max="60" value="' + E.esc(o.homework_days) + '"' + dis + '></label>' +
-          '<fieldset><legend>' + E.esc(t.settings_notify) + '</legend>' +
-          (notify.length
-            ? notify.map((n) => '<label class="check"><input type="checkbox" name="notify_services" value="' + E.esc(n) + '"' + (o.notify_services.indexOf(n) !== -1 ? ' checked' : '') + dis + '> ' + E.esc(n) + '</label>').join('')
-            : '<span class="hint">—</span>') +
-          '<span class="hint">' + E.esc(t.settings_notify_hint) + '</span></fieldset>' +
-          '<label class="check"><input type="checkbox" name="show_panel"' + (o.show_panel ? ' checked' : '') + dis + '> ' + E.esc(t.settings_panel) + '</label>' +
-          (s.admin ? '<div class="popup-actions"><span class="msg"></span><button class="act" data-action="save">' + E.esc(t.save) + '</button></div>' : '') +
-          '</form>', true);
-      }).join('') + '</div>';
+      s.accounts.map((acc) => this._box(acc.title,
+        '<div class="url">' + E.esc(acc.url) + '</div><div class="form" data-entry="' + E.esc(acc.entry_id) + '"></div>' +
+        (s.admin ? '<div class="popup-actions"><span class="msg"></span><button class="act" data-action="save" data-entry="' + E.esc(acc.entry_id) + '">' + E.esc(t.save) + '</button></div>' : ''),
+        true)).join('') + '</div>';
+    var labels = { scan_interval: t.settings_scan, homework_days: t.settings_days, notify_services: t.settings_notify, show_panel: t.settings_panel };
+    var helpers = { scan_interval: t.settings_scan_hint, notify_services: t.settings_notify_hint };
+    s.accounts.forEach((acc) => {
+      var form = document.createElement('ha-form');
+      var notify = s.notify_services.concat(acc.options.notify_services.filter((n) => s.notify_services.indexOf(n) === -1));
+      form.hass = this._hass;
+      form.disabled = !s.admin;
+      form.schema = [
+        { name: 'scan_interval', selector: { number: { min: 10, max: 360, step: 5, mode: 'box', unit_of_measurement: 'min' } } },
+        { name: 'homework_days', selector: { number: { min: 1, max: 60, step: 1, mode: 'box', unit_of_measurement: 'd' } } },
+        { name: 'notify_services', selector: { select: { multiple: true, custom_value: true, mode: 'dropdown', options: notify } } },
+        { name: 'show_panel', selector: { boolean: {} } },
+      ];
+      form.data = this._drafts[acc.entry_id] || acc.options;
+      form.computeLabel = (field) => labels[field.name] || field.name;
+      form.computeHelper = (field) => helpers[field.name] || '';
+      form.addEventListener('value-changed', (ev) => {
+        this._drafts[acc.entry_id] = ev.detail.value;
+        form.data = ev.detail.value;
+      });
+      content.querySelector(`.form[data-entry="${CSS.escape(acc.entry_id)}"]`).appendChild(form);
+    });
   }
 
-  _save(form) {
+  _save(button) {
     var E = window.EntOne;
     var t = E.t(this._hass);
-    var get = (name) => form.querySelector(`[name="${name}"]`);
-    var options = {
-      scan_interval: Number(get('scan_interval').value),
-      homework_days: Number(get('homework_days').value),
-      notify_services: Array.from(form.querySelectorAll('[name="notify_services"]:checked')).map((el) => el.value),
-      show_panel: get('show_panel').checked,
-    };
-    var msg = form.querySelector('.msg');
+    var entry = button.getAttribute('data-entry');
+    var acc = this._settings.accounts.find((a) => a.entry_id === entry);
+    var options = Object.assign({}, acc.options, this._drafts[entry] || {});
+    var msg = button.parentElement.querySelector('.msg');
     this._hass
-      .callWS({ type: 'ent_one/settings/update', entry_id: form.getAttribute('data-entry'), options: options })
-      .then(() => {
+      .callWS({
+        type: 'ent_one/settings/update',
+        entry_id: entry,
+        options: {
+          scan_interval: Number(options.scan_interval),
+          homework_days: Number(options.homework_days),
+          notify_services: options.notify_services || [],
+          show_panel: !!options.show_panel,
+        },
+      })
+      .then((res) => {
+        acc.options = res.options;
+        delete this._drafts[entry];
         msg.className = 'msg ok';
         msg.textContent = t.saved;
       })
@@ -323,12 +366,21 @@ class EntOnePanel extends HTMLElement {
       this._render();
     } else if (el.getAttribute?.('data-action') === 'hide-done') {
       this._hideDone = el.checked;
+      this._saveFilters();
       this._render();
     }
   }
 
   _onClick(ev) {
     var E = window.EntOne;
+    var toggle = ev.target.closest('[data-toggle]');
+    if (toggle && !ev.target.closest('[data-action], a')) {
+      var key = toggle.getAttribute('data-toggle');
+      if (this._open[key]) delete this._open[key];
+      else this._open[key] = true;
+      this._render();
+      return;
+    }
     var tabEl = ev.target.closest('[data-tab]');
     if (tabEl) {
       this._setTab(tabEl.getAttribute('data-tab'));
@@ -337,6 +389,7 @@ class EntOnePanel extends HTMLElement {
     var bookEl = ev.target.closest('[data-book]:not([data-action])');
     if (bookEl) {
       this._book = bookEl.getAttribute('data-book');
+      this._saveFilters();
       this._render();
       return;
     }
@@ -352,7 +405,7 @@ class EntOnePanel extends HTMLElement {
     var action = el.getAttribute('data-action');
     if (action === 'save') {
       ev.preventDefault();
-      this._save(el.closest('form'));
+      this._save(el);
     } else if (!data) {
       return;
     } else if (action === 'refresh') this._refresh(data);
@@ -434,7 +487,8 @@ class EntOnePanel extends HTMLElement {
       '.badge { display: inline-block; min-width: 18px; padding: 1px 5px; margin-left: 4px; border-radius: 9px; font-size: 11px; text-align: center;' +
         ' color: color-mix(in srgb, ' + A + ' 60%, var(--primary-text-color)); background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
       '.page { max-width: 1100px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }',
-      '.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }',
+      // Each box keeps its own height: a box with one item no longer stretches to its neighbour's.
+      '.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: start; }',
       '.box { background: var(--card-background-color, #fff); border-radius: var(--ha-card-border-radius, 12px); border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)); padding: 12px 16px; min-width: 0; }',
       '.box h2 { margin: 0 0 6px; font-size: 14px; font-weight: 500; color: var(--secondary-text-color); }',
       '.box h3 { margin: 12px 0 2px; font-size: 13px; font-weight: 500; color: var(--secondary-text-color); }',
@@ -442,6 +496,7 @@ class EntOnePanel extends HTMLElement {
       '.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }',
       '.tile { all: unset; cursor: pointer; padding: 12px 16px; border-radius: 12px; background: var(--card-background-color, #fff); border: 1px solid var(--divider-color, #e0e0e0); }',
       '.tile.hot { background: color-mix(in srgb, ' + A + ' 12%, var(--card-background-color, #fff)); }',
+      '.tile:hover { border-color: var(--secondary-text-color); }',
       '.tile:focus-visible { outline: 2px solid var(--primary-color); }',
       '.tile .v { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 500; --mdc-icon-size: 20px; }',
       '.tile .v ha-icon { color: var(--secondary-text-color); }',
@@ -458,13 +513,7 @@ class EntOnePanel extends HTMLElement {
       '.popup-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 8px; }',
       '.act.ghost { color: var(--secondary-text-color); border-color: var(--divider-color, rgba(0,0,0,.2)); }',
       '.banner { padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--error-color, #db4437) 10%, transparent); }',
-      '.settings { display: flex; flex-direction: column; gap: 12px; }',
-      '.settings label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }',
-      '.settings label.check { flex-direction: row; align-items: center; gap: 8px; }',
-      '.settings input[type=number] { font: inherit; width: 120px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--divider-color); background: var(--card-background-color); color: var(--primary-text-color); }',
-      '.settings fieldset { border: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }',
-      '.settings legend { font-size: 14px; margin-bottom: 4px; padding: 0; }',
-      '.url, .hint { font-size: 12px; color: var(--secondary-text-color); }',
+      '.url { font-size: 12px; color: var(--secondary-text-color); margin-bottom: 8px; }',
       '.msg { font-size: 13px; margin-right: auto; }',
       '.msg.ok { color: color-mix(in srgb, var(--success-color, #43a047) 55%, var(--primary-text-color)); }',
       '@media (max-width: 600px) { .updated { display: none; } .page { padding: 12px; } .tile .v { font-size: 22px; } }',

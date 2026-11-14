@@ -11,5 +11,6 @@ First release.
 - One to-do list per homework notebook: ticking an item marks the homework done in the ENT.
 - Actions `ent_one.sign_word` (administrators only) and `ent_one.refresh`; events `ent_one_new_message`, `ent_one_new_word` and `ent_one_new_homework`; optional notifications.
 - Cards `ent-one-card` (dashboard: counts, liaison book, homework, messages, calendar, news) and `ent-one-mini-card`.
-- Sidebar panel with Home, Homework, Liaison book, Messages, News and Settings tabs.
+- Rows unfold to their text, counts open the panel tab, 40 px check boxes, times in the profile's 12 / 24 h format, empty sections hidden (`show_empty`).
+- Sidebar panel with Home, Homework, Liaison book, Messages, News and Settings tabs (Home Assistant form, remembered homework filters, arrow keys).
 - 22 languages.

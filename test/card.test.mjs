@@ -19,7 +19,7 @@ const context = {
   Intl,
 };
 vm.createContext(context);
-vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, EntOneI18n };`, context);
+vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, EntOneI18n };`, context);
 const E = context.e;
 
 const sensor = (id, state, attrs) => ({ entity_id: id, state: String(state), attributes: { config_entry_id: 'abc', stale: [], ...attrs } });
@@ -110,4 +110,35 @@ test('only administrators get the sign button', () => {
   assert.equal(E.entOneCanSign({}), true, 'unknown user: the backend still refuses non-admins');
   assert.match(E.entOneWordRow(word, t, 'en', { canSign: true }), /data-action="sign"/);
   assert.doesNotMatch(E.entOneWordRow(word, t, 'en', { canSign: false }), /data-action="sign"/);
+});
+
+test('time follows the 12 / 24 h setting of the profile', () => {
+  const raw = '2026-11-20T09:05:00';
+  E.entOneSetTimeFormat({ locale: { time_format: '24' } });
+  assert.doesNotMatch(E.entOneTime(raw, 'en-US'), /AM|PM/);
+  E.entOneSetTimeFormat({ locale: { time_format: '12' } });
+  assert.match(E.entOneTime(raw, 'fr'), /AM|PM|am|pm/i);
+  E.entOneSetTimeFormat({ locale: { time_format: 'language' } });
+  assert.match(E.entOneTime(raw, 'en-US'), /AM/);
+});
+
+test('far dates keep the weekday', () => {
+  const t = E.entOneT({ language: 'en' });
+  const d = new Date();
+  d.setDate(d.getDate() + 10);
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const weekday = d.toLocaleDateString('en', { weekday: 'short' });
+  assert.ok(E.entOneDay(iso, t, 'en').includes(weekday));
+});
+
+test('rows unfold on demand', () => {
+  const t = E.entOneT({ language: 'en' });
+  const word = { id: '1', child_id: 'c1', title: 'Trip', text: 'Bring lunch', signed: false };
+  const closed = E.entOneWordRow(word, t, 'en', { isOpen: () => false });
+  assert.match(closed, /data-toggle="word:1:c1"/);
+  assert.match(closed, /aria-expanded="false"/);
+  assert.doesNotMatch(closed, /Bring lunch/);
+  assert.match(E.entOneWordRow(word, t, 'en', { isOpen: () => true }), /Bring lunch/);
+  const msg = E.entOneMessageRow({ id: 'm1', subject: 'Pool', unread: true }, t, 'en', { url: 'https://ent', isOpen: () => true });
+  assert.match(msg, /href="https:\/\/ent\/conversation\/conversation"/);
 });

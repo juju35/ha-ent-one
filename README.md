@@ -110,8 +110,11 @@ type: custom:ent-one-card
 | `show_messages` | `true` | Show the unread messages |
 | `show_events` | `true` | Show the upcoming events of the ENT's calendars |
 | `show_news` | `false` | Show the school news |
+| `show_empty` | `false` | Keep the sections with nothing to show (the homework section always stays) |
 | `max_items` | `5` | Items per section |
 | `language` | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
+
+Click a row with a chevron to unfold it: the text of a word, a homework or a news item, the description of an event, a link to the ENT messaging for a message (its body is not read, which would mark it read in the ENT); a click elsewhere folds it back. A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
 
 **Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. It is shown to administrators only (a child with a Home Assistant account must not sign their own words); other users see the words to sign without the button. The check box of a homework marks it done (or not done) in the ENT.
 
@@ -140,7 +143,7 @@ The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab pe
 | News | The school news in full |
 | Settings | The account options; only administrators can change them |
 
-With several accounts, a menu in the header bar switches between them.
+With several accounts, a menu in the header bar switches between them. The Homework filters are remembered in the browser, the Home rows unfold like the card's, and the tabs can be browsed with the arrow keys.
 
 ### Actions
 
@@ -185,6 +188,12 @@ While the ENT is read, the refresh button spins until the update finishes.
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/refreshing.gif" alt="refresh animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/refreshing-dark.gif" alt="refresh animation dark" width="400"> |
+
+A word unfolded to its text:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-unfolded.png" alt="unfolded word" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-unfolded-dark.png" alt="unfolded word dark" width="400"> |
 
 The card, with the news shown:
 

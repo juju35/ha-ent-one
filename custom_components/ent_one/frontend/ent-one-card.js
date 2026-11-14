@@ -32,6 +32,7 @@ var EntOneI18n = {
     sign_title: 'Sign this word?',
     sign_text: 'The ENT records that you read “{title}” for {child}. This cannot be undone.',
     cancel: 'Cancel',
+    close: 'Close',
     confirm: 'Sign',
     signing: 'Signing…',
     mark_done: 'Mark as done',
@@ -81,6 +82,7 @@ var EntOneI18n = {
     editor_show_messages: 'Show the messages',
     editor_show_news: 'Show the news',
     editor_show_events: 'Show the calendar',
+    editor_show_empty: 'Show empty sections',
     editor_max_items: 'Items per section',
     editor_language: 'Language',
     editor_lang_auto: 'Automatic',
@@ -111,6 +113,7 @@ var EntOneI18n = {
     sign_title: 'Signer ce mot ?',
     sign_text: 'L\'ENT enregistre que vous avez lu « {title} » pour {child}. Impossible d\'annuler.',
     cancel: 'Annuler',
+    close: 'Fermer',
     confirm: 'Signer',
     signing: 'Signature…',
     mark_done: 'Marquer comme fait',
@@ -160,6 +163,7 @@ var EntOneI18n = {
     editor_show_messages: 'Afficher les messages',
     editor_show_news: 'Afficher les actualités',
     editor_show_events: 'Afficher l\'agenda',
+    editor_show_empty: 'Afficher les sections vides',
     editor_max_items: 'Éléments par section',
     editor_language: 'Langue',
     editor_lang_auto: 'Automatique',
@@ -189,6 +193,7 @@ var EntOneI18n = {
     sign_title: "Diese Mitteilung unterschreiben?",
     sign_text: "Das ENT vermerkt, dass du „{title}“ für {child} gelesen hast. Das lässt sich nicht rückgängig machen.",
     cancel: "Abbrechen",
+    close: "Schließen",
     confirm: "Unterschreiben",
     signing: "Wird unterschrieben…",
     mark_done: "Als erledigt markieren",
@@ -238,6 +243,7 @@ var EntOneI18n = {
     editor_show_messages: "Nachrichten anzeigen",
     editor_show_news: "Neuigkeiten anzeigen",
     editor_show_events: "Kalender anzeigen",
+    editor_show_empty: "Leere Abschnitte anzeigen",
     editor_max_items: "Einträge pro Abschnitt",
     editor_language: "Sprache",
     editor_lang_auto: "Automatisch",
@@ -267,6 +273,7 @@ var EntOneI18n = {
     sign_title: "¿Firmar esta nota?",
     sign_text: "El ENT registra que has leído «{title}» para {child}. No se puede deshacer.",
     cancel: "Cancelar",
+    close: "Cerrar",
     confirm: "Firmar",
     signing: "Firmando…",
     mark_done: "Marcar como hecho",
@@ -316,6 +323,7 @@ var EntOneI18n = {
     editor_show_messages: "Mostrar los mensajes",
     editor_show_news: "Mostrar las noticias",
     editor_show_events: "Mostrar la agenda",
+    editor_show_empty: "Mostrar las secciones vacías",
     editor_max_items: "Elementos por sección",
     editor_language: "Idioma",
     editor_lang_auto: "Automático",
@@ -345,6 +353,7 @@ var EntOneI18n = {
     sign_title: "Потписати ову белешку?",
     sign_text: "ENT бележи да сте прочитали „{title}“ за {child}. Ово се не може опозвати.",
     cancel: "Откажи",
+    close: "Затвори",
     confirm: "Потпиши",
     signing: "Потписивање…",
     mark_done: "Означи као урађено",
@@ -394,6 +403,7 @@ var EntOneI18n = {
     editor_show_messages: "Прикажи поруке",
     editor_show_news: "Прикажи вести",
     editor_show_events: "Прикажи календар",
+    editor_show_empty: "Прикажи празне одељке",
     editor_max_items: "Ставки по одељку",
     editor_language: "Језик",
     editor_lang_auto: "Аутоматски",
@@ -423,6 +433,7 @@ var EntOneI18n = {
     sign_title: "Potpisati ovu belešku?",
     sign_text: "ENT beleži da ste pročitali „{title}“ za {child}. Ovo se ne može opozvati.",
     cancel: "Otkaži",
+    close: "Zatvori",
     confirm: "Potpiši",
     signing: "Potpisivanje…",
     mark_done: "Označi kao urađeno",
@@ -472,6 +483,7 @@ var EntOneI18n = {
     editor_show_messages: "Prikaži poruke",
     editor_show_news: "Prikaži vesti",
     editor_show_events: "Prikaži kalendar",
+    editor_show_empty: "Prikaži prazne odeljke",
     editor_max_items: "Stavki po odeljku",
     editor_language: "Jezik",
     editor_lang_auto: "Automatski",
@@ -501,6 +513,7 @@ var EntOneI18n = {
     sign_title: "Firmare questo avviso?",
     sign_text: "L'ENT registra che hai letto «{title}» per {child}. Non si può annullare.",
     cancel: "Annulla",
+    close: "Chiudi",
     confirm: "Firma",
     signing: "Firma in corso…",
     mark_done: "Segna come fatto",
@@ -550,6 +563,7 @@ var EntOneI18n = {
     editor_show_messages: "Mostra i messaggi",
     editor_show_news: "Mostra le notizie",
     editor_show_events: "Mostra l'agenda",
+    editor_show_empty: "Mostra le sezioni vuote",
     editor_max_items: "Elementi per sezione",
     editor_language: "Lingua",
     editor_lang_auto: "Automatica",
@@ -579,6 +593,7 @@ var EntOneI18n = {
     sign_title: "Dit bericht ondertekenen?",
     sign_text: "De ENT registreert dat je \"{title}\" voor {child} hebt gelezen. Dit kan niet ongedaan worden gemaakt.",
     cancel: "Annuleren",
+    close: "Sluiten",
     confirm: "Ondertekenen",
     signing: "Ondertekenen…",
     mark_done: "Markeren als klaar",
@@ -628,6 +643,7 @@ var EntOneI18n = {
     editor_show_messages: "Berichten tonen",
     editor_show_news: "Nieuws tonen",
     editor_show_events: "Agenda tonen",
+    editor_show_empty: "Lege secties tonen",
     editor_max_items: "Items per sectie",
     editor_language: "Taal",
     editor_lang_auto: "Automatisch",
@@ -657,6 +673,7 @@ var EntOneI18n = {
     sign_title: "Assinar esta nota?",
     sign_text: "O ENT regista que leu «{title}» para {child}. Não é possível anular.",
     cancel: "Cancelar",
+    close: "Fechar",
     confirm: "Assinar",
     signing: "A assinar…",
     mark_done: "Marcar como feito",
@@ -706,6 +723,7 @@ var EntOneI18n = {
     editor_show_messages: "Mostrar as mensagens",
     editor_show_news: "Mostrar as notícias",
     editor_show_events: "Mostrar a agenda",
+    editor_show_empty: "Mostrar as secções vazias",
     editor_max_items: "Elementos por secção",
     editor_language: "Idioma",
     editor_lang_auto: "Automático",
@@ -735,6 +753,7 @@ var EntOneI18n = {
     sign_title: "Podpisać tę uwagę?",
     sign_text: "ENT zapisze, że przeczytano „{title}” dla: {child}. Nie można tego cofnąć.",
     cancel: "Anuluj",
+    close: "Zamknij",
     confirm: "Podpisz",
     signing: "Podpisywanie…",
     mark_done: "Oznacz jako zrobione",
@@ -784,6 +803,7 @@ var EntOneI18n = {
     editor_show_messages: "Pokaż wiadomości",
     editor_show_news: "Pokaż aktualności",
     editor_show_events: "Pokaż kalendarz",
+    editor_show_empty: "Pokaż puste sekcje",
     editor_max_items: "Elementy na sekcję",
     editor_language: "Język",
     editor_lang_auto: "Automatycznie",
@@ -813,6 +833,7 @@ var EntOneI18n = {
     sign_title: "Semnezi acest mesaj?",
     sign_text: "ENT-ul înregistrează că ai citit „{title}” pentru {child}. Nu se poate anula.",
     cancel: "Anulează",
+    close: "Închide",
     confirm: "Semnează",
     signing: "Se semnează…",
     mark_done: "Marchează ca făcut",
@@ -862,6 +883,7 @@ var EntOneI18n = {
     editor_show_messages: "Afișează mesajele",
     editor_show_news: "Afișează noutățile",
     editor_show_events: "Afișează calendarul",
+    editor_show_empty: "Afișează secțiunile goale",
     editor_max_items: "Elemente pe secțiune",
     editor_language: "Limbă",
     editor_lang_auto: "Automat",
@@ -891,6 +913,7 @@ var EntOneI18n = {
     sign_title: "Underskriv denne besked?",
     sign_text: "ENT registrerer, at du har læst \"{title}\" for {child}. Det kan ikke fortrydes.",
     cancel: "Annuller",
+    close: "Luk",
     confirm: "Underskriv",
     signing: "Underskriver…",
     mark_done: "Marker som udført",
@@ -940,6 +963,7 @@ var EntOneI18n = {
     editor_show_messages: "Vis beskederne",
     editor_show_news: "Vis nyhederne",
     editor_show_events: "Vis kalenderen",
+    editor_show_empty: "Vis tomme sektioner",
     editor_max_items: "Elementer pr. sektion",
     editor_language: "Sprog",
     editor_lang_auto: "Automatisk",
@@ -969,6 +993,7 @@ var EntOneI18n = {
     sign_title: "Signera det här meddelandet?",
     sign_text: "ENT registrerar att du har läst \"{title}\" för {child}. Det går inte att ångra.",
     cancel: "Avbryt",
+    close: "Stäng",
     confirm: "Signera",
     signing: "Signerar…",
     mark_done: "Markera som klar",
@@ -1018,6 +1043,7 @@ var EntOneI18n = {
     editor_show_messages: "Visa meddelandena",
     editor_show_news: "Visa nyheterna",
     editor_show_events: "Visa kalendern",
+    editor_show_empty: "Visa tomma avsnitt",
     editor_max_items: "Objekt per avsnitt",
     editor_language: "Språk",
     editor_lang_auto: "Automatiskt",
@@ -1047,6 +1073,7 @@ var EntOneI18n = {
     sign_title: "Да се подпише ли тази бележка?",
     sign_text: "ENT отбелязва, че сте прочели „{title}“ за {child}. Това не може да се отмени.",
     cancel: "Отказ",
+    close: "Затвори",
     confirm: "Подпиши",
     signing: "Подписване…",
     mark_done: "Отбележи като готово",
@@ -1096,6 +1123,7 @@ var EntOneI18n = {
     editor_show_messages: "Покажи съобщенията",
     editor_show_news: "Покажи новините",
     editor_show_events: "Покажи календара",
+    editor_show_empty: "Показвай празните секции",
     editor_max_items: "Елементи в секция",
     editor_language: "Език",
     editor_lang_auto: "Автоматично",
@@ -1125,6 +1153,7 @@ var EntOneI18n = {
     sign_title: "Подписать эту запись?",
     sign_text: "ENT отметит, что вы прочитали «{title}» для {child}. Это нельзя отменить.",
     cancel: "Отмена",
+    close: "Закрыть",
     confirm: "Подписать",
     signing: "Подписание…",
     mark_done: "Отметить как выполненное",
@@ -1174,6 +1203,7 @@ var EntOneI18n = {
     editor_show_messages: "Показывать сообщения",
     editor_show_news: "Показывать новости",
     editor_show_events: "Показывать календарь",
+    editor_show_empty: "Показывать пустые разделы",
     editor_max_items: "Элементов в разделе",
     editor_language: "Язык",
     editor_lang_auto: "Автоматически",
@@ -1203,6 +1233,7 @@ var EntOneI18n = {
     sign_title: "Підписати цей запис?",
     sign_text: "ENT зазначить, що ви прочитали «{title}» для {child}. Це не можна скасувати.",
     cancel: "Скасувати",
+    close: "Закрити",
     confirm: "Підписати",
     signing: "Підписання…",
     mark_done: "Позначити як виконане",
@@ -1252,6 +1283,7 @@ var EntOneI18n = {
     editor_show_messages: "Показувати повідомлення",
     editor_show_news: "Показувати новини",
     editor_show_events: "Показувати календар",
+    editor_show_empty: "Показувати порожні розділи",
     editor_max_items: "Елементів у розділі",
     editor_language: "Мова",
     editor_lang_auto: "Автоматично",
@@ -1281,6 +1313,7 @@ var EntOneI18n = {
     sign_title: "Aláírod ezt a bejegyzést?",
     sign_text: "Az ENT rögzíti, hogy elolvastad: „{title}” ({child}). Ez nem vonható vissza.",
     cancel: "Mégse",
+    close: "Bezárás",
     confirm: "Aláírás",
     signing: "Aláírás…",
     mark_done: "Megjelölés készként",
@@ -1330,6 +1363,7 @@ var EntOneI18n = {
     editor_show_messages: "Üzenetek megjelenítése",
     editor_show_news: "Hírek megjelenítése",
     editor_show_events: "Naptár megjelenítése",
+    editor_show_empty: "Üres szakaszok megjelenítése",
     editor_max_items: "Elemek szakaszonként",
     editor_language: "Nyelv",
     editor_lang_auto: "Automatikus",
@@ -1359,6 +1393,7 @@ var EntOneI18n = {
     sign_title: "Podpísať tento záznam?",
     sign_text: "ENT zaznamená, že ste si prečítali „{title}“ pre {child}. Nedá sa to vrátiť späť.",
     cancel: "Zrušiť",
+    close: "Zavrieť",
     confirm: "Podpísať",
     signing: "Podpisuje sa…",
     mark_done: "Označiť ako hotové",
@@ -1408,6 +1443,7 @@ var EntOneI18n = {
     editor_show_messages: "Zobraziť správy",
     editor_show_news: "Zobraziť novinky",
     editor_show_events: "Zobraziť kalendár",
+    editor_show_empty: "Zobraziť prázdne sekcie",
     editor_max_items: "Položky na sekciu",
     editor_language: "Jazyk",
     editor_lang_auto: "Automaticky",
@@ -1437,6 +1473,7 @@ var EntOneI18n = {
     sign_title: "Podepsat tento záznam?",
     sign_text: "ENT zaznamená, že jste si přečetli „{title}“ pro {child}. Nelze to vrátit zpět.",
     cancel: "Zrušit",
+    close: "Zavřít",
     confirm: "Podepsat",
     signing: "Podepisuje se…",
     mark_done: "Označit jako hotové",
@@ -1486,6 +1523,7 @@ var EntOneI18n = {
     editor_show_messages: "Zobrazit zprávy",
     editor_show_news: "Zobrazit novinky",
     editor_show_events: "Zobrazit kalendář",
+    editor_show_empty: "Zobrazit prázdné sekce",
     editor_max_items: "Položky na sekci",
     editor_language: "Jazyk",
     editor_lang_auto: "Automaticky",
@@ -1515,6 +1553,7 @@ var EntOneI18n = {
     sign_title: "Podpišem to obvestilo?",
     sign_text: "ENT zabeleži, da ste prebrali »{title}« za {child}. Tega ni mogoče razveljaviti.",
     cancel: "Prekliči",
+    close: "Zapri",
     confirm: "Podpiši",
     signing: "Podpisovanje…",
     mark_done: "Označi kot opravljeno",
@@ -1564,6 +1603,7 @@ var EntOneI18n = {
     editor_show_messages: "Prikaži sporočila",
     editor_show_news: "Prikaži novice",
     editor_show_events: "Prikaži koledar",
+    editor_show_empty: "Prikaži prazne razdelke",
     editor_max_items: "Elementi na razdelek",
     editor_language: "Jezik",
     editor_lang_auto: "Samodejno",
@@ -1593,6 +1633,7 @@ var EntOneI18n = {
     sign_title: "Parakstīt šo ierakstu?",
     sign_text: "ENT reģistrē, ka esat izlasījis “{title}” ({child}). To nevar atsaukt.",
     cancel: "Atcelt",
+    close: "Aizvērt",
     confirm: "Parakstīt",
     signing: "Paraksta…",
     mark_done: "Atzīmēt kā izpildītu",
@@ -1642,6 +1683,7 @@ var EntOneI18n = {
     editor_show_messages: "Rādīt ziņojumus",
     editor_show_news: "Rādīt jaunumus",
     editor_show_events: "Rādīt kalendāru",
+    editor_show_empty: "Rādīt tukšās sadaļas",
     editor_max_items: "Elementi sadaļā",
     editor_language: "Valoda",
     editor_lang_auto: "Automātiski",
@@ -1671,6 +1713,7 @@ var EntOneI18n = {
     sign_title: "Υπογραφή αυτού του σημειώματος;",
     sign_text: "Το ENT καταγράφει ότι διαβάσατε «{title}» για {child}. Δεν αναιρείται.",
     cancel: "Ακύρωση",
+    close: "Κλείσιμο",
     confirm: "Υπογραφή",
     signing: "Υπογραφή…",
     mark_done: "Σήμανση ως ολοκληρωμένο",
@@ -1720,6 +1763,7 @@ var EntOneI18n = {
     editor_show_messages: "Εμφάνιση μηνυμάτων",
     editor_show_news: "Εμφάνιση νέων",
     editor_show_events: "Εμφάνιση ημερολογίου",
+    editor_show_empty: "Εμφάνιση κενών ενοτήτων",
     editor_max_items: "Στοιχεία ανά ενότητα",
     editor_language: "Γλώσσα",
     editor_lang_auto: "Αυτόματα",
@@ -1743,6 +1787,7 @@ var ENT_ONE_DEFAULTS = {
   show_messages: true,
   show_news: false,
   show_events: true,
+  show_empty: false,
   max_items: 5,
 };
 
@@ -1867,7 +1912,8 @@ function entOneDay(raw, t, locale) {
   if (diff === 1) return t.tomorrow;
   if (diff === -1) return t.yesterday;
   var d = entOneParse(raw);
-  var opts = Math.abs(diff) < 7 ? { weekday: 'long' } : { day: 'numeric', month: 'short' };
+  // Within a week the weekday is enough; further away the weekday stays, with the date (Thu 26 Nov).
+  var opts = Math.abs(diff) < 7 ? { weekday: 'long' } : { weekday: 'short', day: 'numeric', month: 'short' };
   try {
     return d.toLocaleDateString(locale, opts);
   } catch (_e) {
@@ -1883,13 +1929,23 @@ function entOneDue(raw, t, locale) {
   return entOneFormat(t.due, { day: entOneDay(raw, t, locale) });
 }
 
+// The time format of the user's Home Assistant profile: '12', '24', or the language's ('language' / 'system').
+var entOneHour12 = undefined;
+
+function entOneSetTimeFormat(hass) {
+  var f = hass?.locale?.time_format;
+  entOneHour12 = f === '12' ? true : f === '24' ? false : undefined;
+}
+
 function entOneTime(raw, locale) {
   var d = entOneParse(raw);
   if (Number.isNaN(d.getTime())) return '';
+  var opts = { hour: '2-digit', minute: '2-digit' };
+  if (entOneHour12 !== undefined) opts.hour12 = entOneHour12;
   try {
-    return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleTimeString(locale, opts);
   } catch (_e) {
-    return d.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleTimeString('en', opts);
   }
 }
 
@@ -1937,14 +1993,31 @@ function entOneUpcomingEvents(events) {
   });
 }
 
-// Shared row renderers: the card and the panel draw the same rows.
+// Shared row renderers: the card and the panel draw the same rows. A row with more to read (text, description,
+// link) gets a chevron and data-toggle; opts.open shows that part (the panel always does with opts.full).
+function entOneToggle(key, open, hasMore) {
+  if (!hasMore) return { attrs: '', chevron: '' };
+  return {
+    attrs: ' data-toggle="' + entOneEsc(key) + '" role="button" tabindex="0" aria-expanded="' + !!open + '"',
+    chevron: '<ha-icon class="chevron' + (open ? '' : ' closed') + '" icon="mdi:chevron-down"></ha-icon>',
+  };
+}
+
+// Open when the panel shows everything (full), or when the caller's isOpen(key) says so (rows unfolded by a click).
+function entOneOpen(opts, key) {
+  return !!(opts && (opts.full || opts.isOpen?.(key)));
+}
+
 function entOneWordRow(w, t, locale, opts) {
   var meta = [w.child, w.author, entOneDay(w.date, t, locale)].filter(Boolean).join(' · ');
+  var key = 'word:' + w.id + ':' + w.child_id;
+  var open = entOneOpen(opts, key);
+  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!w.text);
   return '<div class="item word' + (w.signed ? ' done' : '') + '">' +
     '<ha-icon class="item-icon" icon="' + (w.signed ? 'mdi:check-circle-outline' : 'mdi:notebook-edit-outline') + '"></ha-icon>' +
-    '<div class="item-main"><div class="item-title">' + entOneEsc(w.title || w.category || '—') + '</div>' +
+    '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(w.title || w.category || '—') + '</div>' +
     '<div class="item-meta">' + entOneEsc(meta) + '</div>' +
-    (opts?.full && w.text ? '<div class="item-text">' + entOneEsc(w.text) + '</div>' : '') + '</div>' +
+    (open && w.text ? '<div class="item-text">' + entOneEsc(w.text) + '</div>' : '') + '</div>' + tg.chevron +
     (w.signed
       ? '<span class="chip ok">' + entOneEsc(t.signed) + '</span>'
       : opts?.canSign
@@ -1955,38 +2028,56 @@ function entOneWordRow(w, t, locale, opts) {
 
 function entOneHomeworkRow(h, t, locale, opts) {
   var label = h.done ? t.mark_todo : t.mark_done;
+  var key = 'homework:' + h.book_id + ':' + h.id;
+  var open = entOneOpen(opts, key);
+  var more = !!(h.text && h.title);
+  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, more);
   return '<div class="item hw' + (h.done ? ' done' : '') + '">' +
     '<button class="check" role="checkbox" aria-checked="' + !!h.done + '" aria-label="' + entOneEsc(label) + '" title="' + entOneEsc(label) + '"' +
     ' data-action="homework" data-id="' + entOneEsc(h.id) + '" data-book="' + entOneEsc(h.book_id) + '">' +
     '<ha-icon icon="' + (h.done ? 'mdi:checkbox-marked-outline' : 'mdi:checkbox-blank-outline') + '"></ha-icon></button>' +
-    '<div class="item-main"><div class="item-title">' + entOneEsc(h.title || (h.text || '').split('\n')[0] || h.book) + '</div>' +
+    '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(h.title || (h.text || '').split('\n')[0] || h.book) + '</div>' +
     '<div class="item-meta">' + entOneEsc([h.book, entOneDue(h.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (opts?.full && h.text && h.title ? '<div class="item-text">' + entOneEsc(h.text) + '</div>' : '') + '</div></div>';
+    (open && more ? '<div class="item-text">' + entOneEsc(h.text) + '</div>' : '') + '</div>' + tg.chevron + '</div>';
 }
 
-function entOneMessageRow(m, t, locale) {
+// The message body is not read (that would mark it read in the ENT): the row opens on a link to the ENT messaging.
+function entOneMessageRow(m, t, locale, opts) {
+  var key = 'message:' + m.id;
+  var open = entOneOpen(opts, key);
+  var tg = opts?.url && !opts.full ? entOneToggle(key, open, true) : { attrs: '', chevron: '' };
   return '<div class="item msg' + (m.unread ? ' unread' : ' done') + '">' +
     '<ha-icon class="item-icon" icon="' + (m.unread ? 'mdi:email-outline' : 'mdi:email-open-outline') + '"></ha-icon>' +
-    '<div class="item-main"><div class="item-title">' + entOneEsc(m.subject || '—') + '</div>' +
-    '<div class="item-meta">' + entOneEsc([m.sender, entOneDay(m.date, t, locale)].filter(Boolean).join(' · ')) + '</div></div>' +
-    (m.attachment ? '<ha-icon class="item-side" icon="mdi:paperclip" title="' + entOneEsc(t.attachment) + '"></ha-icon>' : '') +
+    '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(m.subject || '—') + '</div>' +
+    '<div class="item-meta">' + entOneEsc([m.sender, entOneDay(m.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
+    (open && opts?.url
+      ? '<div class="item-text"><a class="link" href="' + entOneEsc(opts.url + '/conversation/conversation') + '" target="_blank" rel="noopener">' + entOneEsc(t.open_ent) + '</a></div>'
+      : '') + '</div>' +
+    (m.attachment ? '<ha-icon class="item-side" icon="mdi:paperclip" title="' + entOneEsc(t.attachment) + '"></ha-icon>' : '') + tg.chevron +
     '</div>';
 }
 
 function entOneNewsRow(n, t, locale, opts) {
+  var key = 'news:' + n.id;
+  var open = entOneOpen(opts, key);
+  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!n.text);
   return '<div class="item news">' +
     '<ha-icon class="item-icon" icon="mdi:newspaper-variant-outline"></ha-icon>' +
-    '<div class="item-main"><div class="item-title">' + entOneEsc(n.title || '—') + '</div>' +
+    '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(n.title || '—') + '</div>' +
     '<div class="item-meta">' + entOneEsc([n.author, entOneDay(n.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (opts?.full && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + '</div></div>';
+    (open && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + '</div>' + tg.chevron + '</div>';
 }
 
-function entOneEventRow(e, t, locale) {
+function entOneEventRow(e, t, locale, opts) {
   var when = entOneDay(e.start, t, locale) + ' · ' + (e.all_day ? t.all_day : entOneTime(e.start, locale));
+  var key = 'event:' + e.id;
+  var open = entOneOpen(opts, key);
+  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!e.description);
   return '<div class="item event">' +
     '<ha-icon class="item-icon" icon="mdi:calendar-blank-outline"></ha-icon>' +
-    '<div class="item-main"><div class="item-title">' + entOneEsc(e.title || '—') + '</div>' +
-    '<div class="item-meta">' + entOneEsc([when, e.location].filter(Boolean).join(' · ')) + '</div></div></div>';
+    '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(e.title || '—') + '</div>' +
+    '<div class="item-meta">' + entOneEsc([when, e.location].filter(Boolean).join(' · ')) + '</div>' +
+    (open && e.description ? '<div class="item-text">' + entOneEsc(e.description) + '</div>' : '') + '</div>' + tg.chevron + '</div>';
 }
 
 // Styles of the rows, chips and buttons, shared by the card and the panel.
@@ -2002,7 +2093,17 @@ function entOneItemStyles(accent) {
     '.hw.done .item-title { text-decoration: line-through; }',
     '.item-meta { font-size: 12px; color: var(--secondary-text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
     '.item-text { font-size: 13px; color: var(--primary-text-color); white-space: pre-line; margin-top: 4px; overflow-wrap: anywhere; }',
-    '.check { all: unset; cursor: pointer; flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; color: var(--secondary-text-color); --mdc-icon-size: 20px; }',
+    // 40 px touch target around the 20 px box, without moving the row's text.
+    '.check { all: unset; cursor: pointer; flex: none; display: grid; place-items: center; width: 40px; height: 40px; margin: -8px -8px -8px -10px; border-radius: 10px; color: var(--secondary-text-color); --mdc-icon-size: 20px; }',
+    '.check:hover { background: color-mix(in srgb, var(--primary-text-color) 6%, transparent); }',
+    '[data-toggle] { cursor: pointer; }',
+    '[data-toggle]:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }',
+    // Collapsed: chevron to the right; open: down (like the other cards).
+    '.chevron { flex: none; align-self: flex-start; margin-top: 10px; color: var(--secondary-text-color); --mdc-icon-size: 20px; transition: transform .2s ease; }',
+    '.chevron.closed { transform: rotate(-90deg); }',
+    '.link { color: color-mix(in srgb, ' + accent + ' 65%, var(--primary-text-color)); font-weight: 500; text-decoration: none; }',
+    '.link:hover { text-decoration: underline; }',
+    '@media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }',
     '.hw.done .check { color: var(--success-color, #43a047); }',
     '.check:focus-visible, .act:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }',
     // Outlined, never filled (card convention): accent text on an accent hairline.
@@ -2031,6 +2132,8 @@ window.EntOne = {
   accounts: entOneAccounts,
   data: entOneData,
   day: entOneDay,
+  time: entOneTime,
+  setTimeFormat: entOneSetTimeFormat,
   sign: entOneSign,
   canSign: entOneCanSign,
   setDone: entOneSetDone,
@@ -2042,6 +2145,8 @@ window.EntOne = {
 };
 
 // ── ent-one-card ──────────────────────────────────────────────────────────────
+var ENT_ONE_PANEL_PATH = 'ent-one';
+
 class EntOneCard extends HTMLElement {
   static getConfigElement() {
     return document.createElement('ent-one-card-editor');
@@ -2054,6 +2159,7 @@ class EntOneCard extends HTMLElement {
   setConfig(config) {
     this._config = Object.assign({}, ENT_ONE_DEFAULTS, config || {});
     this.toggleAttribute?.('hide-title', config?.show_title === false);
+    this._open = this._open || {};
     if (this._hass) this._render(true);
   }
 
@@ -2066,14 +2172,19 @@ class EntOneCard extends HTMLElement {
     var changed = first || !key !== !this._lastKey || (key?.some((st, i) => st !== this._lastKey[i]));
     if (changed) {
       this._lastKey = key;
+      // A new successful update clears the error shown since the one before.
+      if (this._error && data?.updated && data.updated !== this._errorAt) this._error = '';
       this._render();
     }
   }
 
   connectedCallback() {
     this._onOutside = this._onOutside || ((ev) => {
-      if (!this._confirm || ev.composedPath().indexOf(this) !== -1 || entOneInDialog(ev)) return;
+      var anyOpen = Object.keys(this._open || {}).length > 0;
+      if ((!this._confirm && !anyOpen) || ev.composedPath().indexOf(this) !== -1 || entOneInDialog(ev)) return;
+      // Like the other cards: a click elsewhere closes the popup and folds the open rows.
       this._confirm = null;
+      this._open = {};
       this._render(true);
     });
     document.addEventListener('click', this._onOutside, true);
@@ -2082,8 +2193,9 @@ class EntOneCard extends HTMLElement {
   disconnectedCallback() {
     document.removeEventListener('click', this._onOutside, true);
     // Leaving the page (view change, conditional card hidden) closes the popup without doing anything.
-    if (this._confirm) {
+    if (this._confirm || Object.keys(this._open || {}).length) {
       this._confirm = null;
+      this._open = {};
       this._render(true);
     }
   }
@@ -2116,12 +2228,20 @@ class EntOneCard extends HTMLElement {
     if (this._root) return;
     this._root = this.attachShadow({ mode: 'open' });
     this._root.innerHTML = '<style>' + EntOneCard._styles() + '</style><ha-card><div class="header"></div><div class="popup" hidden></div><div class="body"></div></ha-card>';
-    this._root.querySelector('ha-card').addEventListener('click', this._onClick.bind(this));
+    var card = this._root.querySelector('ha-card');
+    card.addEventListener('click', this._onClick.bind(this));
+    card.addEventListener('keydown', (ev) => {
+      if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.hasAttribute?.('data-toggle')) {
+        ev.preventDefault();
+        this._toggleRow(ev.target.getAttribute('data-toggle'));
+      }
+    });
   }
 
   _render() {
     if (!this._config || !this._hass) return;
     this._ensureShell();
+    entOneSetTimeFormat(this._hass);
     var t = this._t();
     var data = entOneData(this._hass, this._config.config_entry_id);
     this._data = data;
@@ -2137,24 +2257,32 @@ class EntOneCard extends HTMLElement {
       body.innerHTML = '<div class="pad empty">' + entOneEsc(t.unavailable) + '</div>';
       return;
     }
+    // innerHTML replaces the focused row: give the keyboard focus back to the same toggle.
+    var focused = this._root.activeElement?.getAttribute?.('data-toggle');
     body.innerHTML = this._renderTiles(t, data) + (this._compact() ? '' : this._renderSections(t, data));
+    if (focused) body.querySelector(`[data-toggle="${CSS.escape(focused)}"]`)?.focus({ preventScroll: true });
+  }
+
+  _time(iso) {
+    return entOneTime(iso, this._locale());
   }
 
   _renderHeader(t, data) {
     var c = this._config;
     var header = this._root.querySelector('.header');
     var title = c.title || (data?.account.schools?.[0]) || t.default_title;
-    var subParts = [];
+    // The children's first names (or the classes of a staff account) say whose ENT this is.
+    var who = '';
     if (data) {
-      if (data.account.classes?.length) subParts.push(data.account.classes.join(', '));
-      else if (data.children.length > 1) subParts.push(entOneFormat(t.children, { n: data.children.length }));
-      else if (data.children.length === 1) subParts.push(data.children[0].first_name);
+      var names = data.children.map((ch) => ch.first_name).filter(Boolean);
+      who = names.length ? names.join(' · ') : (data.account.classes || []).join(', ');
     }
+    var updated = data?.updated ? entOneFormat(t.last_update, { time: this._time(data.updated) }) : '';
     var pill = '';
     if (data && !this._compact()) {
       var kind = data.unavailable ? 'bad' : data.stale.length ? 'warn' : 'ok';
       var text = data.unavailable ? t.offline : data.stale.length ? t.partial : t.up_to_date;
-      pill = '<span class="status ' + kind + '" title="' + entOneEsc(text) + '"><span class="status-text">' + entOneEsc(text) + '</span></span>';
+      pill = '<span class="status ' + kind + '" title="' + entOneEsc(updated || text) + '"><span class="status-text">' + entOneEsc(text) + '</span></span>';
     }
     var buttons = '';
     if (data && !this._compact()) {
@@ -2165,13 +2293,13 @@ class EntOneCard extends HTMLElement {
         buttons += '<ha-icon-button data-action="open" label="' + entOneEsc(t.open_ent) + '" title="' + entOneEsc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></ha-icon-button>';
       }
     }
+    var sub = this._error
+      ? '<div class="sub error"><span>' + entOneEsc(this._error) + '</span><button class="dismiss" data-action="dismiss" aria-label="' + entOneEsc(t.close) + '" title="' + entOneEsc(t.close) + '"><ha-icon icon="mdi:close"></ha-icon></button></div>'
+      : who ? '<div class="sub">' + entOneEsc(who) + '</div>' : '';
     header.innerHTML =
       '<div class="title"><div class="logo" aria-hidden="true"><ha-icon icon="mdi:school-outline"></ha-icon></div>' +
-      '<div class="titles"><div class="name">' + entOneEsc(title) + '</div>' +
-      (this._error
-        ? '<div class="sub error">' + entOneEsc(this._error) + '</div>'
-        : subParts.length ? '<div class="sub">' + entOneEsc(subParts.join(' · ')) + '</div>' : '') +
-      '</div></div>' + pill + (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
+      '<div class="titles"><div class="name">' + entOneEsc(title) + '</div>' + sub + '</div></div>' +
+      pill + (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
   }
 
   // Confirmation popup at the top of the card (card convention), never centered on the screen.
@@ -2196,17 +2324,20 @@ class EntOneCard extends HTMLElement {
   _renderTiles(t, data) {
     var toSign = data.words.filter((w) => !w.signed).length;
     var todo = data.homework.filter((h) => !h.done).length;
-    var tile = (value, label, icon, hot) =>
-      '<div class="tile' + (hot ? ' hot' : '') + '"><div class="v"><ha-icon icon="' + icon + '"></ha-icon>' + value + '</div><div class="l">' + entOneEsc(label) + '</div></div>';
+    var tile = (value, label, icon, hot, tab) =>
+      '<button class="tile' + (hot ? ' hot' : '') + '" data-action="goto" data-tab="' + tab + '" aria-label="' + entOneEsc(value + ' ' + label) + '">' +
+      '<span class="v"><ha-icon icon="' + icon + '"></ha-icon>' + value + '</span><span class="l">' + entOneEsc(label) + '</span></button>';
     return '<div class="tiles">' +
-      tile(data.unread, t.tile_messages, 'mdi:email-outline', false) +
-      tile(toSign, t.tile_words, 'mdi:notebook-edit-outline', toSign > 0) +
-      tile(todo, t.tile_homework, 'mdi:pencil-outline', false) +
+      tile(data.unread, t.tile_messages, 'mdi:email-outline', false, 'messages') +
+      tile(toSign, t.tile_words, 'mdi:notebook-edit-outline', toSign > 0, 'words') +
+      tile(todo, t.tile_homework, 'mdi:pencil-outline', false, 'homework') +
       '</div>';
   }
 
-  _section(title, rows, empty, extra) {
-    return '<div class="section"><div class="section-title">' + entOneEsc(title) + '</div>' +
+  _section(key, title, rows, empty, extra) {
+    // An empty section is left out (but homework, which says "nothing to do"), unless show_empty.
+    if (!rows.length && !this._config.show_empty && key !== 'homework') return '';
+    return '<div class="section" data-section="' + key + '"><div class="section-title">' + entOneEsc(title) + '</div>' +
       (rows.length ? rows.join('') : '<div class="empty">' + entOneEsc(empty) + '</div>') +
       (extra ? '<div class="more">' + entOneEsc(extra) + '</div>' : '') + '</div>';
   }
@@ -2215,42 +2346,73 @@ class EntOneCard extends HTMLElement {
     var c = this._config;
     var max = Math.max(1, Number(c.max_items) || ENT_ONE_DEFAULTS.max_items);
     var locale = this._locale();
+    var isOpen = (key) => !!this._open[key];
     var limit = (list) => ({ shown: list.slice(0, max), rest: Math.max(0, list.length - max) });
     var more = (n) => (n ? entOneFormat(t.more, { n: n }) : '');
     var html = '';
     if (c.show_words) {
-      var words = limit(data.words.filter((w) => !w.signed));
       var canSign = entOneCanSign(this._hass);
-      html += this._section(t.section_words, words.shown.map((w) => entOneWordRow(w, t, locale, { canSign: canSign })), t.no_words, more(words.rest));
+      var words = limit(data.words.filter((w) => !w.signed));
+      html += this._section('words', t.section_words, words.shown.map((w) => entOneWordRow(w, t, locale, { canSign: canSign, isOpen: isOpen })), t.no_words, more(words.rest));
     }
     if (c.show_homework) {
       var hw = limit(entOneSortedHomework(data.homework, c.show_done));
-      html += this._section(t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale)), t.no_homework, more(hw.rest));
+      html += this._section('homework', t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale, { isOpen: isOpen })), t.no_homework, more(hw.rest));
     }
     if (c.show_messages) {
       var msgs = limit(data.messages.filter((m) => m.unread));
-      html += this._section(t.section_messages, msgs.shown.map((m) => entOneMessageRow(m, t, locale)), t.no_messages, more(msgs.rest));
+      html += this._section('messages', t.section_messages, msgs.shown.map((m) => entOneMessageRow(m, t, locale, { url: data.url, isOpen: isOpen })), t.no_messages, more(msgs.rest));
     }
     if (c.show_events) {
       var events = limit(entOneUpcomingEvents(data.events));
-      html += this._section(t.section_events, events.shown.map((e) => entOneEventRow(e, t, locale)), t.no_events, more(events.rest));
+      html += this._section('events', t.section_events, events.shown.map((e) => entOneEventRow(e, t, locale, { isOpen: isOpen })), t.no_events, more(events.rest));
     }
     if (c.show_news) {
       var news = limit(data.news);
-      html += this._section(t.section_news, news.shown.map((n) => entOneNewsRow(n, t, locale)), t.no_news, more(news.rest));
+      html += this._section('news', t.section_news, news.shown.map((n) => entOneNewsRow(n, t, locale, { isOpen: isOpen })), t.no_news, more(news.rest));
     }
     return html;
   }
 
+  _toggleRow(key) {
+    if (this._open[key]) delete this._open[key];
+    else this._open[key] = true;
+    this._render(true);
+  }
+
+  // A count opens the panel on its tab; without the panel, the card scrolls to the section (the mini card opens).
+  _goto(tab) {
+    if (this._hass?.panels?.[ENT_ONE_PANEL_PATH]) {
+      window.history.pushState(null, '', `/${ENT_ONE_PANEL_PATH}?tab=${tab}`);
+      window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
+      return;
+    }
+    if (this._compact()) this._setZoom?.(true);
+    var section = { messages: 'messages', words: 'words', homework: 'homework' }[tab];
+    this._root.querySelector(`[data-section="${section}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
   _onClick(ev) {
+    var toggle = ev.target.closest ? ev.target.closest('[data-toggle]') : null;
     var el = ev.target.closest ? ev.target.closest('[data-action]') : null;
+    if (toggle && !el && !ev.target.closest('a')) {
+      ev.stopPropagation();
+      this._toggleRow(toggle.getAttribute('data-toggle'));
+      return;
+    }
     if (!el || !this._data) return;
     var action = el.getAttribute('data-action');
     var data = this._data;
     if (action === 'refresh') this._refresh();
     else if (action === 'open') window.open(data.url, '_blank', 'noopener');
     else if (action === 'detail') this._toggleDetail(ev);
-    else if (action === 'sign' && entOneCanSign(this._hass)) {
+    else if (action === 'goto') {
+      ev.stopPropagation();
+      this._goto(el.getAttribute('data-tab'));
+    } else if (action === 'dismiss') {
+      this._error = '';
+      this._render(true);
+    } else if (action === 'sign' && entOneCanSign(this._hass)) {
       ev.stopPropagation();
       this._confirm = { id: el.getAttribute('data-id'), child: el.getAttribute('data-child') };
       this._render(true);
@@ -2264,9 +2426,10 @@ class EntOneCard extends HTMLElement {
     }
   }
 
-  _fail(err) {
+  _fail(err, prefix) {
     entOneErrorText(this._hass, err).then((text) => {
-      this._error = `${this._t().action_failed} ${text}`;
+      this._error = `${prefix || this._t().action_failed} ${text}`;
+      this._errorAt = this._data?.updated;
       this._render(true);
     });
   }
@@ -2299,11 +2462,7 @@ class EntOneCard extends HTMLElement {
     this._error = '';
     this._render(true);
     entOneRefresh(this._hass, this._data.entryId)
-      .catch((err) =>
-        entOneErrorText(this._hass, err).then((text) => {
-          this._error = `${this._t().refresh_failed} ${text}`;
-        }),
-      )
+      .catch((err) => this._fail(err, this._t().refresh_failed))
       .finally(() => {
         this._refreshing = false;
         this._render(true);
@@ -2324,7 +2483,10 @@ class EntOneCard extends HTMLElement {
       ':host([hide-title]) .titles > .name { display: none; }',
       '.name { font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
-      '.sub.error { white-space: normal; color: color-mix(in srgb, var(--error-color, #db4437) 55%, var(--primary-text-color)); }',
+      '.sub.error { display: flex; align-items: flex-start; gap: 4px; white-space: normal; color: color-mix(in srgb, var(--error-color, #db4437) 55%, var(--primary-text-color)); }',
+      '.dismiss { all: unset; cursor: pointer; flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; --mdc-icon-size: 14px; }',
+      '.dismiss:hover { background: color-mix(in srgb, var(--error-color, #db4437) 14%, transparent); }',
+      '.dismiss:focus-visible { outline: 2px solid var(--primary-color); }',
       '.status { --c: var(--success-color, #43a047); flex: 0 1 auto; min-width: 0; max-width: 45%; display: flex; align-items: center; overflow: hidden; font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap;' +
         ' border-radius: 12px; padding: 5px 10px; color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); background: color-mix(in srgb, var(--c) 15%, transparent); }',
       '.status.warn { --c: var(--warning-color, #ffa600); }',
@@ -2339,12 +2501,15 @@ class EntOneCard extends HTMLElement {
         ' .status-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } }',
       '.pad { padding: 4px 16px; }',
       '.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0 12px; }',
-      '.tile { min-width: 0; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, var(--primary-text-color) 5%, transparent); }',
+      '.tile { all: unset; box-sizing: border-box; cursor: pointer; display: block; min-width: 0; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, var(--primary-text-color) 5%, transparent); }',
+      '.tile:hover { background: color-mix(in srgb, var(--primary-text-color) 9%, transparent); }',
+      '.tile:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 1px; }',
+      '.tile.hot:hover { background: color-mix(in srgb, ' + A + ' 20%, transparent); }',
       '.tile.hot { background: color-mix(in srgb, ' + A + ' 14%, transparent); }',
       '.tile .v { display: flex; align-items: center; gap: 6px; font-size: 22px; font-weight: 500; line-height: 1.1; color: var(--primary-text-color); --mdc-icon-size: 18px; }',
       '.tile .v ha-icon { color: var(--secondary-text-color); }',
       '.tile.hot .v ha-icon { color: ' + A + '; }',
-      '.tile .l { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
+      '.tile .l { display: block; font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.section { padding: 10px 12px 0; }',
       '.section-title { font-size: 12px; font-weight: 500; color: var(--secondary-text-color); margin-bottom: 2px; }',
       '.more { font-size: 12px; color: var(--secondary-text-color); padding-top: 2px; }',
@@ -2437,6 +2602,7 @@ var ENT_ONE_EDITOR_KEYS = {
   show_messages: 'editor_show_messages',
   show_news: 'editor_show_news',
   show_events: 'editor_show_events',
+  show_empty: 'editor_show_empty',
   max_items: 'editor_max_items',
   language: 'editor_language',
 };
@@ -2449,7 +2615,7 @@ function entOneEditorSchema(t) {
     {
       type: 'grid',
       name: '',
-      schema: ['show_title', 'show_refresh', 'show_words', 'show_homework', 'show_done', 'show_messages', 'show_events', 'show_news'].map(bool),
+      schema: ['show_title', 'show_refresh', 'show_words', 'show_homework', 'show_done', 'show_messages', 'show_events', 'show_news', 'show_empty'].map(bool),
     },
     { name: 'max_items', selector: { number: { min: 1, max: 20, mode: 'box' } } },
     {

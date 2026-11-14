@@ -50,6 +50,8 @@ COMMON = {
 
 # Material Design Icons used by the cards and the panel (@mdi/js).
 ICONS = {
+    "chevron-down": "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z",
+    "close": "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",
     "school-outline": "M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3M18.82 9L12 12.72L5.18 9L12 5.28L18.82 9M17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z",
     "email-outline": "M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z",
     "notebook-edit-outline": "M19.07 14.88L21.12 16.93L15.06 23H13V20.94L19.07 14.88M21.04 13.13C21.18 13.13 21.31 13.19 21.42 13.3L22.7 14.58C22.92 14.79 22.92 15.14 22.7 15.35L21.7 16.35L19.65 14.3L20.65 13.3C20.76 13.19 20.9 13.13 21.04 13.13M17 4V10L15 8L13 10V4H9V20H11V22H7C5.95 22 5 21.05 5 20V19H3V17H5V13H3V11H5V7H3V5H5V4C5 2.89 5.9 2 7 2H19C20.05 2 21 2.95 21 4V10L19 12V4H17M5 5V7H7V5H5M5 11V13H7V11H5M5 17V19H7V17H5Z",
@@ -280,6 +282,9 @@ SHOTS = [
     # The confirmation popup at the top of the card, before signing a word of the liaison book.
     {"file": "card-sign", "theme": "light", "config": {}, "click": '[data-action="sign"]'},
     {"file": "card-sign-dark", "theme": "dark", "config": {}, "click": '[data-action="sign"]'},
+    # A word unfolded to its text, by a click on its row.
+    {"file": "card-unfolded", "theme": "light", "config": {}, "click": '[data-toggle^="word:"]'},
+    {"file": "card-unfolded-dark", "theme": "dark", "config": {}, "click": '[data-toggle^="word:"]'},
     {"file": "mini-card", "theme": "light", "element": "ent-one-mini-card", "width": 300, "config": {}},
     {"file": "mini-card-dark", "theme": "dark", "element": "ent-one-mini-card", "width": 300, "config": {}},
     {"file": "panel", "theme": "light", "panel": "home", "width": 960},
@@ -348,7 +353,7 @@ def mount(context, shot):
         page.add_script_tag(content=PANEL_JS)
     page.evaluate(
         """({config, states, element, tab}) => {
-          const hass = {states, language: "en", locale: {language: "en"}, user: {is_admin: true},
+          const hass = {states, language: "en", locale: {language: "en", time_format: "24"}, user: {is_admin: true},
                         callService: () => Promise.resolve(), callWS: () => Promise.resolve({})};
           const el = document.createElement(element);
           if (tab) {
