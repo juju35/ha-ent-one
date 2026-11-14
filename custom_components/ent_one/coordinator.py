@@ -37,6 +37,7 @@ from .const import (
     DEFAULT_HOMEWORK_DAYS,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    EVENT_NEW_BLOG_POST,
     EVENT_NEW_HOMEWORK,
     EVENT_NEW_MESSAGE,
     EVENT_NEW_WORD,
@@ -380,7 +381,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         data.events = events
 
     def _fire_new(self, data: EntData) -> None:
-        """Fire ent_one_new_* for unread messages, unsigned words and homework to do seen for the first time.
+        """Fire ent_one_new_* for unread messages, unsigned words, homework to do and blog posts seen the first time.
 
         A kind starts being followed at its first successful read, which only records what is there: a section that
         failed at startup does not fire everything it holds once it comes back. The ids remembered are the ones
@@ -396,6 +397,13 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                 lambda h: not h["done"],
                 EVENT_NEW_HOMEWORK,
                 ("book", "date", "title"),
+            ),
+            "blog_post": (
+                "blog",
+                data.blog,
+                lambda _: True,
+                EVENT_NEW_BLOG_POST,
+                ("blog_id", "blog", "title", "author"),
             ),
         }
         for kind, (section, items, pending, event, fields) in kinds.items():
@@ -427,9 +435,11 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             except (KeyError, IndexError, ValueError):
                 return message
 
-        title = text(f"notify_{kind}", child=data.get("child") or "")
+        title = text(f"notify_{kind}", child=data.get("child") or "", blog=data.get("blog") or "")
         if event == EVENT_NEW_MESSAGE:
             message = " · ".join(p for p in (data.get("sender"), data.get("subject")) if p)
+        elif event == EVENT_NEW_BLOG_POST:
+            message = " · ".join(p for p in (data.get("title"), data.get("author")) if p)
         elif event == EVENT_NEW_HOMEWORK:
             message = " · ".join(p for p in (data.get("title") or data.get("book"), data.get("date")) if p)
         else:

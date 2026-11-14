@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "ENT delas av hela skolan: minst 10 minuter.",
           "homework_days": "Läxor med deadline inom så många dagar visas.",
-          "notify_services": "Nya meddelanden, meddelanden att signera och läxor skickas till dessa åtgärder."
+          "notify_services": "Nya meddelanden, anteckningar att skriva under, läxor och blogginlägg skickas till dessa åtgärder."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Ny läxa"
+    },
+    "notify_new_blog_post": {
+      "message": "Nytt inlägg · {blog}"
     }
   }
 }

@@ -28,7 +28,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 - **School** calendar: the ENT's events and every homework on its due date
 - One **to-do list per homework notebook**: ticking an item marks the homework done in the ENT, like its check box (a notebook gone from the ENT has its list removed)
 - `ent_one.sign_word` action to sign a word of the liaison book (read receipt), `ent_one.refresh` to read the ENT now
-- `ent_one_new_message`, `ent_one_new_word` and `ent_one_new_homework` events for automations, and optional **notifications** to the notify actions of your choice
+- `ent_one_new_message`, `ent_one_new_word`, `ent_one_new_homework` and `ent_one_new_blog_post` events for automations, and optional **notifications** to the notify actions of your choice
 - `custom:ent-one-card` card, **shipped with the integration** and loaded automatically: counts, words to sign (with confirmation), homework to tick, unread messages, calendar and news
 - `custom:ent-one-mini-card` compact card: the three counts, with a button to open the full card
 - **ENT ONE sidebar panel** with Home, Homework, Liaison book, Messages, News, Blog and Settings tabs
@@ -167,6 +167,7 @@ data:
 | `ent_one_new_message` | An unread message appears | `id`, `subject`, `sender` |
 | `ent_one_new_word` | A word to sign appears | `id`, `child_id`, `child`, `title` |
 | `ent_one_new_homework` | A homework to do appears | `id`, `book`, `date`, `title` |
+| `ent_one_new_blog_post` | A blog post appears | `id`, `blog_id`, `blog`, `title`, `author` |
 
 Every event also carries `config_entry_id`. Nothing fires at startup or after a reload, nor for what a section holds when it is first read after failing, and an item fires once only. A homework fires when it enters the homework window (14 days by default), which can be later than when the teacher posted it.
 

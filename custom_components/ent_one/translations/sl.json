@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "ENT uporablja vsa šola: najmanj 10 minut.",
           "homework_days": "Prikazane so naloge z rokom v tem številu dni.",
-          "notify_services": "Nova sporočila, obvestila za podpis in domače naloge se pošljejo tem dejanjem."
+          "notify_services": "Nova sporočila, obvestila za podpis, domače naloge in objave na blogu se pošljejo tem dejanjem."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Nova domača naloga"
+    },
+    "notify_new_blog_post": {
+      "message": "Nova objava · {blog}"
     }
   }
 }

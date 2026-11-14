@@ -41,6 +41,7 @@ ATTR_CHILD_ID: Final = "child_id"
 EVENT_NEW_MESSAGE: Final = f"{DOMAIN}_new_message"
 EVENT_NEW_WORD: Final = f"{DOMAIN}_new_word"
 EVENT_NEW_HOMEWORK: Final = f"{DOMAIN}_new_homework"
+EVENT_NEW_BLOG_POST: Final = f"{DOMAIN}_new_blog_post"
 
 CONF_SHOW_PANEL: Final = "show_panel"
 DEFAULT_SHOW_PANEL: Final = True

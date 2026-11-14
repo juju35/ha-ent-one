@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1 (2026-11-15)
+
+- New blog posts fire `ent_one_new_blog_post` (`id`, `blog_id`, `blog`, `title`, `author`) and are sent to the notify actions chosen in the options, like messages, words and homework. The posts there at startup or after a reload never fire.
+
 ## 1.3.0 (2026-11-15)
 
 - Blog: the latest 20 posts of the class and school blogs, in a **Blog** sensor (title, blog, author, date, text, pictures, comment count).

@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "Das ENT wird von der ganzen Schule genutzt: mindestens 10 Minuten.",
           "homework_days": "Hausaufgaben, die innerhalb so vieler Tage fällig sind, werden angezeigt.",
-          "notify_services": "Neue Nachrichten, zu unterschreibende Mitteilungen und Hausaufgaben werden an diese Aktionen gesendet."
+          "notify_services": "Neue Nachrichten, zu unterschreibende Mitteilungen, Hausaufgaben und Blogbeiträge werden an diese Aktionen gesendet."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Neue Hausaufgabe"
+    },
+    "notify_new_blog_post": {
+      "message": "Neuer Blogbeitrag · {blog}"
     }
   }
 }

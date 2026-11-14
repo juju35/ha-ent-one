@@ -600,3 +600,23 @@ async def test_blog(hass: HomeAssistant, api, entry) -> None:
     state = hass.states.get(_entity(hass, "sensor", "blog"))
     assert state.state == "0"
     assert "blog" not in state.attributes["stale"]
+
+
+async def test_new_blog_post_event(hass: HomeAssistant, api, entry) -> None:
+    """A post seen for the first time fires ent_one_new_blog_post; the posts there at startup do not."""
+    events = []
+    hass.bus.async_listen("ent_one_new_blog_post", events.append)
+    await _setup(hass, entry)
+    assert events == []
+    fake = entry.runtime_data.api
+    original = fake.blog_posts
+
+    async def more(blog_id: str) -> list[dict]:
+        return [{"_id": "p2", "title": "Chorale", "author": {"username": "M. Bernard"}}, *await original(blog_id)]
+
+    fake.blog_posts = more
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert [e.data["id"] for e in events] == ["p2"]
+    assert events[0].data["blog"] == "Blog du CE2"
+    assert events[0].data["author"] == "M. Bernard"

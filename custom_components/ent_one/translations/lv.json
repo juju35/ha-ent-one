@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "ENT izmanto visa skola: vismaz 10 minūtes.",
           "homework_days": "Tiek rādīti mājasdarbi, kuru termiņš ir šajā dienu skaitā.",
-          "notify_services": "Jauni ziņojumi, parakstāmi ieraksti un mājasdarbi tiek nosūtīti šīm darbībām."
+          "notify_services": "Jaunie ziņojumi, parakstāmie ieraksti, mājasdarbi un emuāra ieraksti tiek nosūtīti šīm darbībām."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Jauns mājasdarbs"
+    },
+    "notify_new_blog_post": {
+      "message": "Jauns ieraksts · {blog}"
     }
   }
 }

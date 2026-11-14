@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "O ENT é partilhado por toda a escola: 10 minutos no mínimo.",
           "homework_days": "São mostrados os trabalhos de casa para dentro deste número de dias.",
-          "notify_services": "Novas mensagens, notas por assinar e trabalhos de casa são enviados para estas ações."
+          "notify_services": "As novas mensagens, recados para assinar, lições de casa e publicações do blog são enviadas para estas ações."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Novo trabalho de casa"
+    },
+    "notify_new_blog_post": {
+      "message": "Nova publicação · {blog}"
     }
   }
 }

@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "Az ENT-et az egész iskola használja: legalább 10 perc.",
           "homework_days": "Az ennyi napon belül esedékes házi feladatok jelennek meg.",
-          "notify_services": "Az új üzenetek, aláírandó bejegyzések és házi feladatok ezekre a műveletekre mennek."
+          "notify_services": "Az új üzenetek, aláírandó bejegyzések, házi feladatok és blogbejegyzések ezekhez a műveletekhez kerülnek."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Új házi feladat"
+    },
+    "notify_new_blog_post": {
+      "message": "Új bejegyzés · {blog}"
     }
   }
 }

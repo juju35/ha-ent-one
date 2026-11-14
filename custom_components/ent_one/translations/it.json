@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "L'ENT è condiviso da tutta la scuola: almeno 10 minuti.",
           "homework_days": "Vengono mostrati i compiti in scadenza entro questo numero di giorni.",
-          "notify_services": "Nuovi messaggi, avvisi da firmare e compiti vengono inviati a queste azioni."
+          "notify_services": "I nuovi messaggi, avvisi da firmare, compiti e articoli del blog vengono inviati a queste azioni."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Nuovi compiti"
+    },
+    "notify_new_blog_post": {
+      "message": "Nuovo articolo · {blog}"
     }
   }
 }

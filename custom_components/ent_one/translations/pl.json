@@ -76,7 +76,7 @@
         "data_description": {
           "scan_interval": "Z ENT korzysta cała szkoła: co najmniej 10 minut.",
           "homework_days": "Pokazywane są prace domowe z terminem w ciągu tylu dni.",
-          "notify_services": "Nowe wiadomości, uwagi do podpisania i prace domowe są wysyłane do tych akcji."
+          "notify_services": "Nowe wiadomości, wpisy do podpisania, zadania domowe i wpisy na blogu są wysyłane do tych akcji."
         }
       }
     }
@@ -164,6 +164,9 @@
     },
     "notify_new_homework": {
       "message": "Nowa praca domowa"
+    },
+    "notify_new_blog_post": {
+      "message": "Nowy wpis · {blog}"
     }
   }
 }
