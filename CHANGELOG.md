@@ -2,6 +2,7 @@
 
 ## 1.3.1 (2026-11-15)
 
+- Cards: `show_homework`, `show_words` and `show_messages` hide the matching count too (it stayed at the top of the card and the mini card); the counts left share the width.
 - New blog posts fire `ent_one_new_blog_post` (`id`, `blog_id`, `blog`, `title`, `author`) and are sent to the notify actions chosen in the options, like messages, words and homework. The posts there at startup or after a reload never fire.
 
 ## 1.3.0 (2026-11-15)

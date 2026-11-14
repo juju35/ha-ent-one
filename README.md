@@ -30,7 +30,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 - `ent_one.sign_word` action to sign a word of the liaison book (read receipt), `ent_one.refresh` to read the ENT now
 - `ent_one_new_message`, `ent_one_new_word`, `ent_one_new_homework` and `ent_one_new_blog_post` events for automations, and optional **notifications** to the notify actions of your choice
 - `custom:ent-one-card` card, **shipped with the integration** and loaded automatically: counts, words to sign (with confirmation), homework to tick, unread messages, calendar and news
-- `custom:ent-one-mini-card` compact card: the three counts, with a button to open the full card
+- `custom:ent-one-mini-card` compact card: the counts (each one hidden with its `show_*` option), with a button to open the full card
 - **ENT ONE sidebar panel** with Home, Homework, Liaison book, Messages, News, Blog and Settings tabs
 - Username and password stored in the entry or read from `secrets.yaml` at every update
 - Silent re-login when the ENT session expires; after refused credentials it never retries on its own, so the account is not locked
@@ -106,10 +106,10 @@ type: custom:ent-one-card
 | `title` | school name | Card title |
 | `show_title` | `true` | Show the title in the header |
 | `show_refresh` | `true` | Show the refresh button |
-| `show_words` | `true` | Show the words of the liaison book to sign |
-| `show_homework` | `true` | Show the homework |
+| `show_words` | `true` | Show the words of the liaison book to sign (section and count) |
+| `show_homework` | `true` | Show the homework (section and count) |
 | `show_done` | `true` | Show the homework already done (after the rest, struck through) |
-| `show_messages` | `true` | Show the unread messages |
+| `show_messages` | `true` | Show the unread messages (section and count) |
 | `show_events` | `true` | Show the upcoming events of the ENT's calendars |
 | `show_news` | `false` | Show the school news |
 | `show_blog` | `false` | Show the latest blog posts |

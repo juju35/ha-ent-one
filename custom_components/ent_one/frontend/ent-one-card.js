@@ -2898,11 +2898,15 @@ class EntOneCard extends HTMLElement {
     var tile = (value, label, icon, hot, tab) =>
       '<button class="tile' + (hot ? ' hot' : '') + '" data-action="goto" data-tab="' + tab + '" aria-label="' + entOneEsc(value + ' ' + label) + '">' +
       '<span class="v"><ha-icon icon="' + icon + '"></ha-icon>' + value + '</span><span class="l">' + entOneEsc(label) + '</span></button>';
-    return '<div class="tiles">' +
-      tile(data.unread, t.tile_messages, 'mdi:email-outline', false, 'messages') +
-      tile(toSign, t.tile_words, 'mdi:notebook-edit-outline', toSign > 0, 'words') +
-      tile(todo, t.tile_homework, 'mdi:pencil-outline', false, 'homework') +
-      '</div>';
+    // A count follows its section's option: hiding the homework hides its count too.
+    var c = this._config;
+    var tiles = [
+      c.show_messages ? tile(data.unread, t.tile_messages, 'mdi:email-outline', false, 'messages') : '',
+      c.show_words ? tile(toSign, t.tile_words, 'mdi:notebook-edit-outline', toSign > 0, 'words') : '',
+      c.show_homework ? tile(todo, t.tile_homework, 'mdi:pencil-outline', false, 'homework') : '',
+    ].filter(Boolean);
+    if (!tiles.length) return '';
+    return '<div class="tiles" style="grid-template-columns: repeat(' + tiles.length + ', minmax(0, 1fr))">' + tiles.join('') + '</div>';
   }
 
   _section(key, title, rows, empty, extra) {
