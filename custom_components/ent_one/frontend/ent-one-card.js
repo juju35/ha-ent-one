@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.2.1';
+var ENT_ONE_CARD_VERSION = '1.2.2';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -2228,6 +2228,37 @@ function entOneCachedUrl(entryId, path) {
   return hit?.url && Date.now() - hit.at < ENT_ONE_SIGN_REUSE ? hit.url : '';
 }
 
+// Images and PDFs shown in the page are fetched here and drawn from a blob: URL. A frame of the file view itself
+// stays blank when a reverse proxy or Home Assistant forbids framing (X-Frame-Options), and a failed fetch can say
+// why. Kept for the page's life, so a redraw shows them at once.
+var entOneBlobs = {};
+
+function entOneFileBlob(hass, entryId, path, name) {
+  var key = entryId + ' ' + path;
+  if (entOneBlobs[key]) return entOneBlobs[key].promise;
+  var entry = { url: '' };
+  entry.promise = entOneFileUrl(hass, entryId, path, name)
+    .then((url) => fetch(url, { credentials: 'same-origin' }))
+    .then((res) => {
+      if (!res.ok) return res.text().then((text) => Promise.reject(new Error(`HTTP ${res.status} ${text.slice(0, 200)}`.trim())));
+      return res.blob();
+    })
+    .then((blob) => {
+      entry.type = blob.type;
+      entry.url = URL.createObjectURL(blob);
+      return entry.url;
+    });
+  entry.promise.catch(() => {
+    if (entOneBlobs[key] === entry) delete entOneBlobs[key];
+  });
+  entOneBlobs[key] = entry;
+  return entry.promise;
+}
+
+function entOneBlobUrl(entryId, path) {
+  return entOneBlobs[entryId + ' ' + path]?.url || '';
+}
+
 // How an attachment is shown: an image, a PDF, or a file to download.
 function entOneFileKind(f) {
   var name = String(f.name || f.path || '').split('?')[0].toLowerCase();
@@ -2240,7 +2271,7 @@ function entOneFileKind(f) {
 // download button. Otherwise (card): image thumbnails and buttons. Sources are set by entOneHydrate after drawing.
 function entOneFiles(files, t, entryId, full) {
   if (!files?.length) return '';
-  var src = (f) => ' data-ent-src="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '"' + (entOneCachedUrl(entryId, f.path) ? ' src="' + entOneEsc(entOneCachedUrl(entryId, f.path)) + '"' : '');
+  var src = (f) => ' data-ent-src="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '"' + (entOneBlobUrl(entryId, f.path) ? ' src="' + entOneEsc(entOneBlobUrl(entryId, f.path)) + '"' : '');
   var open = (f, label, icon) => '<button class="file" data-action="file" data-path="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '" title="' + entOneEsc(f.name) + '">' +
     '<ha-icon icon="' + icon + '"></ha-icon><span>' + entOneEsc(label) + '</span></button>';
   var images = files.filter((f) => entOneFileKind(f) === 'image');
@@ -2249,7 +2280,7 @@ function entOneFiles(files, t, entryId, full) {
   if (images.length) {
     html += '<div class="att-images">' + images.map((f) =>
       '<button class="att-img" data-action="file" data-path="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '" title="' + entOneEsc(f.name) + '">' +
-      '<img alt="' + entOneEsc(f.name) + '" loading="lazy"' + src(f) + '></button>').join('') + '</div>';
+      '<img alt="' + entOneEsc(f.name) + '"' + src(f) + '></button>').join('') + '</div>';
   }
   others.forEach((f) => {
     var pdf = entOneFileKind(f) === 'pdf';
@@ -2263,15 +2294,27 @@ function entOneFiles(files, t, entryId, full) {
   return html + '</div>';
 }
 
-// Gives the drawn images and PDF viewers their signed sources.
+// Gives the drawn images and PDF viewers their sources; a file that cannot be fetched says why in its place.
 function entOneHydrate(root, hass, entryId) {
   root.querySelectorAll('[data-ent-src]:not([src])').forEach((el) => {
-    entOneFileUrl(hass, entryId, el.getAttribute('data-ent-src'), el.getAttribute('data-name'))
+    entOneFileBlob(hass, entryId, el.getAttribute('data-ent-src'), el.getAttribute('data-name'))
       .then((url) => {
+        // Fetched but not an image (a sign-in page from a proxy, a format the browser cannot draw): say what came.
+        if (el.tagName === 'IMG') el.onerror = () => entOneBroken(el, entOneBlobs[`${entryId} ${el.getAttribute('data-ent-src')}`]?.type || '?');
         if (!el.getAttribute('src')) el.setAttribute('src', url);
       })
-      .catch(() => el.closest('.att-img, .att-pdf')?.classList.add('broken'));
+      .catch((err) => entOneBroken(el, err?.message || err));
   });
+}
+
+function entOneBroken(el, why) {
+  var box = el.closest('.att-img, .att-pdf');
+  if (!box || box.classList.contains('broken')) return;
+  box.classList.add('broken');
+  var note = document.createElement('span');
+  note.className = 'att-error';
+  note.textContent = `${el.getAttribute('data-name') || ''} — ${why}`;
+  box.appendChild(note);
 }
 
 // Opens a file in a new tab (PDF and images shown by the browser, other files downloaded).
@@ -2443,7 +2486,8 @@ function entOneItemStyles(accent) {
     '.att-img img { display: block; height: 72px; width: auto; max-width: 160px; object-fit: cover; }',
     '.atts.full .att-img { cursor: zoom-in; }',
     '.atts.full .att-img img { height: auto; max-width: min(100%, 720px); max-height: 60vh; object-fit: contain; }',
-    '.att-img.broken, .att-pdf.broken iframe { display: none; }',
+    '.att-img.broken img, .att-pdf.broken iframe { display: none; }',
+    '.att-error { display: block; padding: 8px 10px; font-size: 12px; color: color-mix(in srgb, var(--error-color, #db4437) 55%, var(--primary-text-color)); background: var(--card-background-color, #fff); }',
     '.att-pdf { border: 1px solid var(--divider-color, rgba(0,0,0,.12)); border-radius: 8px; overflow: hidden; }',
     '.att-head { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 10px; font-size: 13px; --mdc-icon-size: 18px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
     '.att-head > ha-icon { color: ' + accent + '; flex: none; }',
