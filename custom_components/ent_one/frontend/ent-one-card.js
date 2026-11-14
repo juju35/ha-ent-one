@@ -1,9 +1,10 @@
 var ENT_ONE_CARD_VERSION = '1.0.0';
 
-// ── Header logo: the ONE panda (brand logo kept in a 40 px container, like the Free logo), served by the
-// integration next to this file. Accent: the orange of the "e" of the ONE logo.
+// ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
+// the other cards. Accent: the orange of the "e" of the ONE logo.
 var ENT_ONE_ACCENT = '#f39c3c';
-var ENT_ONE_LOGO = '/ent_one_static/ent-one-logo.png';
+var ENT_ONE_ICON_PATH = 'M8.5,2.8 C8.7,3.4 8.7,4.0 8.6,4.5 L9.4,4.4 L12,4.4 L14.5,4.4 L15.3,4.5 C15.2,4.0 15.2,3.4 15.4,2.8 C16.0,1.3 17.5,0.4 18.8,0.9 C20.0,1.3 20.6,3.0 20.1,4.5 C19.8,5.1 19.5,5.6 19.1,5.9 L19.5,6.4 L20.1,7.1 L20.5,8.0 L20.8,9.1 L21.0,10.4 L21.1,12.8 L21.0,15.3 L20.8,16.6 L20.5,17.7 L20.1,18.6 L19.5,19.3 L18.9,19.9 L18.1,20.5 L17.1,20.8 L16.0,21.1 L14.5,21.3 L12,21.3 L9.4,21.3 L7.9,21.1 L6.8,20.8 L5.8,20.5 L5.0,19.9 L4.4,19.3 L3.8,18.6 L3.4,17.7 L3.1,16.6 L2.9,15.3 L2.9,12.8 L2.9,10.4 L3.1,9.1 L3.4,8.0 L3.8,7.1 L4.4,6.4 L4.8,5.9 C4.4,5.6 4.1,5.1 3.8,4.5 C3.3,3.0 3.9,1.3 5.1,0.9 C6.4,0.4 7.9,1.3 8.5,2.8 Z M19.5,12.8 L19.5,10.9 L19.3,9.8 L19.1,8.9 L18.7,8.2 L18.3,7.6 L17.7,7.0 L17.0,6.6 L16.2,6.3 L15.3,6.1 L14.1,5.9 L12,5.9 L9.8,5.9 L8.6,6.1 L7.7,6.3 L6.9,6.6 L6.2,7.0 L5.6,7.6 L5.2,8.2 L4.8,8.9 L4.6,9.8 L4.5,10.9 L4.4,12.8 L4.5,14.8 L4.6,15.9 L4.8,16.8 L5.2,17.5 L5.6,18.1 L6.1,18.6 C6.3,18.5 6.5,18.5 6.6,18.6 C6.6,18.5 6.6,18.4 6.6,18.3 C6.6,18.3 6.6,18.2 6.6,18.1 C6.0,18.2 5.5,17.9 5.4,17.4 C5.9,17.3 6.4,17.5 6.7,18.1 C6.7,18.0 6.9,17.9 7.0,17.9 C6.7,17.4 6.7,16.8 7.0,16.5 C7.4,16.8 7.4,17.4 7.1,17.9 C7.2,17.9 7.4,18.0 7.4,18.1 C7.7,17.5 8.1,17.3 8.6,17.4 Q8.5,17.2 8.4,17.0 Q8.2,16.8 8.3,16.5 Q8.3,16.2 8.6,16.1 Q8.8,15.9 9.1,16.0 Q9.4,16.0 9.5,16.3 Q10.6,18 12,18 Q13.3,18 14.4,16.3 Q14.5,16.0 14.8,16.0 Q15.1,15.9 15.3,16.1 Q15.6,16.2 15.6,16.5 Q15.7,16.8 15.5,17.0 Q14.0,19.3 12,19.3 Q10.1,19.3 8.7,17.5 C8.5,17.9 8.1,18.2 7.5,18.1 C7.5,18.2 7.5,18.3 7.5,18.3 C7.5,18.4 7.5,18.5 7.5,18.6 C8.1,18.5 8.6,18.8 8.7,19.3 C8.2,19.4 7.7,19.2 7.4,18.6 C7.4,18.7 7.2,18.8 7.1,18.8 C7.2,19.0 7.3,19.1 7.3,19.2 L7.7,19.4 L8.6,19.6 L9.8,19.8 L12,19.8 L14.1,19.8 L15.3,19.6 L16.2,19.4 L17.0,19.1 L17.7,18.7 L18.3,18.1 L18.7,17.5 L19.1,16.8 L19.3,15.9 L19.5,14.8 Z M17.9,12 Q17.9,14.6 15.3,14.6 Q12.6,14.6 12.6,12 Q12.6,9.3 15.3,9.3 Q17.9,9.3 17.9,12 Z M6.9,11.4 Q8.0,12.5 9.6,11.7 Q9.9,11.6 10.2,11.7 Q10.5,11.8 10.7,12.1 Q10.8,12.4 10.7,12.7 Q10.6,13.0 10.3,13.2 Q7.7,14.4 5.8,12.5 Q5.5,12.3 5.5,12 Q5.5,11.6 5.8,11.4 Q6.0,11.1 6.4,11.1 Q6.7,11.1 6.9,11.4 Z M16.6,12 Q16.6,10.6 15.3,10.6 Q13.9,10.6 13.9,12 Q13.9,13.3 15.3,13.3 Q16.6,13.3 16.6,12 Z M16.4,12 C16.4,12.6 15.9,13.1 15.3,13.1 C14.6,13.1 14.1,12.6 14.1,12 C14.1,11.3 14.6,10.8 15.3,10.8 C15.9,10.8 16.4,11.3 16.4,12 Z M10.9,15 Q12,15.2 13.0,15 Q12.7,16.0 12,16.6 Q11.2,16.0 10.9,15 Z M6.7,18.6 C6.6,18.7 6.6,18.8 6.5,18.9 L6.9,19.1 C6.9,19.0 7.0,18.9 7.0,18.8 C6.9,18.8 6.7,18.7 6.7,18.6 Z';
+var ENT_ONE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="' + ENT_ONE_ICON_PATH + '"/></svg>';
 
 // ── i18n ──────────────────────────────────────────────────────────────────────
 // One table for the cards and the panel (the panel loads this file). Flat keys, so every language splits out.
@@ -2124,7 +2125,7 @@ function entOneItemStyles(accent) {
 window.EntOne = {
   version: ENT_ONE_CARD_VERSION,
   accent: ENT_ONE_ACCENT,
-  logo: ENT_ONE_LOGO,
+  icon: ENT_ONE_ICON,
   i18n: EntOneI18n,
   t: entOneT,
   lang: entOneLang,
@@ -2300,7 +2301,7 @@ class EntOneCard extends HTMLElement {
       ? '<div class="sub error"><span>' + entOneEsc(this._error) + '</span><button class="dismiss" data-action="dismiss" aria-label="' + entOneEsc(t.close) + '" title="' + entOneEsc(t.close) + '"><ha-icon icon="mdi:close"></ha-icon></button></div>'
       : who ? '<div class="sub">' + entOneEsc(who) + '</div>' : '';
     header.innerHTML =
-      '<div class="title"><div class="logo" aria-hidden="true"><img src="' + ENT_ONE_LOGO + '" alt=""></div>' +
+      '<div class="title"><div class="logo" aria-hidden="true">' + ENT_ONE_ICON + '</div>' +
       '<div class="titles"><div class="name">' + entOneEsc(title) + '</div>' + sub + '</div></div>' +
       pill + (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
   }
@@ -2480,8 +2481,8 @@ class EntOneCard extends HTMLElement {
       'ha-card { padding: 0 0 10px; overflow: hidden; container-type: inline-size; }',
       '.header { display: flex; align-items: center; gap: 10px; padding: 12px 10px 8px 12px; min-height: 40px; }',
       '.title { flex: 1 1 0; min-width: calc(5ch + 50px); display: flex; align-items: center; gap: 10px; }',
-      '.logo { width: 40px; height: 40px; flex: none; display: grid; place-items: center; }',
-      '.logo img { width: 40px; height: 40px; object-fit: contain; }',
+      '.logo { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
+      '.logo svg { width: 24px; height: 24px; }',
       '.titles { flex: 1 1 0; min-width: 5ch; overflow: hidden; }',
       ':host([hide-title]) .titles > .name { display: none; }',
       '.name { font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',

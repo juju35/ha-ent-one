@@ -19,7 +19,7 @@ custom_components/ent_one/
 ├── secret.py        # async_credentials(): username / password stored, or the secrets.yaml entries named by username_secret / password_secret (read at every update)
 ├── config_flow.py   # URL + username or username_secret + password or password_secret, reauth (password, or reauth_secret: just confirm), reconfigure, options (scan_interval ≥ 10, homework_days, notify_services, show_panel)
 ├── diagnostics.py   # Counts only: no names, no contents
-└── frontend/        # Vanilla JS, no dependencies; ent-one-logo.png = the ONE panda (from the user's logo file, header of card and panel; brand/icon.png adds a blue backpack badge). The panel imports the card file and reuses window.EntOne (helpers, i18n, row renderers)
+└── frontend/        # Vanilla JS, no dependencies; header pastille = the MDI-style panda pictogram supplied by the user (ENT_ONE_ICON_PATH); brand/icon.png = the panda of the ONE logo file on the orange tile with a blue backpack badge. The panel imports the card file and reuses window.EntOne (helpers, i18n, row renderers)
 ```
 
 ## ENT routes
