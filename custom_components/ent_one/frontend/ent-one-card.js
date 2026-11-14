@@ -1930,7 +1930,7 @@ function entOneDue(raw, t, locale) {
 }
 
 // The time format of the user's Home Assistant profile: '12', '24', or the language's ('language' / 'system').
-var entOneHour12 = undefined;
+var entOneHour12;
 
 function entOneSetTimeFormat(hass) {
   var f = hass?.locale?.time_format;
