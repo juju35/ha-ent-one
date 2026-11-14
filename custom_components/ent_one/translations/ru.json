@@ -7,10 +7,13 @@
         "data": {
           "url": "Адрес ENT",
           "username": "Имя пользователя",
+          "username_secret": "Секрет имени пользователя",
           "password": "Пароль",
           "password_secret": "Секрет пароля"
         },
         "data_description": {
+          "username": "Оставьте пустым, чтобы читать его из secrets.yaml.",
+          "username_secret": "Имя записи в secrets.yaml с именем пользователя, например ent_one_username.",
           "password": "Оставьте пустым, чтобы читать его из secrets.yaml.",
           "password_secret": "Имя записи в secrets.yaml с паролем, например ent_one_password. Она перечитывается при каждом обновлении: после смены пароля достаточно изменить секрет."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Измените пароль {username} или запись в secrets.yaml, в которой он хранится.",
+        "description": "Измените имя пользователя и пароль {username} или записи в secrets.yaml, в которых они хранятся.",
         "data": {
+          "username": "Имя пользователя",
+          "username_secret": "Секрет имени пользователя",
           "password": "Пароль",
           "password_secret": "Секрет пароля"
         },
         "data_description": {
+          "username": "Оставьте пустым, чтобы читать его из secrets.yaml.",
+          "username_secret": "Имя записи в secrets.yaml с именем пользователя, например ent_one_username.",
           "password": "Оставьте пустым, чтобы читать его из secrets.yaml.",
           "password_secret": "Имя записи в secrets.yaml с паролем, например ent_one_password. Она перечитывается при каждом обновлении: после смены пароля достаточно изменить секрет."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Не удаётся связаться с ENT. Проверьте адрес и повторите попытку.",
       "password_or_secret": "Введите либо пароль, либо имя секрета.",
       "secret_not_found": "Эта запись отсутствует в secrets.yaml.",
-      "wrong_account": "Этот пароль принадлежит другой учётной записи."
+      "wrong_account": "Этот пароль принадлежит другой учётной записи.",
+      "username_or_secret": "Введите либо имя пользователя, либо имя секрета."
     },
     "abort": {
       "already_configured": "Эта учётная запись уже настроена.",

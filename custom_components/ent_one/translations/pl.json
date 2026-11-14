@@ -7,10 +7,13 @@
         "data": {
           "url": "Adres ENT",
           "username": "Nazwa użytkownika",
+          "username_secret": "Sekret nazwy użytkownika",
           "password": "Hasło",
           "password_secret": "Sekret hasła"
         },
         "data_description": {
+          "username": "Pozostaw puste, aby odczytać ją z secrets.yaml.",
+          "username_secret": "Nazwa wpisu w secrets.yaml z nazwą użytkownika, na przykład ent_one_username.",
           "password": "Pozostaw puste, aby odczytać je z secrets.yaml.",
           "password_secret": "Nazwa wpisu w secrets.yaml z hasłem, na przykład ent_one_password. Jest odczytywany przy każdej aktualizacji: po zmianie hasła wystarczy zmienić sekret."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Zmień hasło użytkownika {username} lub wpis w secrets.yaml, który je zawiera.",
+        "description": "Zmień nazwę użytkownika i hasło {username} lub wpisy w secrets.yaml, które je zawierają.",
         "data": {
+          "username": "Nazwa użytkownika",
+          "username_secret": "Sekret nazwy użytkownika",
           "password": "Hasło",
           "password_secret": "Sekret hasła"
         },
         "data_description": {
+          "username": "Pozostaw puste, aby odczytać ją z secrets.yaml.",
+          "username_secret": "Nazwa wpisu w secrets.yaml z nazwą użytkownika, na przykład ent_one_username.",
           "password": "Pozostaw puste, aby odczytać je z secrets.yaml.",
           "password_secret": "Nazwa wpisu w secrets.yaml z hasłem, na przykład ent_one_password. Jest odczytywany przy każdej aktualizacji: po zmianie hasła wystarczy zmienić sekret."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Nie można połączyć się z ENT. Sprawdź adres i spróbuj ponownie.",
       "password_or_secret": "Wpisz hasło albo nazwę sekretu.",
       "secret_not_found": "Tego wpisu brakuje w secrets.yaml.",
-      "wrong_account": "To hasło należy do innego konta."
+      "wrong_account": "To hasło należy do innego konta.",
+      "username_or_secret": "Wpisz nazwę użytkownika albo nazwę sekretu."
     },
     "abort": {
       "already_configured": "To konto jest już skonfigurowane.",

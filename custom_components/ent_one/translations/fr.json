@@ -7,10 +7,13 @@
         "data": {
           "url": "Adresse de l'ENT",
           "username": "Identifiant",
+          "username_secret": "Secret de l'identifiant",
           "password": "Mot de passe",
           "password_secret": "Secret du mot de passe"
         },
         "data_description": {
+          "username": "Laissez vide pour le lire dans secrets.yaml.",
+          "username_secret": "Nom de l'entrée de secrets.yaml qui contient l'identifiant, par exemple ent_one_username.",
           "password": "Laissez vide pour le lire dans secrets.yaml.",
           "password_secret": "Nom de l'entrée de secrets.yaml qui contient le mot de passe, par exemple ent_one_password. Il est relu à chaque mise à jour : après un changement de mot de passe, il suffit de modifier le secret."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Modifiez le mot de passe de {username}, ou l'entrée de secrets.yaml qui le contient.",
+        "description": "Modifiez l'identifiant et le mot de passe de {username}, ou les entrées de secrets.yaml qui les contiennent.",
         "data": {
+          "username": "Identifiant",
+          "username_secret": "Secret de l'identifiant",
           "password": "Mot de passe",
           "password_secret": "Secret du mot de passe"
         },
         "data_description": {
+          "username": "Laissez vide pour le lire dans secrets.yaml.",
+          "username_secret": "Nom de l'entrée de secrets.yaml qui contient l'identifiant, par exemple ent_one_username.",
           "password": "Laissez vide pour le lire dans secrets.yaml.",
           "password_secret": "Nom de l'entrée de secrets.yaml qui contient le mot de passe, par exemple ent_one_password. Il est relu à chaque mise à jour : après un changement de mot de passe, il suffit de modifier le secret."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Impossible de joindre l'ENT. Vérifiez l'adresse et réessayez.",
       "password_or_secret": "Saisissez soit un mot de passe, soit un nom de secret.",
       "secret_not_found": "Cette entrée est absente de secrets.yaml.",
-      "wrong_account": "Ce mot de passe appartient à un autre compte."
+      "wrong_account": "Ce mot de passe appartient à un autre compte.",
+      "username_or_secret": "Saisissez soit un identifiant, soit un nom de secret."
     },
     "abort": {
       "already_configured": "Ce compte est déjà configuré.",

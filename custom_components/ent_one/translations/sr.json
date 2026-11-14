@@ -7,10 +7,13 @@
         "data": {
           "url": "Адреса ENT-а",
           "username": "Корисничко име",
+          "username_secret": "Тајна корисничког имена",
           "password": "Лозинка",
           "password_secret": "Тајна лозинке"
         },
         "data_description": {
+          "username": "Оставите празно да би се читало из secrets.yaml.",
+          "username_secret": "Назив уноса у secrets.yaml са корисничким именом, на пример ent_one_username.",
           "password": "Оставите празно да би се читала из secrets.yaml.",
           "password_secret": "Назив уноса у secrets.yaml са лозинком, на пример ent_one_password. Поново се чита при сваком ажурирању: после промене лозинке довољно је изменити тајну."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Промените лозинку корисника {username} или унос у secrets.yaml који је садржи.",
+        "description": "Промените корисничко име и лозинку корисника {username} или уносе у secrets.yaml који их садрже.",
         "data": {
+          "username": "Корисничко име",
+          "username_secret": "Тајна корисничког имена",
           "password": "Лозинка",
           "password_secret": "Тајна лозинке"
         },
         "data_description": {
+          "username": "Оставите празно да би се читало из secrets.yaml.",
+          "username_secret": "Назив уноса у secrets.yaml са корисничким именом, на пример ent_one_username.",
           "password": "Оставите празно да би се читала из secrets.yaml.",
           "password_secret": "Назив уноса у secrets.yaml са лозинком, на пример ent_one_password. Поново се чита при сваком ажурирању: после промене лозинке довољно је изменити тајну."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "ENT није доступан. Проверите адресу и покушајте поново.",
       "password_or_secret": "Унесите или лозинку или назив тајне.",
       "secret_not_found": "Овај унос недостаје у secrets.yaml.",
-      "wrong_account": "Ова лозинка припада другом налогу."
+      "wrong_account": "Ова лозинка припада другом налогу.",
+      "username_or_secret": "Унесите или корисничко име или назив тајне."
     },
     "abort": {
       "already_configured": "Овај налог је већ подешен.",

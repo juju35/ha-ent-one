@@ -7,10 +7,13 @@
         "data": {
           "url": "Adresa ENT-a",
           "username": "Korisničko ime",
+          "username_secret": "Tajna korisničkog imena",
           "password": "Lozinka",
           "password_secret": "Tajna lozinke"
         },
         "data_description": {
+          "username": "Ostavite prazno da bi se čitalo iz secrets.yaml.",
+          "username_secret": "Naziv unosa u secrets.yaml sa korisničkim imenom, na primer ent_one_username.",
           "password": "Ostavite prazno da bi se čitala iz secrets.yaml.",
           "password_secret": "Naziv unosa u secrets.yaml sa lozinkom, na primer ent_one_password. Ponovo se čita pri svakom ažuriranju: posle promene lozinke dovoljno je izmeniti tajnu."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Promenite lozinku korisnika {username} ili unos u secrets.yaml koji je sadrži.",
+        "description": "Promenite korisničko ime i lozinku korisnika {username} ili unose u secrets.yaml koji ih sadrže.",
         "data": {
+          "username": "Korisničko ime",
+          "username_secret": "Tajna korisničkog imena",
           "password": "Lozinka",
           "password_secret": "Tajna lozinke"
         },
         "data_description": {
+          "username": "Ostavite prazno da bi se čitalo iz secrets.yaml.",
+          "username_secret": "Naziv unosa u secrets.yaml sa korisničkim imenom, na primer ent_one_username.",
           "password": "Ostavite prazno da bi se čitala iz secrets.yaml.",
           "password_secret": "Naziv unosa u secrets.yaml sa lozinkom, na primer ent_one_password. Ponovo se čita pri svakom ažuriranju: posle promene lozinke dovoljno je izmeniti tajnu."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "ENT nije dostupan. Proverite adresu i pokušajte ponovo.",
       "password_or_secret": "Unesite ili lozinku ili naziv tajne.",
       "secret_not_found": "Ovaj unos nedostaje u secrets.yaml.",
-      "wrong_account": "Ova lozinka pripada drugom nalogu."
+      "wrong_account": "Ova lozinka pripada drugom nalogu.",
+      "username_or_secret": "Unesite ili korisničko ime ili naziv tajne."
     },
     "abort": {
       "already_configured": "Ovaj nalog je već podešen.",

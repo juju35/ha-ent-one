@@ -7,10 +7,13 @@
         "data": {
           "url": "Адрес на ENT",
           "username": "Потребителско име",
+          "username_secret": "Таен ключ за потребителското име",
           "password": "Парола",
           "password_secret": "Таен ключ за паролата"
         },
         "data_description": {
+          "username": "Оставете празно, за да се чете от secrets.yaml.",
+          "username_secret": "Име на записа в secrets.yaml с потребителското име, например ent_one_username.",
           "password": "Оставете празно, за да се чете от secrets.yaml.",
           "password_secret": "Име на записа в secrets.yaml с паролата, например ent_one_password. Чете се отново при всяко обновяване: след смяна на паролата е достатъчно да промените записа."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Сменете паролата на {username} или записа в secrets.yaml, който я съдържа.",
+        "description": "Сменете потребителското име и паролата на {username} или записите в secrets.yaml, които ги съдържат.",
         "data": {
+          "username": "Потребителско име",
+          "username_secret": "Таен ключ за потребителското име",
           "password": "Парола",
           "password_secret": "Таен ключ за паролата"
         },
         "data_description": {
+          "username": "Оставете празно, за да се чете от secrets.yaml.",
+          "username_secret": "Име на записа в secrets.yaml с потребителското име, например ent_one_username.",
           "password": "Оставете празно, за да се чете от secrets.yaml.",
           "password_secret": "Име на записа в secrets.yaml с паролата, например ent_one_password. Чете се отново при всяко обновяване: след смяна на паролата е достатъчно да промените записа."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Няма връзка с ENT. Проверете адреса и опитайте отново.",
       "password_or_secret": "Въведете или парола, или име на запис.",
       "secret_not_found": "Този запис липсва в secrets.yaml.",
-      "wrong_account": "Тази парола принадлежи на друг акаунт."
+      "wrong_account": "Тази парола принадлежи на друг акаунт.",
+      "username_or_secret": "Въведете или потребителско име, или име на запис."
     },
     "abort": {
       "already_configured": "Този акаунт вече е настроен.",

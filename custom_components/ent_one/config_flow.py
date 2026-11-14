@@ -32,6 +32,7 @@ from .const import (
     CONF_PASSWORD_SECRET,
     CONF_SCAN_INTERVAL,
     CONF_SHOW_PANEL,
+    CONF_USERNAME_SECRET,
     DEFAULT_HOMEWORK_DAYS,
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_SHOW_PANEL,
@@ -39,7 +40,7 @@ from .const import (
     DOMAIN,
     MIN_SCAN_INTERVAL,
 )
-from .secret import SecretNotFoundError, async_password
+from .secret import SecretNotFoundError, async_credentials
 
 PASSWORD = TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD))
 
@@ -68,29 +69,45 @@ async def validate(
         session.detach()
 
 
-def password_fields(defaults: Mapping[str, Any]) -> dict:
-    """Either a password, or the name of a secrets.yaml entry holding it."""
-    return {
-        vol.Optional(CONF_PASSWORD): PASSWORD,
-        vol.Optional(CONF_PASSWORD_SECRET, default=defaults.get(CONF_PASSWORD_SECRET, "")): str,
-    }
+def credential_fields(defaults: Mapping[str, Any], *, username: bool = True) -> dict:
+    """Each credential, or the name of the secrets.yaml entry holding it."""
+    fields: dict = {}
+    if username:
+        fields[vol.Optional(CONF_USERNAME, default=defaults.get(CONF_USERNAME, ""))] = str
+        fields[vol.Optional(CONF_USERNAME_SECRET, default=defaults.get(CONF_USERNAME_SECRET, ""))] = str
+    fields[vol.Optional(CONF_PASSWORD)] = PASSWORD
+    fields[vol.Optional(CONF_PASSWORD_SECRET, default=defaults.get(CONF_PASSWORD_SECRET, ""))] = str
+    return fields
+
+
+def _secret_name(value: Any) -> str:
+    return str(value or "").strip().removeprefix("!secret").strip()
 
 
 async def credentials(
     hass: HomeAssistant, user_input: Mapping[str, Any]
-) -> tuple[dict[str, str], str | None, str | None]:
-    """The password part of the entry data, the password itself, and an error key."""
-    password = user_input.get(CONF_PASSWORD) or ""
-    if not password.strip():
-        password = ""
-    name = (user_input.get(CONF_PASSWORD_SECRET) or "").strip().removeprefix("!secret").strip()
-    if bool(password) == bool(name):
-        return {}, None, "password_or_secret"
-    data = {CONF_PASSWORD_SECRET: name} if name else {CONF_PASSWORD: password}
+) -> tuple[dict[str, str], tuple[str, str] | None, str | None]:
+    """The credentials part of the entry data, the resolved (username, password), and an error key."""
+    data: dict[str, str] = {}
+    for key, secret, error in (
+        (CONF_USERNAME, CONF_USERNAME_SECRET, "username_or_secret"),
+        (CONF_PASSWORD, CONF_PASSWORD_SECRET, "password_or_secret"),
+    ):
+        value = str(user_input.get(key) or "")
+        value = value.strip() if key == CONF_USERNAME else value
+        name = _secret_name(user_input.get(secret))
+        if bool(value.strip()) == bool(name):
+            return {}, None, error
+        data.update({secret: name} if name else {key: value})
     try:
-        return data, await async_password(hass, data), None
+        return data, await async_credentials(hass, data), None
     except SecretNotFoundError:
         return {}, None, "secret_not_found"
+
+
+def _account(data: Mapping[str, Any]) -> str:
+    """The username for the forms' texts, or its secret when it is one."""
+    return data.get(CONF_USERNAME) or f"!secret {data.get(CONF_USERNAME_SECRET, '')}"
 
 
 class EntConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -101,22 +118,22 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            username = user_input[CONF_USERNAME].strip()
-            secret, password, error = await credentials(self.hass, user_input)
+            secret, resolved, error = await credentials(self.hass, user_input)
             try:
                 url = normalize_url(user_input[CONF_URL])
             except EntError:
                 errors[CONF_URL] = "invalid_url"
             else:
-                if password is not None:
-                    info, error = await validate(self.hass, url, username, password)
-                if password is not None and info is not None:
+                info = None
+                if resolved is not None:
+                    info, error = await validate(self.hass, url, *resolved)
+                if info is not None:
                     await self.async_set_unique_id(f"{urlsplit(url).netloc}_{info['userId']}")
                     self._abort_if_unique_id_configured()
                     schools = [s for s in info.get("structureNames") or [] if s]
                     return self.async_create_entry(
                         title=f"ENT ONE · {schools[0]}" if schools else "ENT ONE",
-                        data={CONF_URL: url, CONF_USERNAME: username, **secret},
+                        data={CONF_URL: url, **secret},
                     )
                 errors["base"] = error or "cannot_connect"
 
@@ -126,17 +143,16 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_URL, default=defaults.get(CONF_URL, "")): TextSelector(
                     TextSelectorConfig(type=TextSelectorType.URL)
                 ),
-                vol.Required(CONF_USERNAME, default=defaults.get(CONF_USERNAME, "")): str,
-                **password_fields(defaults),
+                **credential_fields(defaults),
             }
         )
         return self.async_show_form(
             step_id="user", data_schema=schema, errors=errors, description_placeholders={"example": DEFAULT_URL}
         )
 
-    async def _check(self, entry: ConfigEntry, password: str) -> str | None:
-        """Log in with the new password of an existing entry: an error key, or None when it works."""
-        info, error = await validate(self.hass, entry.data[CONF_URL], entry.data[CONF_USERNAME], password)
+    async def _check(self, entry: ConfigEntry, username: str, password: str) -> str | None:
+        """Log in with new credentials of an existing entry: an error key, or None when it works."""
+        info, error = await validate(self.hass, entry.data[CONF_URL], username, password)
         if info is None:
             return error or "cannot_connect"
         if entry.unique_id and not entry.unique_id.endswith(f"_{info['userId']}"):
@@ -152,9 +168,10 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
             self.hass.config_entries.async_schedule_reload(entry.entry_id)
         return self.async_abort(reason=reason)
 
-    def _new_data(self, entry: ConfigEntry, secret: Mapping[str, str]) -> dict[str, Any]:
-        data = {k: v for k, v in entry.data.items() if k not in (CONF_PASSWORD, CONF_PASSWORD_SECRET)}
-        return {**data, **secret}
+    @staticmethod
+    def _new_data(entry: ConfigEntry, part: Mapping[str, str], keys: tuple[str, ...]) -> dict[str, Any]:
+        """The entry data with the credentials named by `keys` replaced by `part`."""
+        return {**{k: v for k, v in entry.data.items() if k not in keys}, **part}
 
     async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
         if entry_data.get(CONF_PASSWORD_SECRET):
@@ -162,22 +179,29 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """A stored password was refused: type the new one (the username stays as configured)."""
         errors: dict[str, str] = {}
         entry = self._get_reauth_entry()
         if user_input is not None:
-            error = await self._check(entry, user_input[CONF_PASSWORD])
-            if error == "wrong_account":
-                return self.async_abort(reason="wrong_account")
-            if error is None:
-                return self._update_and_abort(
-                    entry, self._new_data(entry, {CONF_PASSWORD: user_input[CONF_PASSWORD]}), "reauth_successful"
-                )
-            errors["base"] = error
+            try:
+                username, _old = await async_credentials(self.hass, entry.data)
+            except SecretNotFoundError:
+                errors["base"] = "secret_not_found"
+            else:
+                error = await self._check(entry, username, user_input[CONF_PASSWORD])
+                if error == "wrong_account":
+                    return self.async_abort(reason="wrong_account")
+                if error is None:
+                    data = self._new_data(
+                        entry, {CONF_PASSWORD: user_input[CONF_PASSWORD]}, (CONF_PASSWORD, CONF_PASSWORD_SECRET)
+                    )
+                    return self._update_and_abort(entry, data, "reauth_successful")
+                errors["base"] = error
         return self.async_show_form(
             step_id="reauth_confirm",
             data_schema=vol.Schema({vol.Required(CONF_PASSWORD): PASSWORD}),
             errors=errors,
-            description_placeholders={"username": entry.data[CONF_USERNAME]},
+            description_placeholders={"username": _account(entry.data)},
         )
 
     async def async_step_reauth_secret(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
@@ -186,11 +210,11 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
         entry = self._get_reauth_entry()
         if user_input is not None:
             try:
-                password = await async_password(self.hass, entry.data)
+                resolved = await async_credentials(self.hass, entry.data)
             except SecretNotFoundError:
                 errors["base"] = "secret_not_found"
             else:
-                error = await self._check(entry, password)
+                error = await self._check(entry, *resolved)
                 if error == "wrong_account":
                     return self.async_abort(reason="wrong_account")
                 if error is None:
@@ -200,28 +224,28 @@ class EntConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="reauth_secret",
             data_schema=vol.Schema({}),
             errors=errors,
-            description_placeholders={
-                "secret": entry.data[CONF_PASSWORD_SECRET],
-                "username": entry.data[CONF_USERNAME],
-            },
+            description_placeholders={"secret": entry.data[CONF_PASSWORD_SECRET], "username": _account(entry.data)},
         )
 
     async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Change the password, or switch between a stored password and a secrets.yaml entry."""
+        """Change the credentials, or switch each one between a stored value and a secrets.yaml entry."""
         errors: dict[str, str] = {}
         entry = self._get_reconfigure_entry()
         if user_input is not None:
-            secret, password, error = await credentials(self.hass, user_input)
-            if password is not None:
-                error = await self._check(entry, password)
-            if password is not None and error is None:
-                return self._update_and_abort(entry, self._new_data(entry, secret), "reconfigure_successful")
+            part, resolved, error = await credentials(self.hass, user_input)
+            if resolved is not None:
+                error = await self._check(entry, *resolved)
+            if resolved is not None and error is None:
+                data = self._new_data(
+                    entry, part, (CONF_USERNAME, CONF_USERNAME_SECRET, CONF_PASSWORD, CONF_PASSWORD_SECRET)
+                )
+                return self._update_and_abort(entry, data, "reconfigure_successful")
             errors["base"] = error or "cannot_connect"
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=vol.Schema(password_fields(user_input or entry.data)),
+            data_schema=vol.Schema(credential_fields(user_input or entry.data)),
             errors=errors,
-            description_placeholders={"username": entry.data[CONF_USERNAME]},
+            description_placeholders={"username": _account(entry.data)},
         )
 
     @staticmethod

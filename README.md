@@ -30,7 +30,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 - `custom:ent-one-card` card, **shipped with the integration** and loaded automatically: counts, words to sign (with confirmation), homework to tick, unread messages, calendar and news
 - `custom:ent-one-mini-card` compact card: the three counts, with a button to open the full card
 - **ENT ONE sidebar panel** with Home, Homework, Liaison book, Messages, News and Settings tabs
-- Password stored in the entry or read from `secrets.yaml` at every update
+- Username and password stored in the entry or read from `secrets.yaml` at every update
 - Silent re-login when the ENT session expires; after refused credentials it never retries on its own, so the account is not locked
 - Diagnostics download with counts only: no name, message or word ever leaves Home Assistant
 - English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, Portuguese, Polish, Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
@@ -78,25 +78,17 @@ Copy `custom_components/ent_one/` to `/config/custom_components/ent_one/`, then 
 
 **Settings → Devices & services → Add integration → ENT ONE**, then enter the ENT address, your username and your password. If the ENT asks for an action first (new terms, password change), sign in once in a browser and try again.
 
-#### Password in secrets.yaml
+#### Username and password in secrets.yaml
 
-Instead of the password, you can give the **name of an entry of `secrets.yaml`** (`ent_one_password`, or `!secret ent_one_password`):
+Instead of the username and/or the password, you can give the **name of an entry of `secrets.yaml`** (`ent_one_password`, or `!secret ent_one_password`), in the fields under each one:
 
 ```yaml
 # secrets.yaml
+ent_one_username: "firstname.lastname"
 ent_one_password: "your-ENT-password"
 ```
 
-The integration then keeps only the entry's name and reads the secret again at every update: after changing your ENT password, edit `secrets.yaml` and the next update logs in with it, without asking for anything. If the ENT refused the old password meanwhile, the reauthentication form only asks to confirm once the secret is updated, and it closes by itself when the next update succeeds. **⋮ → Reconfigure** switches between a stored password and a secret.
-
-Options (**Configure** button, or the panel's **Settings** tab):
-
-| Option | Default | Description |
-|---|---|---|
-| Update interval | 30 min | Minimum 10 min: the ENT is a school server shared by many families |
-| Homework window | 14 days | Homework due within this many days (and yesterday's) is read |
-| Notify actions | none | The notify actions (`notify.mobile_app_phone`…) told about each new unread message, word to sign and homework, in Home Assistant's language |
-| Show the panel | on | Show the ENT ONE panel in the sidebar |
+The integration then keeps only the entries' names and reads the secrets again at every update: after changing your ENT password, edit `secrets.yaml` and the next update logs in with it, without asking for anything. If the ENT refused the old password meanwhile, the reauthentication form only asks to confirm once the secret is updated, and it closes by itself when the next update succeeds. **⋮ → Reconfigure** switches each credential between a stored value and a secret.
 
 ### Card
 

@@ -7,10 +7,13 @@
         "data": {
           "url": "Endereço do ENT",
           "username": "Utilizador",
+          "username_secret": "Segredo do utilizador",
           "password": "Palavra-passe",
           "password_secret": "Segredo da palavra-passe"
         },
         "data_description": {
+          "username": "Deixe vazio para o ler de secrets.yaml.",
+          "username_secret": "Nome da entrada de secrets.yaml que contém o utilizador, por exemplo ent_one_username.",
           "password": "Deixe vazio para a ler de secrets.yaml.",
           "password_secret": "Nome da entrada de secrets.yaml que contém a palavra-passe, por exemplo ent_one_password. É lida de novo a cada atualização: depois de mudar a palavra-passe, basta editar o segredo."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Altere a palavra-passe de {username}, ou a entrada de secrets.yaml que a contém.",
+        "description": "Altere o utilizador e a palavra-passe de {username}, ou as entradas de secrets.yaml que os contêm.",
         "data": {
+          "username": "Utilizador",
+          "username_secret": "Segredo do utilizador",
           "password": "Palavra-passe",
           "password_secret": "Segredo da palavra-passe"
         },
         "data_description": {
+          "username": "Deixe vazio para o ler de secrets.yaml.",
+          "username_secret": "Nome da entrada de secrets.yaml que contém o utilizador, por exemplo ent_one_username.",
           "password": "Deixe vazio para a ler de secrets.yaml.",
           "password_secret": "Nome da entrada de secrets.yaml que contém a palavra-passe, por exemplo ent_one_password. É lida de novo a cada atualização: depois de mudar a palavra-passe, basta editar o segredo."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Não é possível contactar o ENT. Verifique o endereço e tente de novo.",
       "password_or_secret": "Introduza uma palavra-passe ou o nome de um segredo.",
       "secret_not_found": "Esta entrada não existe em secrets.yaml.",
-      "wrong_account": "Esta palavra-passe pertence a outra conta."
+      "wrong_account": "Esta palavra-passe pertence a outra conta.",
+      "username_or_secret": "Introduza um utilizador ou o nome de um segredo."
     },
     "abort": {
       "already_configured": "Esta conta já está configurada.",

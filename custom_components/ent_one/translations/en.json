@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT address",
           "username": "Username",
+          "username_secret": "Username secret",
           "password": "Password",
           "password_secret": "Password secret"
         },
         "data_description": {
+          "username": "Leave empty to read it from secrets.yaml instead.",
+          "username_secret": "Name of the secrets.yaml entry holding the username, for example ent_one_username.",
           "password": "Leave empty to read it from secrets.yaml instead.",
           "password_secret": "Name of the secrets.yaml entry holding the password, for example ent_one_password. It is read again at every update: after a password change, editing the secret is enough."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Change the password of {username}, or the secrets.yaml entry that holds it.",
+        "description": "Change the username and password of {username}, or the secrets.yaml entries that hold them.",
         "data": {
+          "username": "Username",
+          "username_secret": "Username secret",
           "password": "Password",
           "password_secret": "Password secret"
         },
         "data_description": {
+          "username": "Leave empty to read it from secrets.yaml instead.",
+          "username_secret": "Name of the secrets.yaml entry holding the username, for example ent_one_username.",
           "password": "Leave empty to read it from secrets.yaml instead.",
           "password_secret": "Name of the secrets.yaml entry holding the password, for example ent_one_password. It is read again at every update: after a password change, editing the secret is enough."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Cannot reach the ENT. Check the address and try again.",
       "password_or_secret": "Enter either a password or a secret name.",
       "secret_not_found": "This entry is missing from secrets.yaml.",
-      "wrong_account": "This password belongs to another account."
+      "wrong_account": "This password belongs to another account.",
+      "username_or_secret": "Enter either a username or a secret name."
     },
     "abort": {
       "already_configured": "This account is already configured.",

@@ -31,6 +31,7 @@ class FakeApi:
 
     def __init__(self, session: Any, url: str, username: str, password: str) -> None:
         self.base_url = url
+        self.username = username
         self.password = password
         self.signed: list[tuple[str, str]] = []
         self.done_calls: list[tuple[str, str, bool]] = []
@@ -46,11 +47,11 @@ class FakeApi:
         ]
         self.news_fails = False
 
-    def update_password(self, password: str) -> None:
-        self.password = password
+    def update_credentials(self, username: str, password: str) -> None:
+        self.username, self.password = username, password
 
     async def login(self) -> None:
-        if self.password != "secret":
+        if self.password != "secret" or self.username != "parent":
             raise EntAuthError("refused")
 
     async def user_info(self) -> dict[str, Any]:
@@ -318,3 +319,20 @@ async def test_reconfigure_switches_to_a_secret(hass: HomeAssistant, api, entry)
     assert entry.state is ConfigEntryState.LOADED
     assert CONF_PASSWORD not in entry.data
     assert entry.data["password_secret"] == "ent_pw"
+
+
+async def test_username_and_password_from_secrets(hass: HomeAssistant, api) -> None:
+    await hass.async_add_executor_job(_secrets, hass, "ent_user: parent\nent_pw: secret\n")
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    none = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_URL: URL, "password_secret": "ent_pw"}
+    )
+    assert none["errors"] == {"base": "username_or_secret"}
+    ok = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_URL: URL, "username_secret": "ent_user", "password_secret": "ent_pw"}
+    )
+    await hass.async_block_till_done()
+    assert ok["data"] == {CONF_URL: URL, "username_secret": "ent_user", "password_secret": "ent_pw"}
+    entry = ok["result"]
+    assert entry.state is ConfigEntryState.LOADED
+    assert api["api"].username == "parent"

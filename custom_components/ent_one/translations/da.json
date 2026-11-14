@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT-adresse",
           "username": "Brugernavn",
+          "username_secret": "Brugernavn-secret",
           "password": "Adgangskode",
           "password_secret": "Adgangskode-secret"
         },
         "data_description": {
+          "username": "Lad stå tomt for at læse det fra secrets.yaml.",
+          "username_secret": "Navnet på posten i secrets.yaml med brugernavnet, for eksempel ent_one_username.",
           "password": "Lad stå tomt for at læse den fra secrets.yaml.",
           "password_secret": "Navnet på posten i secrets.yaml med adgangskoden, for eksempel ent_one_password. Den læses igen ved hver opdatering: efter en ny adgangskode er det nok at ændre secret."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Skift adgangskoden for {username} eller posten i secrets.yaml, der indeholder den.",
+        "description": "Skift brugernavn og adgangskode for {username} eller posterne i secrets.yaml, der indeholder dem.",
         "data": {
+          "username": "Brugernavn",
+          "username_secret": "Brugernavn-secret",
           "password": "Adgangskode",
           "password_secret": "Adgangskode-secret"
         },
         "data_description": {
+          "username": "Lad stå tomt for at læse det fra secrets.yaml.",
+          "username_secret": "Navnet på posten i secrets.yaml med brugernavnet, for eksempel ent_one_username.",
           "password": "Lad stå tomt for at læse den fra secrets.yaml.",
           "password_secret": "Navnet på posten i secrets.yaml med adgangskoden, for eksempel ent_one_password. Den læses igen ved hver opdatering: efter en ny adgangskode er det nok at ændre secret."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Kan ikke nå ENT. Kontroller adressen, og prøv igen.",
       "password_or_secret": "Angiv enten en adgangskode eller et secret-navn.",
       "secret_not_found": "Denne post mangler i secrets.yaml.",
-      "wrong_account": "Denne adgangskode hører til en anden konto."
+      "wrong_account": "Denne adgangskode hører til en anden konto.",
+      "username_or_secret": "Angiv enten et brugernavn eller et secret-navn."
     },
     "abort": {
       "already_configured": "Denne konto er allerede konfigureret.",

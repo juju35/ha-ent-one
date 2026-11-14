@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT címe",
           "username": "Felhasználónév",
+          "username_secret": "Felhasználónév titok",
           "password": "Jelszó",
           "password_secret": "Jelszó titok"
         },
         "data_description": {
+          "username": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "username_secret": "A felhasználónevet tartalmazó secrets.yaml bejegyzés neve, például ent_one_username.",
           "password": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
           "password_secret": "A jelszót tartalmazó secrets.yaml bejegyzés neve, például ent_one_password. Minden frissítéskor újraolvassa: jelszócsere után elég a titkot módosítani."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Módosítsd {username} jelszavát, vagy a jelszót tartalmazó secrets.yaml bejegyzést.",
+        "description": "Módosítsd {username} felhasználónevét és jelszavát, vagy az ezeket tartalmazó secrets.yaml bejegyzéseket.",
         "data": {
+          "username": "Felhasználónév",
+          "username_secret": "Felhasználónév titok",
           "password": "Jelszó",
           "password_secret": "Jelszó titok"
         },
         "data_description": {
+          "username": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "username_secret": "A felhasználónevet tartalmazó secrets.yaml bejegyzés neve, például ent_one_username.",
           "password": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
           "password_secret": "A jelszót tartalmazó secrets.yaml bejegyzés neve, például ent_one_password. Minden frissítéskor újraolvassa: jelszócsere után elég a titkot módosítani."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Az ENT nem érhető el. Ellenőrizd a címet, és próbáld újra.",
       "password_or_secret": "Adj meg vagy egy jelszót, vagy egy titok nevét.",
       "secret_not_found": "Ez a bejegyzés hiányzik a secrets.yaml fájlból.",
-      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik."
+      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik.",
+      "username_or_secret": "Adj meg vagy egy felhasználónevet, vagy egy titok nevét."
     },
     "abort": {
       "already_configured": "Ez a fiók már be van állítva.",

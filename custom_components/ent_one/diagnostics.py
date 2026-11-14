@@ -8,10 +8,10 @@ from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_PASSWORD_SECRET
+from .const import CONF_PASSWORD_SECRET, CONF_USERNAME_SECRET
 from .coordinator import SECTIONS, EntConfigEntry
 
-TO_REDACT = {CONF_USERNAME, CONF_PASSWORD, CONF_PASSWORD_SECRET, "unique_id"}
+TO_REDACT = {CONF_USERNAME, CONF_PASSWORD, CONF_USERNAME_SECRET, CONF_PASSWORD_SECRET, "unique_id"}
 
 
 async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: EntConfigEntry) -> dict[str, Any]:

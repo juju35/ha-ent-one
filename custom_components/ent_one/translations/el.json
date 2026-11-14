@@ -7,10 +7,13 @@
         "data": {
           "url": "Διεύθυνση ENT",
           "username": "Όνομα χρήστη",
+          "username_secret": "Μυστικό ονόματος χρήστη",
           "password": "Κωδικός πρόσβασης",
           "password_secret": "Μυστικό κωδικού"
         },
         "data_description": {
+          "username": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
+          "username_secret": "Όνομα της καταχώρισης του secrets.yaml με το όνομα χρήστη, για παράδειγμα ent_one_username.",
           "password": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
           "password_secret": "Όνομα της καταχώρισης του secrets.yaml με τον κωδικό, για παράδειγμα ent_one_password. Διαβάζεται ξανά σε κάθε ενημέρωση: μετά από αλλαγή κωδικού αρκεί να αλλάξετε το μυστικό."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Αλλάξτε τον κωδικό του {username} ή την καταχώριση του secrets.yaml που τον περιέχει.",
+        "description": "Αλλάξτε το όνομα χρήστη και τον κωδικό του {username} ή τις καταχωρίσεις του secrets.yaml που τα περιέχουν.",
         "data": {
+          "username": "Όνομα χρήστη",
+          "username_secret": "Μυστικό ονόματος χρήστη",
           "password": "Κωδικός πρόσβασης",
           "password_secret": "Μυστικό κωδικού"
         },
         "data_description": {
+          "username": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
+          "username_secret": "Όνομα της καταχώρισης του secrets.yaml με το όνομα χρήστη, για παράδειγμα ent_one_username.",
           "password": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
           "password_secret": "Όνομα της καταχώρισης του secrets.yaml με τον κωδικό, για παράδειγμα ent_one_password. Διαβάζεται ξανά σε κάθε ενημέρωση: μετά από αλλαγή κωδικού αρκεί να αλλάξετε το μυστικό."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Δεν είναι δυνατή η σύνδεση με το ENT. Ελέγξτε τη διεύθυνση και δοκιμάστε ξανά.",
       "password_or_secret": "Εισαγάγετε είτε κωδικό είτε όνομα μυστικού.",
       "secret_not_found": "Αυτή η καταχώριση λείπει από το secrets.yaml.",
-      "wrong_account": "Αυτός ο κωδικός ανήκει σε άλλο λογαριασμό."
+      "wrong_account": "Αυτός ο κωδικός ανήκει σε άλλο λογαριασμό.",
+      "username_or_secret": "Εισαγάγετε είτε όνομα χρήστη είτε όνομα μυστικού."
     },
     "abort": {
       "already_configured": "Αυτός ο λογαριασμός έχει ήδη ρυθμιστεί.",

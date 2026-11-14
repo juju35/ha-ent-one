@@ -7,10 +7,13 @@
         "data": {
           "url": "Dirección del ENT",
           "username": "Usuario",
+          "username_secret": "Secreto del usuario",
           "password": "Contraseña",
           "password_secret": "Secreto de la contraseña"
         },
         "data_description": {
+          "username": "Déjalo vacío para leerlo de secrets.yaml.",
+          "username_secret": "Nombre de la entrada de secrets.yaml que contiene el usuario, por ejemplo ent_one_username.",
           "password": "Déjalo vacío para leerla de secrets.yaml.",
           "password_secret": "Nombre de la entrada de secrets.yaml que contiene la contraseña, por ejemplo ent_one_password. Se vuelve a leer en cada actualización: tras un cambio de contraseña, basta con editar el secreto."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Cambia la contraseña de {username} o la entrada de secrets.yaml que la contiene.",
+        "description": "Cambia el usuario y la contraseña de {username}, o las entradas de secrets.yaml que los contienen.",
         "data": {
+          "username": "Usuario",
+          "username_secret": "Secreto del usuario",
           "password": "Contraseña",
           "password_secret": "Secreto de la contraseña"
         },
         "data_description": {
+          "username": "Déjalo vacío para leerlo de secrets.yaml.",
+          "username_secret": "Nombre de la entrada de secrets.yaml que contiene el usuario, por ejemplo ent_one_username.",
           "password": "Déjalo vacío para leerla de secrets.yaml.",
           "password_secret": "Nombre de la entrada de secrets.yaml que contiene la contraseña, por ejemplo ent_one_password. Se vuelve a leer en cada actualización: tras un cambio de contraseña, basta con editar el secreto."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "No se puede contactar con el ENT. Comprueba la dirección y vuelve a intentarlo.",
       "password_or_secret": "Introduce una contraseña o un nombre de secreto, no ambos.",
       "secret_not_found": "Esta entrada no está en secrets.yaml.",
-      "wrong_account": "Esta contraseña pertenece a otra cuenta."
+      "wrong_account": "Esta contraseña pertenece a otra cuenta.",
+      "username_or_secret": "Introduce un usuario o un nombre de secreto, no ambos."
     },
     "abort": {
       "already_configured": "Esta cuenta ya está configurada.",

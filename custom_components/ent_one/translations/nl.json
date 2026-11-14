@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT-adres",
           "username": "Gebruikersnaam",
+          "username_secret": "Gebruikersnaamgeheim",
           "password": "Wachtwoord",
           "password_secret": "Wachtwoordgeheim"
         },
         "data_description": {
+          "username": "Laat leeg om hem uit secrets.yaml te lezen.",
+          "username_secret": "Naam van de vermelding in secrets.yaml met de gebruikersnaam, bijvoorbeeld ent_one_username.",
           "password": "Laat leeg om het uit secrets.yaml te lezen.",
           "password_secret": "Naam van de vermelding in secrets.yaml met het wachtwoord, bijvoorbeeld ent_one_password. Die wordt bij elke update opnieuw gelezen: na een wachtwoordwijziging volstaat het het geheim aan te passen."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Wijzig het wachtwoord van {username}, of de vermelding in secrets.yaml die het bevat.",
+        "description": "Wijzig gebruikersnaam en wachtwoord van {username}, of de vermeldingen in secrets.yaml die ze bevatten.",
         "data": {
+          "username": "Gebruikersnaam",
+          "username_secret": "Gebruikersnaamgeheim",
           "password": "Wachtwoord",
           "password_secret": "Wachtwoordgeheim"
         },
         "data_description": {
+          "username": "Laat leeg om hem uit secrets.yaml te lezen.",
+          "username_secret": "Naam van de vermelding in secrets.yaml met de gebruikersnaam, bijvoorbeeld ent_one_username.",
           "password": "Laat leeg om het uit secrets.yaml te lezen.",
           "password_secret": "Naam van de vermelding in secrets.yaml met het wachtwoord, bijvoorbeeld ent_one_password. Die wordt bij elke update opnieuw gelezen: na een wachtwoordwijziging volstaat het het geheim aan te passen."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Kan de ENT niet bereiken. Controleer het adres en probeer het opnieuw.",
       "password_or_secret": "Vul een wachtwoord of een geheimnaam in.",
       "secret_not_found": "Deze vermelding ontbreekt in secrets.yaml.",
-      "wrong_account": "Dit wachtwoord hoort bij een ander account."
+      "wrong_account": "Dit wachtwoord hoort bij een ander account.",
+      "username_or_secret": "Vul een gebruikersnaam of een geheimnaam in."
     },
     "abort": {
       "already_configured": "Dit account is al ingesteld.",

@@ -7,10 +7,13 @@
         "data": {
           "url": "Indirizzo dell'ENT",
           "username": "Nome utente",
+          "username_secret": "Segreto del nome utente",
           "password": "Password",
           "password_secret": "Segreto della password"
         },
         "data_description": {
+          "username": "Lascia vuoto per leggerlo da secrets.yaml.",
+          "username_secret": "Nome della voce di secrets.yaml che contiene il nome utente, per esempio ent_one_username.",
           "password": "Lascia vuoto per leggerla da secrets.yaml.",
           "password_secret": "Nome della voce di secrets.yaml che contiene la password, per esempio ent_one_password. Viene riletta a ogni aggiornamento: dopo un cambio di password basta modificare il segreto."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Modifica la password di {username} o la voce di secrets.yaml che la contiene.",
+        "description": "Modifica nome utente e password di {username}, o le voci di secrets.yaml che li contengono.",
         "data": {
+          "username": "Nome utente",
+          "username_secret": "Segreto del nome utente",
           "password": "Password",
           "password_secret": "Segreto della password"
         },
         "data_description": {
+          "username": "Lascia vuoto per leggerlo da secrets.yaml.",
+          "username_secret": "Nome della voce di secrets.yaml che contiene il nome utente, per esempio ent_one_username.",
           "password": "Lascia vuoto per leggerla da secrets.yaml.",
           "password_secret": "Nome della voce di secrets.yaml che contiene la password, per esempio ent_one_password. Viene riletta a ogni aggiornamento: dopo un cambio di password basta modificare il segreto."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Impossibile raggiungere l'ENT. Controlla l'indirizzo e riprova.",
       "password_or_secret": "Inserisci una password oppure il nome di un segreto.",
       "secret_not_found": "Questa voce manca in secrets.yaml.",
-      "wrong_account": "Questa password appartiene a un altro account."
+      "wrong_account": "Questa password appartiene a un altro account.",
+      "username_or_secret": "Inserisci un nome utente oppure il nome di un segreto."
     },
     "abort": {
       "already_configured": "Questo account è già configurato.",

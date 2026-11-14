@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT-Adresse",
           "username": "Benutzername",
+          "username_secret": "Benutzernamen-Secret",
           "password": "Passwort",
           "password_secret": "Passwort-Secret"
         },
         "data_description": {
+          "username": "Leer lassen, um ihn stattdessen aus secrets.yaml zu lesen.",
+          "username_secret": "Name des Eintrags in secrets.yaml mit dem Benutzernamen, zum Beispiel ent_one_username.",
           "password": "Leer lassen, um es stattdessen aus secrets.yaml zu lesen.",
           "password_secret": "Name des Eintrags in secrets.yaml mit dem Passwort, zum Beispiel ent_one_password. Er wird bei jeder Aktualisierung neu gelesen: Nach einer Passwortänderung genügt es, das Secret zu ändern."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Ändere das Passwort von {username} oder den Eintrag in secrets.yaml, der es enthält.",
+        "description": "Ändere Benutzername und Passwort von {username} oder die Einträge in secrets.yaml, die sie enthalten.",
         "data": {
+          "username": "Benutzername",
+          "username_secret": "Benutzernamen-Secret",
           "password": "Passwort",
           "password_secret": "Passwort-Secret"
         },
         "data_description": {
+          "username": "Leer lassen, um ihn stattdessen aus secrets.yaml zu lesen.",
+          "username_secret": "Name des Eintrags in secrets.yaml mit dem Benutzernamen, zum Beispiel ent_one_username.",
           "password": "Leer lassen, um es stattdessen aus secrets.yaml zu lesen.",
           "password_secret": "Name des Eintrags in secrets.yaml mit dem Passwort, zum Beispiel ent_one_password. Er wird bei jeder Aktualisierung neu gelesen: Nach einer Passwortänderung genügt es, das Secret zu ändern."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Das ENT ist nicht erreichbar. Prüfe die Adresse und versuche es erneut.",
       "password_or_secret": "Gib entweder ein Passwort oder einen Secret-Namen ein.",
       "secret_not_found": "Dieser Eintrag fehlt in secrets.yaml.",
-      "wrong_account": "Dieses Passwort gehört zu einem anderen Konto."
+      "wrong_account": "Dieses Passwort gehört zu einem anderen Konto.",
+      "username_or_secret": "Gib entweder einen Benutzernamen oder einen Secret-Namen ein."
     },
     "abort": {
       "already_configured": "Dieses Konto ist bereits eingerichtet.",

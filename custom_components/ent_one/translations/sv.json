@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT-adress",
           "username": "Användarnamn",
+          "username_secret": "Användarnamnshemlighet",
           "password": "Lösenord",
           "password_secret": "Lösenordshemlighet"
         },
         "data_description": {
+          "username": "Lämna tomt för att läsa det från secrets.yaml.",
+          "username_secret": "Namnet på posten i secrets.yaml med användarnamnet, till exempel ent_one_username.",
           "password": "Lämna tomt för att läsa det från secrets.yaml.",
           "password_secret": "Namnet på posten i secrets.yaml med lösenordet, till exempel ent_one_password. Den läses om vid varje uppdatering: efter ett lösenordsbyte räcker det att ändra hemligheten."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Ändra lösenordet för {username} eller posten i secrets.yaml som innehåller det.",
+        "description": "Ändra användarnamn och lösenord för {username} eller posterna i secrets.yaml som innehåller dem.",
         "data": {
+          "username": "Användarnamn",
+          "username_secret": "Användarnamnshemlighet",
           "password": "Lösenord",
           "password_secret": "Lösenordshemlighet"
         },
         "data_description": {
+          "username": "Lämna tomt för att läsa det från secrets.yaml.",
+          "username_secret": "Namnet på posten i secrets.yaml med användarnamnet, till exempel ent_one_username.",
           "password": "Lämna tomt för att läsa det från secrets.yaml.",
           "password_secret": "Namnet på posten i secrets.yaml med lösenordet, till exempel ent_one_password. Den läses om vid varje uppdatering: efter ett lösenordsbyte räcker det att ändra hemligheten."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Kan inte nå ENT. Kontrollera adressen och försök igen.",
       "password_or_secret": "Ange antingen ett lösenord eller ett hemlighetsnamn.",
       "secret_not_found": "Posten saknas i secrets.yaml.",
-      "wrong_account": "Det här lösenordet hör till ett annat konto."
+      "wrong_account": "Det här lösenordet hör till ett annat konto.",
+      "username_or_secret": "Ange antingen ett användarnamn eller ett hemlighetsnamn."
     },
     "abort": {
       "already_configured": "Det här kontot är redan konfigurerat.",

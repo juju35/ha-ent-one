@@ -7,10 +7,13 @@
         "data": {
           "url": "Naslov ENT",
           "username": "Uporabniško ime",
+          "username_secret": "Skrivnost uporabniškega imena",
           "password": "Geslo",
           "password_secret": "Skrivnost gesla"
         },
         "data_description": {
+          "username": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "username_secret": "Ime vnosa v secrets.yaml z uporabniškim imenom, na primer ent_one_username.",
           "password": "Pustite prazno, da se prebere iz secrets.yaml.",
           "password_secret": "Ime vnosa v secrets.yaml z geslom, na primer ent_one_password. Prebere se ob vsaki posodobitvi: po spremembi gesla je dovolj urediti skrivnost."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Spremenite geslo za {username} ali vnos v secrets.yaml, ki ga vsebuje.",
+        "description": "Spremenite uporabniško ime in geslo za {username} ali vnose v secrets.yaml, ki ju vsebujejo.",
         "data": {
+          "username": "Uporabniško ime",
+          "username_secret": "Skrivnost uporabniškega imena",
           "password": "Geslo",
           "password_secret": "Skrivnost gesla"
         },
         "data_description": {
+          "username": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "username_secret": "Ime vnosa v secrets.yaml z uporabniškim imenom, na primer ent_one_username.",
           "password": "Pustite prazno, da se prebere iz secrets.yaml.",
           "password_secret": "Ime vnosa v secrets.yaml z geslom, na primer ent_one_password. Prebere se ob vsaki posodobitvi: po spremembi gesla je dovolj urediti skrivnost."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "ENT ni dosegljiv. Preverite naslov in poskusite znova.",
       "password_or_secret": "Vnesite geslo ali ime skrivnosti.",
       "secret_not_found": "Tega vnosa ni v secrets.yaml.",
-      "wrong_account": "To geslo pripada drugemu računu."
+      "wrong_account": "To geslo pripada drugemu računu.",
+      "username_or_secret": "Vnesite uporabniško ime ali ime skrivnosti."
     },
     "abort": {
       "already_configured": "Ta račun je že nastavljen.",

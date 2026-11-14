@@ -111,10 +111,10 @@ class EntApi:
         # Set once the ENT refused the credentials: no automatic retry until new ones (reauth).
         self._refused = False
 
-    def update_password(self, password: str) -> None:
-        """A new password (secret edited in secrets.yaml): logging in is allowed again after a refusal."""
-        if password != self._password:
-            self._password = password
+    def update_credentials(self, username: str, password: str) -> None:
+        """New credentials (secret edited in secrets.yaml): logging in is allowed again after a refusal."""
+        if (username, password) != (self._username, self._password):
+            self._username, self._password = username, password
             self._refused = False
 
     @property

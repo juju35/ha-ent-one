@@ -7,10 +7,13 @@
         "data": {
           "url": "Adresa ENT",
           "username": "Uživatelské jméno",
+          "username_secret": "Tajemství uživatelského jména",
           "password": "Heslo",
           "password_secret": "Tajemství hesla"
         },
         "data_description": {
+          "username": "Ponechte prázdné, chcete-li ho číst ze secrets.yaml.",
+          "username_secret": "Název položky v secrets.yaml s uživatelským jménem, například ent_one_username.",
           "password": "Ponechte prázdné, chcete-li ho číst ze secrets.yaml.",
           "password_secret": "Název položky v secrets.yaml s heslem, například ent_one_password. Čte se při každé aktualizaci: po změně hesla stačí upravit tajemství."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Změňte heslo uživatele {username} nebo položku v secrets.yaml, která ho obsahuje.",
+        "description": "Změňte uživatelské jméno a heslo {username} nebo položky v secrets.yaml, které je obsahují.",
         "data": {
+          "username": "Uživatelské jméno",
+          "username_secret": "Tajemství uživatelského jména",
           "password": "Heslo",
           "password_secret": "Tajemství hesla"
         },
         "data_description": {
+          "username": "Ponechte prázdné, chcete-li ho číst ze secrets.yaml.",
+          "username_secret": "Název položky v secrets.yaml s uživatelským jménem, například ent_one_username.",
           "password": "Ponechte prázdné, chcete-li ho číst ze secrets.yaml.",
           "password_secret": "Název položky v secrets.yaml s heslem, například ent_one_password. Čte se při každé aktualizaci: po změně hesla stačí upravit tajemství."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "ENT není dostupný. Zkontrolujte adresu a zkuste to znovu.",
       "password_or_secret": "Zadejte buď heslo, nebo název tajemství.",
       "secret_not_found": "Tato položka v secrets.yaml chybí.",
-      "wrong_account": "Toto heslo patří jinému účtu."
+      "wrong_account": "Toto heslo patří jinému účtu.",
+      "username_or_secret": "Zadejte buď uživatelské jméno, nebo název tajemství."
     },
     "abort": {
       "already_configured": "Tento účet je již nastaven.",

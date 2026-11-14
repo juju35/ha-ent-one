@@ -29,7 +29,7 @@ from .const import (
     MIN_SCAN_INTERVAL,
     NEWS_KEPT,
 )
-from .secret import SecretNotFoundError, async_password
+from .secret import SecretNotFoundError, async_credentials
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -121,8 +121,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
 
     async def _async_update_data(self) -> EntData:
         try:
-            # A password kept in secrets.yaml is read again each time: editing the secret is enough after a change.
-            self.api.update_password(await async_password(self.hass, self.config_entry.data))
+            # Credentials kept in secrets.yaml are read again each time: editing the secret is enough after a change.
+            self.api.update_credentials(*await async_credentials(self.hass, self.config_entry.data))
         except SecretNotFoundError as err:
             raise UpdateFailed(str(err)) from err
         try:

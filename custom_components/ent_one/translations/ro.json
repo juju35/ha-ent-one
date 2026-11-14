@@ -7,10 +7,13 @@
         "data": {
           "url": "Adresa ENT",
           "username": "Nume de utilizator",
+          "username_secret": "Secretul numelui de utilizator",
           "password": "Parolă",
           "password_secret": "Secretul parolei"
         },
         "data_description": {
+          "username": "Lasă gol pentru a-l citi din secrets.yaml.",
+          "username_secret": "Numele intrării din secrets.yaml care conține numele de utilizator, de exemplu ent_one_username.",
           "password": "Lasă gol pentru a o citi din secrets.yaml.",
           "password_secret": "Numele intrării din secrets.yaml care conține parola, de exemplu ent_one_password. Este recitită la fiecare actualizare: după schimbarea parolei, ajunge să modifici secretul."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Schimbă parola lui {username} sau intrarea din secrets.yaml care o conține.",
+        "description": "Schimbă numele de utilizator și parola lui {username} sau intrările din secrets.yaml care le conțin.",
         "data": {
+          "username": "Nume de utilizator",
+          "username_secret": "Secretul numelui de utilizator",
           "password": "Parolă",
           "password_secret": "Secretul parolei"
         },
         "data_description": {
+          "username": "Lasă gol pentru a-l citi din secrets.yaml.",
+          "username_secret": "Numele intrării din secrets.yaml care conține numele de utilizator, de exemplu ent_one_username.",
           "password": "Lasă gol pentru a o citi din secrets.yaml.",
           "password_secret": "Numele intrării din secrets.yaml care conține parola, de exemplu ent_one_password. Este recitită la fiecare actualizare: după schimbarea parolei, ajunge să modifici secretul."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "ENT-ul nu poate fi contactat. Verifică adresa și încearcă din nou.",
       "password_or_secret": "Introdu fie o parolă, fie numele unui secret.",
       "secret_not_found": "Această intrare lipsește din secrets.yaml.",
-      "wrong_account": "Această parolă aparține altui cont."
+      "wrong_account": "Această parolă aparține altui cont.",
+      "username_or_secret": "Introdu fie un nume de utilizator, fie numele unui secret."
     },
     "abort": {
       "already_configured": "Acest cont este deja configurat.",

@@ -7,10 +7,13 @@
         "data": {
           "url": "ENT adrese",
           "username": "Lietotājvārds",
+          "username_secret": "Lietotājvārda noslēpums",
           "password": "Parole",
           "password_secret": "Paroles noslēpums"
         },
         "data_description": {
+          "username": "Atstājiet tukšu, lai to nolasītu no secrets.yaml.",
+          "username_secret": "secrets.yaml ieraksta nosaukums ar lietotājvārdu, piemēram, ent_one_username.",
           "password": "Atstājiet tukšu, lai to nolasītu no secrets.yaml.",
           "password_secret": "secrets.yaml ieraksta nosaukums ar paroli, piemēram, ent_one_password. Tas tiek nolasīts katrā atjaunināšanā: pēc paroles maiņas pietiek nomainīt noslēpumu."
         }
@@ -28,12 +31,16 @@
       },
       "reconfigure": {
         "title": "ENT ONE",
-        "description": "Mainiet lietotāja {username} paroli vai secrets.yaml ierakstu, kurā tā glabājas.",
+        "description": "Mainiet lietotāja {username} lietotājvārdu un paroli vai secrets.yaml ierakstus, kuros tie glabājas.",
         "data": {
+          "username": "Lietotājvārds",
+          "username_secret": "Lietotājvārda noslēpums",
           "password": "Parole",
           "password_secret": "Paroles noslēpums"
         },
         "data_description": {
+          "username": "Atstājiet tukšu, lai to nolasītu no secrets.yaml.",
+          "username_secret": "secrets.yaml ieraksta nosaukums ar lietotājvārdu, piemēram, ent_one_username.",
           "password": "Atstājiet tukšu, lai to nolasītu no secrets.yaml.",
           "password_secret": "secrets.yaml ieraksta nosaukums ar paroli, piemēram, ent_one_password. Tas tiek nolasīts katrā atjaunināšanā: pēc paroles maiņas pietiek nomainīt noslēpumu."
         }
@@ -46,7 +53,8 @@
       "cannot_connect": "Nevar sazināties ar ENT. Pārbaudiet adresi un mēģiniet vēlreiz.",
       "password_or_secret": "Ievadiet vai nu paroli, vai noslēpuma nosaukumu.",
       "secret_not_found": "Šis ieraksts failā secrets.yaml nav atrodams.",
-      "wrong_account": "Šī parole pieder citam kontam."
+      "wrong_account": "Šī parole pieder citam kontam.",
+      "username_or_secret": "Ievadiet vai nu lietotājvārdu, vai noslēpuma nosaukumu."
     },
     "abort": {
       "already_configured": "Šis konts jau ir iestatīts.",
