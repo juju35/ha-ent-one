@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.2.0';
+var ENT_ONE_CARD_VERSION = '1.2.1';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -2438,7 +2438,8 @@ function entOneItemStyles(accent) {
     '.read:hover { text-decoration: underline; }',
     '.atts { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }',
     '.att-images { display: flex; flex-wrap: wrap; gap: 6px; }',
-    '.att-img { all: unset; cursor: zoom-in; display: block; border-radius: 8px; overflow: hidden; border: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: color-mix(in srgb, var(--primary-text-color) 4%, transparent); }',
+    // White under the image: a transparent PNG drawn in black (a poster, a scan) disappears on a dark theme.
+    '.att-img { all: unset; cursor: zoom-in; display: block; border-radius: 8px; overflow: hidden; border: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: #fff; }',
     '.att-img img { display: block; height: 72px; width: auto; max-width: 160px; object-fit: cover; }',
     '.atts.full .att-img { cursor: zoom-in; }',
     '.atts.full .att-img img { height: auto; max-width: min(100%, 720px); max-height: 60vh; object-fit: contain; }',

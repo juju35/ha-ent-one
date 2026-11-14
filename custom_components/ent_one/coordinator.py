@@ -14,7 +14,16 @@ from homeassistant.helpers.translation import async_get_translations
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .api import EntActionRequiredError, EntApi, EntAuthError, EntError, html_files, html_to_text
+from .api import (
+    EntActionRequiredError,
+    EntApi,
+    EntAuthError,
+    EntError,
+    html_content,
+    html_files,
+    html_to_text,
+    without_file_names,
+)
 from .const import (
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
@@ -220,8 +229,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                         "child_id": child_id,
                         "child": child["first_name"],
                         "title": w.get("title") or "",
-                        "text": html_to_text(w.get("text")),
-                        "attachments": html_files(w.get("text"), self.api.base_url),
+                        "text": (content := html_content(w.get("text"), self.api.base_url))[0],
+                        "attachments": content[1],
                         "date": iso(w.get("sending_date")),
                         "author": w.get("owner_name"),
                         "category": w.get("category"),
@@ -260,8 +269,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                             "book": title,
                             "date": when.isoformat(),
                             "title": entry.get("title") or "",
-                            "text": html_to_text(entry.get("value")),
-                            "attachments": html_files(entry.get("value"), self.api.base_url),
+                            "text": (content := html_content(entry.get("value"), self.api.base_url))[0],
+                            "attachments": content[1],
                             "done": entry_id in done,
                         }
                     )
@@ -273,8 +282,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             {
                 "id": _str(n.get("id")),
                 "title": n.get("title") or "",
-                "text": html_to_text(n.get("content")),
-                "attachments": html_files(n.get("content"), self.api.base_url),
+                "text": (content := html_content(n.get("content"), self.api.base_url))[0],
+                "attachments": content[1],
                 "date": iso(n.get("publicationDate") or n.get("publication_date") or n.get("created")),
                 "author": _person(n.get("owner")),
                 "headline": bool(n.get("headline")),
@@ -404,7 +413,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             "subject": m.get("subject") or "",
             "sender": _person(m.get("from")),
             "date": iso(m.get("date")),
-            "text": html_to_text(body),
+            "text": without_file_names(html_to_text(body), attachments),
             "attachments": attachments,
         }
 

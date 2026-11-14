@@ -171,3 +171,30 @@ def test_file_paths_and_attachments() -> None:
         {"path": "/workspace/document/d2", "name": "Menu", "kind": "file"},
         {"path": "/workspace/document/d3?thumbnail=1", "name": "Photo", "kind": "image"},
     ]
+
+
+def test_without_file_names() -> None:
+    from custom_components.ent_one.api import html_content, without_file_names
+
+    html = (
+        '<p>Grève mardi.</p><div class="download-attachments"><h2>Pièces jointes</h2>'
+        '<a href="/workspace/document/d1">MODELE AFFICHE GREVES.png</a></div>'
+    )
+    text, files = html_content(html, "https://ent.example")
+    assert text == "Grève mardi."
+    assert files == [{"path": "/workspace/document/d1", "name": "MODELE AFFICHE GREVES.png", "kind": "file"}]
+    # Nothing taken out when no attachment name is in the text, even a line that looks like a title.
+    assert without_file_names("Pièces jointes\nà apporter", [{"name": "x.pdf"}]) == "Pièces jointes\nà apporter"
+    assert without_file_names("Bonjour", []) == "Bonjour"
+
+
+def test_disposition_name() -> None:
+    from custom_components.ent_one.api import disposition_name
+
+    # Raw UTF-8 and Latin-1 bytes, as aiohttp hands them over (undecodable bytes kept as surrogates).
+    utf8 = 'attachment; filename="flyer agr\u00e9ment.pdf"'.encode().decode("utf-8", "surrogateescape")
+    latin = 'attachment; filename="flyer agr\u00e9ment.pdf"'.encode("latin-1").decode("utf-8", "surrogateescape")
+    assert disposition_name(utf8) == "flyer agr\u00e9ment.pdf"
+    assert disposition_name(latin) == "flyer agr\u00e9ment.pdf"
+    assert disposition_name("attachment; filename*=UTF-8''r%C3%A9sum%C3%A9.pdf") == "r\u00e9sum\u00e9.pdf"
+    assert disposition_name("inline") is None

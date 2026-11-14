@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 (2026-11-14)
+
+- Attachments with an accented name (a PDF shown as a white page, for instance) failed with a server error: the ENT writes the name as raw bytes, now decoded again, and the name known from the message or the word comes first.
+- Images are drawn on white: a transparent PNG in black (a poster, a scan) no longer shows as an empty frame on a dark theme.
+- The text of a word, a homework, a news item or a message no longer repeats the list of its attachments ("Pièces jointes" and the file names written by the ENT's editor): the attachments are shown under it.
+
 ## 1.2.0 (2026-11-14)
 
 - Panel: the Messages and Liaison book tabs work like a mail client, the list on the left and the item chosen in a reading pane on the right (on a phone, the item replaces the list, Back returns to it); the item is kept in the address.

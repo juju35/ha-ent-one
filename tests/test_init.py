@@ -529,3 +529,6 @@ def test_sniff_type() -> None:
     assert sniff_type(b"not a pdf", "application/octet-stream", "fake.pdf") == "application/octet-stream"
     assert file_name(None, 'a"b/c.pdf', "/workspace/document/d1") == "abc.pdf"
     assert file_name("", "", "/workspace/document/d1?thumbnail=1") == "d1"
+    # An undecodable character never reaches the header (it made the view fail).
+    assert file_name("agr\udce9ment.pdf", "", "/x") == "agrment.pdf"
+    assert file_name("affiche.png", "d2", "/workspace/document/d2") == "affiche.png"
