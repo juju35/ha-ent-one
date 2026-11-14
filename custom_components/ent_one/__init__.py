@@ -33,7 +33,9 @@ from .const import (
     DEFAULT_SHOW_PANEL,
     DOMAIN,
     FRONTEND_URL,
+    ICONS_FILENAME,
     PANEL_FILENAME,
+    PANEL_ICON,
     PANEL_URL_PATH,
     SERVICE_REFRESH,
     SERVICE_SIGN_WORD,
@@ -61,6 +63,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Serve the card and the panel, and register the services and websocket commands once."""
     await hass.http.async_register_static_paths([StaticPathConfig(FRONTEND_URL, str(FRONTEND_DIR), True)])
     await _async_register_card(hass)
+    # The panda icon set, on every page: the sidebar entry of the panel uses it before any dashboard loads the card.
+    _base, icons_url = await _file_url(hass, ICONS_FILENAME)
+    add_extra_js_url(hass, icons_url)
 
     websocket_api.async_register_command(hass, ws_settings)
     websocket_api.async_register_command(hass, ws_update_settings)
@@ -161,7 +166,7 @@ async def _async_update_panel(hass: HomeAssistant, setting_up: EntConfigEntry) -
             frontend_url_path=PANEL_URL_PATH,
             webcomponent_name="ent-one-panel",
             sidebar_title="ENT ONE",
-            sidebar_icon="mdi:school-outline",
+            sidebar_icon=PANEL_ICON,
             module_url=url,
             require_admin=False,
             config={"card_url": card_url},

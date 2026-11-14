@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 (2026-11-14)
+
+- The sidebar entry of the panel shows the panda (icon set `ent_one`, `ent_one:panda`) instead of a mortarboard.
+
 ## 1.0.0 (2026-11-14)
 
 First release.

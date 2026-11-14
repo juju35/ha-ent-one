@@ -435,3 +435,9 @@ def test_all_day_end() -> None:
     assert (late.start, late.end) == (date(2026, 12, 19), date(2026, 12, 20))
     days = school_event({"id": "z", "title": "Holidays", "all_day": True, "start": "2026-12-19", "end": "2027-01-03"})
     assert (days.start, days.end) == (date(2026, 12, 19), date(2027, 1, 4))
+
+
+async def test_panel_uses_the_panda_icon_set(hass: HomeAssistant, api, entry, stub_frontend) -> None:
+    await _setup(hass, entry)
+    assert hass.data[frontend.DATA_PANELS][PANEL_URL_PATH].sidebar_icon == "ent_one:panda"
+    assert any("/ent_one_static/ent-one-icons.js?v=" in str(c.args[1]) for c in stub_frontend.call_args_list)
