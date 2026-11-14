@@ -352,9 +352,13 @@ def sniff_type(body: bytes, declared: str, filename: str) -> str:
 
 
 def file_name(name: str | None, hint: str, path: str) -> str:
-    """Name of a served file: the ENT's, else the one the card knows, else the last part of the path."""
-    for candidate in (name, hint, path.split("?")[0].rstrip("/").rsplit("/", 1)[-1]):
-        cleaned = re.sub(r'[\x00-\x1f"\\/]', "", candidate or "").strip()[:150]
+    """Name of a served file: the one the card knows (the ENT's metadata), else the ENT's header, else the last
+    part of the path. Characters that cannot be written (control, quotes, unpaired surrogates) are dropped."""
+    # A hint without an extension (an image's id) gives way to the header's name.
+    first = (hint, name) if "." in (hint or "") else (name, hint)
+    for candidate in (*first, path.split("?")[0].rstrip("/").rsplit("/", 1)[-1]):
+        text = (candidate or "").encode("utf-8", "ignore").decode("utf-8")
+        cleaned = re.sub(r'[\x00-\x1f"\\/]', "", text).strip()[:150]
         if cleaned:
             return cleaned
     return "file"

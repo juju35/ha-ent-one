@@ -127,6 +127,23 @@ class _LinkExtractor(HTMLParser):
             self._link = None
 
 
+def disposition_name(header: str) -> str | None:
+    """File name of a Content-Disposition header. The ENT writes accented names as raw bytes (UTF-8 or Latin-1),
+    which reach us as undecodable characters: they are decoded again here."""
+    star = re.search(r"filename\*\s*=\s*[\w-]*'[\w-]*'([^;]+)", header)
+    if star:
+        return unquote(star.group(1).strip().strip('"')) or None
+    plain = re.search(r'filename\s*=\s*"?([^";]+)"?', header)
+    if not plain:
+        return None
+    raw = plain.group(1).strip().encode("utf-8", "surrogateescape")
+    try:
+        name = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        name = raw.decode("latin-1")
+    return unquote(name) or None
+
+
 def html_files(html: str | None, base_url: str) -> list[dict[str, str]]:
     """ENT files linked or shown in a text: [{path, name, kind}], only paths the integration may fetch."""
     if not html:
@@ -170,6 +187,30 @@ def html_to_text(html: str | None) -> str:
         text = re.sub(r"<[^>]+>", " ", html)
     lines = [re.sub(r"[ \t ]+", " ", line).strip() for line in text.splitlines()]
     return re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip()
+
+
+_ATTACHMENTS_TITLE = re.compile(
+    r"^(pi[eè]ces?[ -]jointes?|fichiers? joints?|attachments?|documents? joints?)\s*:?$", re.IGNORECASE
+)
+
+
+def without_file_names(text: str, files: list[dict[str, Any]]) -> str:
+    """The text of a word, a homework or a message without the list of its attachments: the ENT's editor writes
+    their names under a "Pièces jointes" title, and the card and the panel show the attachments themselves."""
+    names = {str(f.get("name") or "").strip().lower() for f in files} - {""}
+    if not names:
+        return text
+    kept = [line for line in text.split("\n") if line.strip().lower() not in names]
+    if len(kept) == text.count("\n") + 1:
+        return text
+    kept = [line for line in kept if not _ATTACHMENTS_TITLE.match(line.strip())]
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip()
+
+
+def html_content(html: str | None, base_url: str) -> tuple[str, list[dict[str, str]]]:
+    """Text and attachments of an ENT text, the attachments' names taken out of the text."""
+    files = html_files(html, base_url)
+    return without_file_names(html_to_text(html), files), files
 
 
 class EntApi:
@@ -352,12 +393,10 @@ class EntApi:
                     body = await resp.content.read(MAX_FILE_SIZE + 1)
                     if len(body) > MAX_FILE_SIZE:
                         raise EntError("File too large")
-                    disposition = resp.headers.get("Content-Disposition", "")
-                    name = re.search(r'filename\*?=(?:UTF-8\'\')?"?([^";]+)"?', disposition)
                     return (
                         body,
                         resp.content_type or "application/octet-stream",
-                        unquote(name.group(1)) if name else None,
+                        disposition_name(resp.headers.get("Content-Disposition", "")),
                     )
             except TimeoutError as err:
                 raise EntError(f"Timeout on {path}") from err
