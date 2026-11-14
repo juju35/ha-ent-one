@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.4 (2026-11-15)
+
+- French labels: the Liaison book tab is called « Carnet de liaison » (was « Carnet ») and the Messages tab and section « Messagerie » (was « Messages »).
+
 ## 1.2.3 (2026-11-15)
 
 - Attachments were cut short: only the first part of a file sent by the ENT was read, so a PDF showed as a white page and an image as an empty frame. The whole file is read now.

@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.2.3';
+var ENT_ONE_CARD_VERSION = '1.2.4';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -117,7 +117,7 @@ var EntOneI18n = {
     tile_homework: 'devoirs',
     section_words: 'Carnet de liaison',
     section_homework: 'Devoirs',
-    section_messages: 'Messages',
+    section_messages: 'Messagerie',
     section_news: 'Actualités',
     section_events: 'Agenda',
     sign: 'Signer',
@@ -156,8 +156,8 @@ var EntOneI18n = {
     action_failed: 'L\'ENT a refusé l\'action :',
     tab_home: 'Accueil',
     tab_homework: 'Devoirs',
-    tab_words: 'Carnet',
-    tab_messages: 'Messages',
+    tab_words: 'Carnet de liaison',
+    tab_messages: 'Messagerie',
     tab_news: 'Actualités',
     tab_settings: 'Réglages',
     all: 'Tous',
