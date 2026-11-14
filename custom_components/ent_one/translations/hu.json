@@ -95,6 +95,9 @@
       "news": {
         "name": "Hírek"
       },
+      "blog": {
+        "name": "Blog"
+      },
       "last_update": {
         "name": "Utolsó frissítés"
       }

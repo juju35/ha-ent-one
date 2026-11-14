@@ -95,6 +95,9 @@
       "news": {
         "name": "Vesti"
       },
+      "blog": {
+        "name": "Blog"
+      },
       "last_update": {
         "name": "Poslednje ažuriranje"
       }

@@ -95,6 +95,9 @@
       "news": {
         "name": "Notizie"
       },
+      "blog": {
+        "name": "Blog"
+      },
       "last_update": {
         "name": "Ultimo aggiornamento"
       }

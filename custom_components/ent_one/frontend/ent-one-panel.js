@@ -1,7 +1,7 @@
 // ENT ONE sidebar panel: one tab per ENT application, Settings last. It draws its own content (no Lovelace card
 // inside) and reuses the card file's helpers, translations and row renderers (window.EntOne), loaded on demand.
-var ENT_ONE_PANEL_TABS = ['home', 'homework', 'words', 'messages', 'news', 'settings'];
-var ENT_ONE_TAB_KEYS = { home: 'tab_home', homework: 'tab_homework', words: 'tab_words', messages: 'tab_messages', news: 'tab_news', settings: 'tab_settings' };
+var ENT_ONE_PANEL_TABS = ['home', 'homework', 'words', 'messages', 'news', 'blog', 'settings'];
+var ENT_ONE_TAB_KEYS = { home: 'tab_home', homework: 'tab_homework', words: 'tab_words', messages: 'tab_messages', news: 'tab_news', blog: 'tab_blog', settings: 'tab_settings' };
 
 class EntOnePanel extends HTMLElement {
   constructor() {
@@ -17,6 +17,7 @@ class EntOnePanel extends HTMLElement {
     }
     this._book = typeof saved.book === 'string' ? saved.book : '';
     this._hideDone = saved.hideDone === true;
+    this._blogFilter = typeof saved.blog === 'string' ? saved.blog : '';
     this._entry = this._entry || '';
     this._open = {};
     // Messages read in full, by id (not `_messages`: that is the tab method).
@@ -85,6 +86,7 @@ class EntOnePanel extends HTMLElement {
     }
     this._render();
     if (item) this._root.querySelector('.reader')?.scrollTo?.(0, 0);
+    this._root.querySelector('.post, .tabs')?.scrollIntoView?.({ block: 'nearest' });
   }
 
   _tabFromUrl() {
@@ -106,7 +108,7 @@ class EntOnePanel extends HTMLElement {
 
   _saveFilters() {
     try {
-      window.localStorage.setItem('ent-one-panel', JSON.stringify({ book: this._book, hideDone: this._hideDone }));
+      window.localStorage.setItem('ent-one-panel', JSON.stringify({ book: this._book, hideDone: this._hideDone, blog: this._blogFilter }));
     } catch (_e) {
       /* private mode, quota: not remembered */
     }
@@ -214,7 +216,7 @@ class EntOnePanel extends HTMLElement {
       content.innerHTML = '<div class="page"><div class="empty">' + E.esc(t.unavailable) + '</div></div>';
       return;
     }
-    var html = { home: this._home, homework: this._homework, words: this._words, messages: this._messages, news: this._news }[this._tab].call(this, t, data);
+    var html = { home: this._home, homework: this._homework, words: this._words, messages: this._messages, news: this._news, blog: this._blog }[this._tab].call(this, t, data);
     var mail = this._tab === 'messages' || this._tab === 'words';
     content.innerHTML = '<div class="page' + (mail ? ' wide' : '') + '">' + (this._error ? '<div class="error-text banner">' + E.esc(this._error) + '</div>' : '') + this._popup(t, data) + html + '</div>';
     E.hydrate(content, this._hass, data.entryId);
@@ -363,6 +365,40 @@ class EntOnePanel extends HTMLElement {
     return this._mail(list, reader, t.no_messages, t.select_message, 'mdi:email-open-outline');
   }
 
+  // Blog, organized like ONE's: a filter per blog, a feed of post cards (start of the text, pictures, comments,
+  // Read more), and the post chosen in full in place of the feed (Back returns to it).
+  _blog(t, data) {
+    var E = window.EntOne;
+    var locale = E.locale(this._hass);
+    var key = (b) => b.blog_id + ':' + b.id;
+    var sel = data.blog.find((b) => key(b) === this._item);
+    var back = '<button class="back show" data-action="back"><ha-icon icon="mdi:arrow-left"></ha-icon>' + E.esc(t.back) + '</button>';
+    if (sel) {
+      return '<article class="post">' + back + this._readerHead(sel.title || '—', [sel.blog, sel.author, this._when(sel.date, t, locale)].filter(Boolean).join(' · ')) +
+        (sel.text ? '<div class="rbody">' + E.esc(sel.text) + '</div>' : '') + E.files(sel.attachments, t, data.entryId, true) + '</article>';
+    }
+    var blogs = [];
+    data.blog.forEach((b) => {
+      if (!blogs.some((x) => x.id === b.blog_id)) blogs.push({ id: b.blog_id, title: b.blog, thumb: b.blog_thumbnail });
+    });
+    if (this._blogFilter && !blogs.some((b) => b.id === this._blogFilter)) this._blogFilter = '';
+    var dot = (thumb) => '<span class="bdot">' + (thumb ? '<img alt="" data-ent-src="' + E.esc(thumb) + '" data-name="">' : '<ha-icon icon="mdi:post-outline"></ha-icon>') + '</span>';
+    var chips = '<div class="filters">' +
+      '<button class="filter' + (this._blogFilter ? '' : ' on') + '" data-blog="">' + E.esc(t.all) + '</button>' +
+      blogs.map((b) => '<button class="filter bfilter' + (this._blogFilter === b.id ? ' on' : '') + '" data-blog="' + E.esc(b.id) + '">' + dot(b.thumb) + E.esc(b.title) + '</button>').join('') + '</div>';
+    var posts = data.blog.filter((b) => !this._blogFilter || b.blog_id === this._blogFilter);
+    var cards = posts.map((b) => {
+      var images = (b.attachments || []).filter((f) => E.fileKind(f) === 'image').slice(0, 3);
+      return '<div class="pcard" role="button" tabindex="0" data-select="' + E.esc(key(b)) + '">' +
+        '<div class="pmeta">' + E.esc([b.blog, b.author, E.day(b.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
+        '<div class="ptitle">' + E.esc(b.title || '—') + '</div>' +
+        (b.text ? '<div class="ptext">' + E.esc(b.text) + '</div>' : '') +
+        (images.length ? E.files(images, t, data.entryId) : '') +
+        '<div class="pfoot"><span><ha-icon icon="mdi:comment-outline"></ha-icon>' + (Number(b.comments) || 0) + '</span><span class="link">' + E.esc(t.read_more) + ' →</span></div></div>';
+    }).join('');
+    return '<div class="feed">' + chips + (cards || '<div class="box"><div class="empty">' + E.esc(t.no_blog) + '</div></div>') + '</div>';
+  }
+
   _news(t, data) {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
@@ -508,6 +544,13 @@ class EntOnePanel extends HTMLElement {
     var tabEl = ev.target.closest('[data-tab]');
     if (tabEl) {
       this._setTab(tabEl.getAttribute('data-tab'));
+      return;
+    }
+    var blogEl = ev.target.closest('[data-blog]');
+    if (blogEl) {
+      this._blogFilter = blogEl.getAttribute('data-blog');
+      this._saveFilters();
+      this._render();
       return;
     }
     var bookEl = ev.target.closest('[data-book]:not([data-action])');
@@ -671,6 +714,22 @@ class EntOnePanel extends HTMLElement {
       '.back { all: unset; cursor: pointer; display: none; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 14px; color: var(--secondary-text-color); --mdc-icon-size: 20px; }',
       '.back:focus-visible { outline: 2px solid var(--primary-color); }',
       '.pad { padding: 12px; }',
+      // Blog: feed of post cards like ONE's, the post read in full in its place.
+      '.feed { display: flex; flex-direction: column; gap: 12px; max-width: 760px; width: 100%; margin: 0 auto; }',
+      '.pcard { cursor: pointer; background: var(--card-background-color, #fff); border-radius: var(--ha-card-border-radius, 12px); border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)); padding: 12px 16px; }',
+      '.pcard:hover { border-color: var(--secondary-text-color); }',
+      '.pcard:focus-visible { outline: 2px solid var(--primary-color); }',
+      '.pmeta { font-size: 12px; color: var(--secondary-text-color); }',
+      '.ptitle { font-size: 16px; font-weight: 500; margin-top: 2px; overflow-wrap: anywhere; }',
+      '.ptext { font-size: 14px; line-height: 1.5; margin-top: 4px; white-space: pre-line; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }',
+      '.pcard .att-img img { height: 120px; max-width: 220px; }',
+      '.pfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 13px; color: var(--secondary-text-color); --mdc-icon-size: 16px; }',
+      '.pfoot ha-icon { margin-right: 4px; vertical-align: -3px; }',
+      '.post { max-width: 860px; width: 100%; margin: 0 auto; box-sizing: border-box; background: var(--card-background-color, #fff); border-radius: var(--ha-card-border-radius, 12px); border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)); padding: 16px 20px; }',
+      '.back.show { display: inline-flex; }',
+      '.bfilter { display: inline-flex; align-items: center; gap: 6px; padding-left: 4px; }',
+      '.bdot { width: 20px; height: 20px; border-radius: 50%; overflow: hidden; display: inline-grid; place-items: center; flex: none; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 14%, transparent); --mdc-icon-size: 13px; }',
+      '.bdot img { width: 100%; height: 100%; object-fit: cover; }',
       '@media (max-width: 800px) { .mail { grid-template-columns: 1fr; height: auto; min-height: 0; } .mlist { border-right: none; } .mail.has-item .mlist { display: none; }' +
         ' .mail:not(.has-item) .reader { display: none; } .back { display: inline-flex; } .reader { padding: 12px 14px; } }',
       '@media (max-width: 600px) { .updated { display: none; } .page { padding: 12px; } .tile .v { font-size: 22px; } }',

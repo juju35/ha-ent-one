@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.2.4';
+var ENT_ONE_CARD_VERSION = '1.3.0';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -56,6 +56,12 @@ var EntOneI18n = {
     attachments: 'Attachments',
     loading: 'Loading…',
     message_failed: 'Could not read the message:',
+    read_more: 'Read more',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'No blog post',
+    select_post: 'Choose a post to read it.',
+    editor_show_blog: 'Show the blog',
     read: 'Read',
     select_message: 'Choose a message to read it.',
     select_word: 'Choose a word to read it.',
@@ -146,6 +152,12 @@ var EntOneI18n = {
     attachments: 'Pièces jointes',
     loading: 'Chargement…',
     message_failed: 'Impossible de lire le message :',
+    read_more: 'Lire la suite',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Aucun billet',
+    select_post: 'Choisissez un billet pour le lire.',
+    editor_show_blog: 'Afficher le blog',
     read: 'Lire',
     select_message: 'Choisissez un message pour le lire.',
     select_word: 'Choisissez un mot pour le lire.',
@@ -235,6 +247,12 @@ var EntOneI18n = {
     attachments: "Anhänge",
     loading: "Wird geladen…",
     message_failed: "Die Nachricht konnte nicht gelesen werden:",
+    read_more: 'Weiterlesen',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Kein Beitrag',
+    select_post: 'Wählen Sie einen Beitrag, um ihn zu lesen.',
+    editor_show_blog: 'Blog anzeigen',
     read: 'Lesen',
     select_message: 'Wählen Sie eine Nachricht, um sie zu lesen.',
     select_word: 'Wählen Sie eine Mitteilung, um sie zu lesen.',
@@ -324,6 +342,12 @@ var EntOneI18n = {
     attachments: "Adjuntos",
     loading: "Cargando…",
     message_failed: "No se pudo leer el mensaje:",
+    read_more: 'Leer más',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Ninguna entrada',
+    select_post: 'Elija una entrada para leerla.',
+    editor_show_blog: 'Mostrar el blog',
     read: 'Leer',
     select_message: 'Elija un mensaje para leerlo.',
     select_word: 'Elija una nota para leerla.',
@@ -413,6 +437,12 @@ var EntOneI18n = {
     attachments: "Прилози",
     loading: "Учитавање…",
     message_failed: "Порука није могла да се прочита:",
+    read_more: 'Прочитај више',
+    tab_blog: 'Блог',
+    section_blog: 'Блог',
+    no_blog: 'Нема објава',
+    select_post: 'Изаберите објаву да бисте је прочитали.',
+    editor_show_blog: 'Прикажи блог',
     read: 'Прочитај',
     select_message: 'Изаберите поруку да бисте је прочитали.',
     select_word: 'Изаберите белешку да бисте је прочитали.',
@@ -502,6 +532,12 @@ var EntOneI18n = {
     attachments: "Prilozi",
     loading: "Učitavanje…",
     message_failed: "Poruka nije mogla da se pročita:",
+    read_more: 'Pročitaj više',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Nema objava',
+    select_post: 'Izaberite objavu da biste je pročitali.',
+    editor_show_blog: 'Prikaži blog',
     read: 'Pročitaj',
     select_message: 'Izaberite poruku da biste je pročitali.',
     select_word: 'Izaberite belešku da biste je pročitali.',
@@ -591,6 +627,12 @@ var EntOneI18n = {
     attachments: "Allegati",
     loading: "Caricamento…",
     message_failed: "Impossibile leggere il messaggio:",
+    read_more: 'Continua a leggere',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Nessun articolo',
+    select_post: 'Scegli un articolo per leggerlo.',
+    editor_show_blog: 'Mostra il blog',
     read: 'Leggi',
     select_message: 'Scegli un messaggio per leggerlo.',
     select_word: 'Scegli un avviso per leggerlo.',
@@ -680,6 +722,12 @@ var EntOneI18n = {
     attachments: "Bijlagen",
     loading: "Laden…",
     message_failed: "Het bericht kon niet worden gelezen:",
+    read_more: 'Lees verder',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Geen berichten',
+    select_post: 'Kies een bericht om het te lezen.',
+    editor_show_blog: 'Blog tonen',
     read: 'Lezen',
     select_message: 'Kies een bericht om het te lezen.',
     select_word: 'Kies een mededeling om die te lezen.',
@@ -769,6 +817,12 @@ var EntOneI18n = {
     attachments: "Anexos",
     loading: "A carregar…",
     message_failed: "Não foi possível ler a mensagem:",
+    read_more: 'Ler mais',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Nenhuma publicação',
+    select_post: 'Escolha uma publicação para a ler.',
+    editor_show_blog: 'Mostrar o blog',
     read: 'Ler',
     select_message: 'Escolha uma mensagem para a ler.',
     select_word: 'Escolha um recado para o ler.',
@@ -858,6 +912,12 @@ var EntOneI18n = {
     attachments: "Załączniki",
     loading: "Ładowanie…",
     message_failed: "Nie udało się odczytać wiadomości:",
+    read_more: 'Czytaj dalej',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Brak wpisów',
+    select_post: 'Wybierz wpis, aby go przeczytać.',
+    editor_show_blog: 'Pokaż blog',
     read: 'Czytaj',
     select_message: 'Wybierz wiadomość, aby ją przeczytać.',
     select_word: 'Wybierz wpis, aby go przeczytać.',
@@ -947,6 +1007,12 @@ var EntOneI18n = {
     attachments: "Atașamente",
     loading: "Se încarcă…",
     message_failed: "Mesajul nu a putut fi citit:",
+    read_more: 'Citește mai mult',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Nicio postare',
+    select_post: 'Alegeți o postare pentru a o citi.',
+    editor_show_blog: 'Afișează blogul',
     read: 'Citește',
     select_message: 'Alegeți un mesaj pentru a-l citi.',
     select_word: 'Alegeți o notă pentru a o citi.',
@@ -1036,6 +1102,12 @@ var EntOneI18n = {
     attachments: "Vedhæftede filer",
     loading: "Indlæser…",
     message_failed: "Beskeden kunne ikke læses:",
+    read_more: 'Læs mere',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Ingen indlæg',
+    select_post: 'Vælg et indlæg for at læse det.',
+    editor_show_blog: 'Vis bloggen',
     read: 'Læs',
     select_message: 'Vælg en besked for at læse den.',
     select_word: 'Vælg en meddelelse for at læse den.',
@@ -1125,6 +1197,12 @@ var EntOneI18n = {
     attachments: "Bilagor",
     loading: "Läser in…",
     message_failed: "Meddelandet kunde inte läsas:",
+    read_more: 'Läs mer',
+    tab_blog: 'Blogg',
+    section_blog: 'Blogg',
+    no_blog: 'Inga inlägg',
+    select_post: 'Välj ett inlägg för att läsa det.',
+    editor_show_blog: 'Visa bloggen',
     read: 'Läs',
     select_message: 'Välj ett meddelande för att läsa det.',
     select_word: 'Välj en anteckning för att läsa den.',
@@ -1214,6 +1292,12 @@ var EntOneI18n = {
     attachments: "Прикачени файлове",
     loading: "Зареждане…",
     message_failed: "Съобщението не можа да бъде прочетено:",
+    read_more: 'Прочети още',
+    tab_blog: 'Блог',
+    section_blog: 'Блог',
+    no_blog: 'Няма публикации',
+    select_post: 'Изберете публикация, за да я прочетете.',
+    editor_show_blog: 'Покажи блога',
     read: 'Прочети',
     select_message: 'Изберете съобщение, за да го прочетете.',
     select_word: 'Изберете бележка, за да я прочетете.',
@@ -1303,6 +1387,12 @@ var EntOneI18n = {
     attachments: "Вложения",
     loading: "Загрузка…",
     message_failed: "Не удалось прочитать сообщение:",
+    read_more: 'Читать далее',
+    tab_blog: 'Блог',
+    section_blog: 'Блог',
+    no_blog: 'Нет записей',
+    select_post: 'Выберите запись, чтобы прочитать её.',
+    editor_show_blog: 'Показать блог',
     read: 'Читать',
     select_message: 'Выберите сообщение, чтобы прочитать его.',
     select_word: 'Выберите запись, чтобы прочитать её.',
@@ -1392,6 +1482,12 @@ var EntOneI18n = {
     attachments: "Вкладення",
     loading: "Завантаження…",
     message_failed: "Не вдалося прочитати повідомлення:",
+    read_more: 'Читати далі',
+    tab_blog: 'Блог',
+    section_blog: 'Блог',
+    no_blog: 'Немає дописів',
+    select_post: 'Виберіть допис, щоб прочитати його.',
+    editor_show_blog: 'Показати блог',
     read: 'Читати',
     select_message: 'Виберіть повідомлення, щоб прочитати його.',
     select_word: 'Виберіть запис, щоб прочитати його.',
@@ -1481,6 +1577,12 @@ var EntOneI18n = {
     attachments: "Mellékletek",
     loading: "Betöltés…",
     message_failed: "Az üzenet nem olvasható:",
+    read_more: 'Tovább',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Nincs bejegyzés',
+    select_post: 'Válasszon egy bejegyzést az olvasáshoz.',
+    editor_show_blog: 'Blog megjelenítése',
     read: 'Olvasás',
     select_message: 'Válasszon egy üzenetet az olvasáshoz.',
     select_word: 'Válasszon egy bejegyzést az olvasáshoz.',
@@ -1570,6 +1672,12 @@ var EntOneI18n = {
     attachments: "Prílohy",
     loading: "Načítava sa…",
     message_failed: "Správu sa nepodarilo prečítať:",
+    read_more: 'Čítať ďalej',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Žiadny príspevok',
+    select_post: 'Vyberte príspevok, ktorý si chcete prečítať.',
+    editor_show_blog: 'Zobraziť blog',
     read: 'Čítať',
     select_message: 'Vyberte správu, ktorú si chcete prečítať.',
     select_word: 'Vyberte oznam, ktorý si chcete prečítať.',
@@ -1659,6 +1767,12 @@ var EntOneI18n = {
     attachments: "Přílohy",
     loading: "Načítání…",
     message_failed: "Zprávu se nepodařilo přečíst:",
+    read_more: 'Číst dále',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Žádný příspěvek',
+    select_post: 'Vyberte příspěvek, který si chcete přečíst.',
+    editor_show_blog: 'Zobrazit blog',
     read: 'Číst',
     select_message: 'Vyberte zprávu, kterou si chcete přečíst.',
     select_word: 'Vyberte sdělení, které si chcete přečíst.',
@@ -1748,6 +1862,12 @@ var EntOneI18n = {
     attachments: "Priloge",
     loading: "Nalaganje…",
     message_failed: "Sporočila ni bilo mogoče prebrati:",
+    read_more: 'Preberi več',
+    tab_blog: 'Blog',
+    section_blog: 'Blog',
+    no_blog: 'Ni objav',
+    select_post: 'Izberite objavo, da jo preberete.',
+    editor_show_blog: 'Prikaži blog',
     read: 'Preberi',
     select_message: 'Izberite sporočilo, da ga preberete.',
     select_word: 'Izberite obvestilo, da ga preberete.',
@@ -1837,6 +1957,12 @@ var EntOneI18n = {
     attachments: "Pielikumi",
     loading: "Ielādē…",
     message_failed: "Ziņojumu neizdevās nolasīt:",
+    read_more: 'Lasīt vairāk',
+    tab_blog: 'Emuārs',
+    section_blog: 'Emuārs',
+    no_blog: 'Nav ierakstu',
+    select_post: 'Izvēlieties ierakstu, lai to izlasītu.',
+    editor_show_blog: 'Rādīt emuāru',
     read: 'Lasīt',
     select_message: 'Izvēlieties ziņojumu, lai to izlasītu.',
     select_word: 'Izvēlieties ierakstu, lai to izlasītu.',
@@ -1926,6 +2052,12 @@ var EntOneI18n = {
     attachments: "Συνημμένα",
     loading: "Φόρτωση…",
     message_failed: "Δεν ήταν δυνατή η ανάγνωση του μηνύματος:",
+    read_more: 'Διαβάστε περισσότερα',
+    tab_blog: 'Ιστολόγιο',
+    section_blog: 'Ιστολόγιο',
+    no_blog: 'Καμία ανάρτηση',
+    select_post: 'Επιλέξτε μια ανάρτηση για να τη διαβάσετε.',
+    editor_show_blog: 'Εμφάνιση ιστολογίου',
     read: 'Ανάγνωση',
     select_message: 'Επιλέξτε ένα μήνυμα για να το διαβάσετε.',
     select_word: 'Επιλέξτε ένα σημείωμα για να το διαβάσετε.',
@@ -1987,6 +2119,7 @@ var ENT_ONE_DEFAULTS = {
   show_done: true,
   show_messages: true,
   show_news: false,
+  show_blog: false,
   show_events: true,
   show_empty: false,
   max_items: 5,
@@ -2043,7 +2176,7 @@ function entOneErrorText(hass, err) {
 }
 
 // The ENT ONE accounts found in the states: each sensor carries config_entry_id and its own list attribute.
-var ENT_ONE_KINDS = { messages: 'messages', words: 'words', homework: 'homework', news: 'news', account: 'last' };
+var ENT_ONE_KINDS = { messages: 'messages', words: 'words', homework: 'homework', news: 'news', blog: 'blog', account: 'last' };
 
 // Sensors of the integration. Home Assistant updates hass several times a second: scanning every state each time
 // cost a lot on large installations, so the ids are taken from the entity registry, read again only when it
@@ -2097,13 +2230,14 @@ function entOneData(hass, entryId) {
     homework: a(acc.homework, 'homework', []),
     books: acc.homework?.attributes?.books || {},
     news: a(acc.news, 'news', []),
+    blog: a(acc.blog, 'blog', []),
     events: a(last, 'events', []),
     children: a(last, 'children', []),
     account: last?.attributes?.account || {},
     url: last?.attributes?.url || '',
     updated: last && !down(last) ? last.state : null,
     stale: stale,
-    states: [acc.messages, acc.words, acc.homework, acc.news, last],
+    states: [acc.messages, acc.words, acc.homework, acc.news, acc.blog, last],
   };
 }
 
@@ -2452,6 +2586,21 @@ function entOneNewsRow(n, t, locale, opts) {
     (open && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + (open ? entOneFiles(files, t, opts?.entryId, opts?.full) : '') + '</div>' + tg.chevron + '</div>';
 }
 
+// A blog post unfolds to its first lines and its images; with the panel, a Read link opens it in the reading pane.
+function entOneBlogRow(b, t, locale, opts) {
+  var key = 'blog:' + b.blog_id + ':' + b.id;
+  var open = entOneOpen(opts, key);
+  var files = b.attachments || [];
+  var tg = entOneToggle(key, open, !!b.text || files.length > 0);
+  return '<div class="item blog">' +
+    '<ha-icon class="item-icon" icon="mdi:post-outline"></ha-icon>' +
+    '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(b.title || '—') + '</div>' +
+    '<div class="item-meta">' + entOneEsc([b.blog, entOneDay(b.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
+    (open && b.text ? '<div class="item-text clamp">' + entOneEsc(b.text) + '</div>' : '') + (open ? entOneFiles(files, t, opts?.entryId) : '') +
+    (open && opts?.reader ? '<button class="link read" data-action="read" data-tab="blog" data-item="' + entOneEsc(b.blog_id + ':' + b.id) + '">' + entOneEsc(t.read) + '</button>' : '') +
+    '</div>' + tg.chevron + '</div>';
+}
+
 function entOneEventRow(e, t, locale, opts) {
   var when = entOneDay(e.start, t, locale) + ' · ' + (e.all_day ? t.all_day : entOneTime(e.start, locale));
   var key = 'event:' + e.id;
@@ -2549,6 +2698,7 @@ window.EntOne = {
   sign: entOneSign,
   openFile: entOneOpenFile,
   files: entOneFiles,
+  fileKind: entOneFileKind,
   hydrate: entOneHydrate,
   loadMessage: entOneLoadMessage,
   canSign: entOneCanSign,
@@ -2556,7 +2706,7 @@ window.EntOne = {
   refresh: entOneRefresh,
   sortedHomework: entOneSortedHomework,
   upcomingEvents: entOneUpcomingEvents,
-  rows: { word: entOneWordRow, homework: entOneHomeworkRow, message: entOneMessageRow, news: entOneNewsRow, event: entOneEventRow },
+  rows: { word: entOneWordRow, homework: entOneHomeworkRow, message: entOneMessageRow, news: entOneNewsRow, blog: entOneBlogRow, event: entOneEventRow },
   itemStyles: entOneItemStyles,
 };
 
@@ -2794,6 +2944,10 @@ class EntOneCard extends HTMLElement {
     if (c.show_news) {
       var news = limit(data.news);
       html += this._section('news', t.section_news, news.shown.map((n) => entOneNewsRow(n, t, locale, { isOpen: isOpen, entryId: entryId })), t.no_news, more(news.rest));
+    }
+    if (c.show_blog) {
+      var posts = limit(data.blog);
+      html += this._section('blog', t.section_blog, posts.shown.map((b) => entOneBlogRow(b, t, locale, { isOpen: isOpen, entryId: entryId, reader: reader })), t.no_blog, more(posts.rest));
     }
     return html;
   }
@@ -3039,6 +3193,7 @@ var ENT_ONE_EDITOR_KEYS = {
   show_done: 'editor_show_done',
   show_messages: 'editor_show_messages',
   show_news: 'editor_show_news',
+  show_blog: 'editor_show_blog',
   show_events: 'editor_show_events',
   show_empty: 'editor_show_empty',
   max_items: 'editor_max_items',
@@ -3053,7 +3208,7 @@ function entOneEditorSchema(t) {
     {
       type: 'grid',
       name: '',
-      schema: ['show_title', 'show_refresh', 'show_words', 'show_homework', 'show_done', 'show_messages', 'show_events', 'show_news', 'show_empty'].map(bool),
+      schema: ['show_title', 'show_refresh', 'show_words', 'show_homework', 'show_done', 'show_messages', 'show_events', 'show_news', 'show_blog', 'show_empty'].map(bool),
     },
     { name: 'max_items', selector: { number: { min: 1, max: 20, mode: 'box' } } },
     {

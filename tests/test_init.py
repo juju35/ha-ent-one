@@ -16,7 +16,7 @@ from homeassistant.exceptions import Unauthorized
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_capture_events, async_fire_time_changed
 
-from custom_components.ent_one.api import EntAuthError, EntError
+from custom_components.ent_one.api import EntAuthError, EntError, EntUnavailableError
 from custom_components.ent_one.const import DOMAIN, EVENT_NEW_WORD, PANEL_URL_PATH
 from custom_components.ent_one.diagnostics import async_get_config_entry_diagnostics
 
@@ -50,6 +50,7 @@ class FakeApi:
         self.words_fail = False
         self.books = [{"_id": "b1", "title": "CE2 A"}]
         self.calls: dict[str, int] = {}
+        self.blog_missing = False
 
     def update_credentials(self, username: str, password: str) -> None:
         self.username, self.password = username, password
@@ -81,6 +82,23 @@ class FakeApi:
                 "from": {"displayName": "Mme Martin"},
                 "date": 1763200000000,
                 "unread": True,
+            }
+        ]
+
+    async def blogs(self) -> list[dict[str, Any]]:
+        if self.blog_missing:
+            raise EntUnavailableError("HTTP 404 on /blog/list/all")
+        return [{"_id": "bl1", "title": "Blog du CE2", "thumbnail": "/workspace/document/th1?thumbnail=120x120"}]
+
+    async def blog_posts(self, blog_id: str) -> list[dict[str, Any]]:
+        return [
+            {
+                "_id": "p1",
+                "title": "Sortie au parc",
+                "content": '<p>Belle journée.</p><img src="/workspace/document/ph1" alt="Photo">',
+                "author": {"username": "Mme Martin"},
+                "firstPublishDate": {"$date": 1763200000000},
+                "nbComments": 2,
             }
         ]
 
@@ -562,3 +580,23 @@ async def test_files_cached(hass: HomeAssistant, api, entry, hass_client) -> Non
         resp = await client.get(f"/api/ent_one/file/{entry.entry_id}", params={"path": "/workspace/document/d1"})
         assert resp.status == 200
     assert entry.runtime_data.api.calls["download"] == 1
+
+
+async def test_blog(hass: HomeAssistant, api, entry) -> None:
+    await _setup(hass, entry)
+    state = hass.states.get(_entity(hass, "sensor", "blog"))
+    assert state.state == "1"
+    post = state.attributes["blog"][0]
+    assert post["blog"] == "Blog du CE2"
+    assert post["text"] == "Belle journée."
+    assert post["attachments"] == [{"path": "/workspace/document/ph1", "name": "Photo", "kind": "image"}]
+    assert post["author"] == "Mme Martin"
+    assert post["comments"] == 2
+    assert post["blog_thumbnail"] == "/workspace/document/th1?thumbnail=120x120"
+    # An ENT without a blog: an empty section, not "partly updated".
+    entry.runtime_data.api.blog_missing = True
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    state = hass.states.get(_entity(hass, "sensor", "blog"))
+    assert state.state == "0"
+    assert "blog" not in state.attributes["stale"]

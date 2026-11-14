@@ -1,4 +1,4 @@
-"""Sensors of an ENT ONE account: unread messages, words to sign, homework to do, news, last update."""
+"""Sensors of an ENT ONE account: unread messages, words to sign, homework to do, news, blog, last update."""
 
 from __future__ import annotations
 
@@ -52,6 +52,11 @@ SENSORS: tuple[EntSensorDescription, ...] = (
         value=lambda d: len(d.news),
         attributes=lambda d: {"news": d.news},
     ),
+    EntSensorDescription(
+        key="blog",
+        value=lambda d: len(d.blog),
+        attributes=lambda d: {"blog": d.blog},
+    ),
 )
 
 
@@ -69,7 +74,7 @@ class EntSensor(EntEntity, SensorEntity):
 
     entity_description: EntSensorDescription
     # The lists change often and can be large: keep them out of the recorder.
-    _unrecorded_attributes = frozenset({"messages", "words", "homework", "books", "news"})
+    _unrecorded_attributes = frozenset({"messages", "words", "homework", "books", "news", "blog"})
 
     def __init__(self, coordinator: EntCoordinator, description: EntSensorDescription) -> None:
         super().__init__(coordinator, description.key)
