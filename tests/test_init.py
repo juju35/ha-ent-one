@@ -98,7 +98,10 @@ class FakeApi:
     async def download(self, path: str) -> tuple[bytes, str, str | None]:
         if path.endswith("page"):
             return b"<script>alert(1)</script>", "text/html", "page.html"
-        return b"%PDF", "application/pdf", "liste.pdf"
+        if path.endswith("a2"):
+            # The ENT often gives no name and no type: the signature and the card's name decide.
+            return b"\x89PNG\r\n\x1a\n....", "application/octet-stream", None
+        return b"%PDF-1.4", "application/pdf", "liste.pdf"
 
     async def sign_word(self, word_id: str, child_id: str) -> None:
         self.signed.append((word_id, child_id))
@@ -497,6 +500,15 @@ async def test_file_view(hass: HomeAssistant, api, entry, hass_client) -> None:
     assert ok.status == 200
     assert ok.headers["Content-Type"] == "application/pdf"
     assert ok.headers["Content-Disposition"].startswith("inline;")
+    # Browsers refuse to draw a sandboxed PDF.
+    assert "Content-Security-Policy" not in ok.headers
+    image = await client.get(
+        f"/api/ent_one/file/{entry.entry_id}",
+        params={"path": "/conversation/message/m1/attachment/a2", "name": "Pool.jpg"},
+    )
+    assert image.headers["Content-Type"] == "image/png"
+    assert image.headers["Content-Disposition"] == "inline; filename*=UTF-8''Pool.jpg"
+    assert "sandbox" in image.headers["Content-Security-Policy"]
     # HTML is never served as such from Home Assistant's origin.
     html = await client.get(f"/api/ent_one/file/{entry.entry_id}", params={"path": "/workspace/document/page"})
     assert html.headers["Content-Type"] == "application/octet-stream"
@@ -504,3 +516,16 @@ async def test_file_view(hass: HomeAssistant, api, entry, hass_client) -> None:
     assert "sandbox" in html.headers["Content-Security-Policy"]
     refused = await client.get(f"/api/ent_one/file/{entry.entry_id}", params={"path": "/auth/logout"})
     assert refused.status == 400
+
+
+def test_sniff_type() -> None:
+    from custom_components.ent_one import file_name, sniff_type
+
+    assert sniff_type(b"%PDF-1.7", "application/octet-stream", "x") == "application/pdf"
+    assert sniff_type(b"\xff\xd8\xff\xe0", "", "x") == "image/jpeg"
+    assert sniff_type(b"RIFF\0\0\0\0WEBPVP8", "application/octet-stream", "x") == "image/webp"
+    assert sniff_type(b"<html>", "text/html; charset=utf-8", "x.pdf") == "text/html"
+    assert sniff_type(b"hello", "application/octet-stream", "notes.txt") == "text/plain"
+    assert sniff_type(b"not a pdf", "application/octet-stream", "fake.pdf") == "application/octet-stream"
+    assert file_name(None, 'a"b/c.pdf', "/workspace/document/d1") == "abc.pdf"
+    assert file_name("", "", "/workspace/document/d1?thumbnail=1") == "d1"

@@ -19,7 +19,7 @@ const context = {
   Intl,
 };
 vm.createContext(context);
-vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, EntOneI18n };`, context);
+vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, entOneFileKind, entOneFiles, EntOneI18n };`, context);
 const E = context.e;
 
 const sensor = (id, state, attrs) => ({ entity_id: id, state: String(state), attributes: { config_entry_id: 'abc', stale: [], ...attrs } });
@@ -142,3 +142,25 @@ test('rows unfold on demand', () => {
   const msg = E.entOneMessageRow({ id: 'm1', subject: 'Pool', unread: true }, t, 'en', { url: 'https://ent', isOpen: () => true });
   assert.match(msg, /href="https:\/\/ent\/conversation\/conversation"/);
 });
+
+test('attachments are shown: images, PDF viewer in the reading pane, other files as buttons', () => {
+  const t = E.EntOneI18n.en;
+  assert.equal(E.entOneFileKind({ name: 'Map', kind: 'image' }), 'image');
+  assert.equal(E.entOneFileKind({ name: 'photo.JPG', kind: 'file' }), 'image');
+  assert.equal(E.entOneFileKind({ name: 'list.pdf', kind: 'file' }), 'pdf');
+  assert.equal(E.entOneFileKind({ name: 'sheet.docx', kind: 'file' }), 'file');
+  const files = [
+    { path: '/workspace/document/d1', name: 'slip.pdf', kind: 'file' },
+    { path: '/workspace/document/d2', name: 'Map', kind: 'image' },
+    { path: '/workspace/document/d3', name: 'sheet.docx', kind: 'file' },
+  ];
+  const full = E.entOneFiles(files, t, 'abc', true);
+  assert.match(full, /<iframe title="slip.pdf" data-ent-src="\/workspace\/document\/d1"/);
+  assert.match(full, /<img alt="Map" loading="lazy" data-ent-src="\/workspace\/document\/d2"/);
+  assert.match(full, /data-path="\/workspace\/document\/d3" data-name="sheet.docx"/);
+  const card = E.entOneFiles(files, t, 'abc', false);
+  assert.doesNotMatch(card, /<iframe/);
+  assert.match(card, /<img alt="Map"/);
+  assert.equal(E.entOneFiles([], t, 'abc', true), '');
+});
+

@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.1.0';
+var ENT_ONE_CARD_VERSION = '1.2.0';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -56,6 +56,12 @@ var EntOneI18n = {
     attachments: 'Attachments',
     loading: 'Loading…',
     message_failed: 'Could not read the message:',
+    read: 'Read',
+    select_message: 'Choose a message to read it.',
+    select_word: 'Choose a word to read it.',
+    back: 'Back',
+    open_file: 'Open',
+    download: 'Download',
     more: '+{n} more',
     action_failed: 'The ENT refused the action:',
     tab_home: 'Home',
@@ -140,6 +146,12 @@ var EntOneI18n = {
     attachments: 'Pièces jointes',
     loading: 'Chargement…',
     message_failed: 'Impossible de lire le message :',
+    read: 'Lire',
+    select_message: 'Choisissez un message pour le lire.',
+    select_word: 'Choisissez un mot pour le lire.',
+    back: 'Retour',
+    open_file: 'Ouvrir',
+    download: 'Télécharger',
     more: '+{n} autres',
     action_failed: 'L\'ENT a refusé l\'action :',
     tab_home: 'Accueil',
@@ -223,6 +235,12 @@ var EntOneI18n = {
     attachments: "Anhänge",
     loading: "Wird geladen…",
     message_failed: "Die Nachricht konnte nicht gelesen werden:",
+    read: 'Lesen',
+    select_message: 'Wählen Sie eine Nachricht, um sie zu lesen.',
+    select_word: 'Wählen Sie eine Mitteilung, um sie zu lesen.',
+    back: 'Zurück',
+    open_file: 'Öffnen',
+    download: 'Herunterladen',
     more: "+{n} weitere",
     action_failed: "Das ENT hat die Aktion abgelehnt:",
     tab_home: "Start",
@@ -306,6 +324,12 @@ var EntOneI18n = {
     attachments: "Adjuntos",
     loading: "Cargando…",
     message_failed: "No se pudo leer el mensaje:",
+    read: 'Leer',
+    select_message: 'Elija un mensaje para leerlo.',
+    select_word: 'Elija una nota para leerla.',
+    back: 'Volver',
+    open_file: 'Abrir',
+    download: 'Descargar',
     more: "+{n} más",
     action_failed: "El ENT rechazó la acción:",
     tab_home: "Inicio",
@@ -389,6 +413,12 @@ var EntOneI18n = {
     attachments: "Прилози",
     loading: "Учитавање…",
     message_failed: "Порука није могла да се прочита:",
+    read: 'Прочитај',
+    select_message: 'Изаберите поруку да бисте је прочитали.',
+    select_word: 'Изаберите белешку да бисте је прочитали.',
+    back: 'Назад',
+    open_file: 'Отвори',
+    download: 'Преузми',
     more: "+још {n}",
     action_failed: "ENT је одбио радњу:",
     tab_home: "Почетна",
@@ -472,6 +502,12 @@ var EntOneI18n = {
     attachments: "Prilozi",
     loading: "Učitavanje…",
     message_failed: "Poruka nije mogla da se pročita:",
+    read: 'Pročitaj',
+    select_message: 'Izaberite poruku da biste je pročitali.',
+    select_word: 'Izaberite belešku da biste je pročitali.',
+    back: 'Nazad',
+    open_file: 'Otvori',
+    download: 'Preuzmi',
     more: "+još {n}",
     action_failed: "ENT je odbio radnju:",
     tab_home: "Početna",
@@ -555,6 +591,12 @@ var EntOneI18n = {
     attachments: "Allegati",
     loading: "Caricamento…",
     message_failed: "Impossibile leggere il messaggio:",
+    read: 'Leggi',
+    select_message: 'Scegli un messaggio per leggerlo.',
+    select_word: 'Scegli un avviso per leggerlo.',
+    back: 'Indietro',
+    open_file: 'Apri',
+    download: 'Scarica',
     more: "+{n} altri",
     action_failed: "L'ENT ha rifiutato l'azione:",
     tab_home: "Home",
@@ -638,6 +680,12 @@ var EntOneI18n = {
     attachments: "Bijlagen",
     loading: "Laden…",
     message_failed: "Het bericht kon niet worden gelezen:",
+    read: 'Lezen',
+    select_message: 'Kies een bericht om het te lezen.',
+    select_word: 'Kies een mededeling om die te lezen.',
+    back: 'Terug',
+    open_file: 'Openen',
+    download: 'Downloaden',
     more: "+{n} meer",
     action_failed: "De ENT weigerde de actie:",
     tab_home: "Start",
@@ -721,6 +769,12 @@ var EntOneI18n = {
     attachments: "Anexos",
     loading: "A carregar…",
     message_failed: "Não foi possível ler a mensagem:",
+    read: 'Ler',
+    select_message: 'Escolha uma mensagem para a ler.',
+    select_word: 'Escolha um recado para o ler.',
+    back: 'Voltar',
+    open_file: 'Abrir',
+    download: 'Transferir',
     more: "+{n} mais",
     action_failed: "O ENT recusou a ação:",
     tab_home: "Início",
@@ -804,6 +858,12 @@ var EntOneI18n = {
     attachments: "Załączniki",
     loading: "Ładowanie…",
     message_failed: "Nie udało się odczytać wiadomości:",
+    read: 'Czytaj',
+    select_message: 'Wybierz wiadomość, aby ją przeczytać.',
+    select_word: 'Wybierz wpis, aby go przeczytać.',
+    back: 'Wstecz',
+    open_file: 'Otwórz',
+    download: 'Pobierz',
     more: "+{n} więcej",
     action_failed: "ENT odrzucił operację:",
     tab_home: "Start",
@@ -887,6 +947,12 @@ var EntOneI18n = {
     attachments: "Atașamente",
     loading: "Se încarcă…",
     message_failed: "Mesajul nu a putut fi citit:",
+    read: 'Citește',
+    select_message: 'Alegeți un mesaj pentru a-l citi.',
+    select_word: 'Alegeți o notă pentru a o citi.',
+    back: 'Înapoi',
+    open_file: 'Deschide',
+    download: 'Descarcă',
     more: "+încă {n}",
     action_failed: "ENT-ul a refuzat acțiunea:",
     tab_home: "Acasă",
@@ -970,6 +1036,12 @@ var EntOneI18n = {
     attachments: "Vedhæftede filer",
     loading: "Indlæser…",
     message_failed: "Beskeden kunne ikke læses:",
+    read: 'Læs',
+    select_message: 'Vælg en besked for at læse den.',
+    select_word: 'Vælg en meddelelse for at læse den.',
+    back: 'Tilbage',
+    open_file: 'Åbn',
+    download: 'Download',
     more: "+{n} mere",
     action_failed: "ENT afviste handlingen:",
     tab_home: "Start",
@@ -1053,6 +1125,12 @@ var EntOneI18n = {
     attachments: "Bilagor",
     loading: "Läser in…",
     message_failed: "Meddelandet kunde inte läsas:",
+    read: 'Läs',
+    select_message: 'Välj ett meddelande för att läsa det.',
+    select_word: 'Välj en anteckning för att läsa den.',
+    back: 'Tillbaka',
+    open_file: 'Öppna',
+    download: 'Ladda ned',
     more: "+{n} till",
     action_failed: "ENT avvisade åtgärden:",
     tab_home: "Start",
@@ -1136,6 +1214,12 @@ var EntOneI18n = {
     attachments: "Прикачени файлове",
     loading: "Зареждане…",
     message_failed: "Съобщението не можа да бъде прочетено:",
+    read: 'Прочети',
+    select_message: 'Изберете съобщение, за да го прочетете.',
+    select_word: 'Изберете бележка, за да я прочетете.',
+    back: 'Назад',
+    open_file: 'Отвори',
+    download: 'Изтегли',
     more: "+още {n}",
     action_failed: "ENT отказа действието:",
     tab_home: "Начало",
@@ -1219,6 +1303,12 @@ var EntOneI18n = {
     attachments: "Вложения",
     loading: "Загрузка…",
     message_failed: "Не удалось прочитать сообщение:",
+    read: 'Читать',
+    select_message: 'Выберите сообщение, чтобы прочитать его.',
+    select_word: 'Выберите запись, чтобы прочитать её.',
+    back: 'Назад',
+    open_file: 'Открыть',
+    download: 'Скачать',
     more: "+ещё {n}",
     action_failed: "ENT отклонил действие:",
     tab_home: "Главная",
@@ -1302,6 +1392,12 @@ var EntOneI18n = {
     attachments: "Вкладення",
     loading: "Завантаження…",
     message_failed: "Не вдалося прочитати повідомлення:",
+    read: 'Читати',
+    select_message: 'Виберіть повідомлення, щоб прочитати його.',
+    select_word: 'Виберіть запис, щоб прочитати його.',
+    back: 'Назад',
+    open_file: 'Відкрити',
+    download: 'Завантажити',
     more: "+ще {n}",
     action_failed: "ENT відхилив дію:",
     tab_home: "Головна",
@@ -1385,6 +1481,12 @@ var EntOneI18n = {
     attachments: "Mellékletek",
     loading: "Betöltés…",
     message_failed: "Az üzenet nem olvasható:",
+    read: 'Olvasás',
+    select_message: 'Válasszon egy üzenetet az olvasáshoz.',
+    select_word: 'Válasszon egy bejegyzést az olvasáshoz.',
+    back: 'Vissza',
+    open_file: 'Megnyitás',
+    download: 'Letöltés',
     more: "+{n} további",
     action_failed: "Az ENT elutasította a műveletet:",
     tab_home: "Kezdőlap",
@@ -1468,6 +1570,12 @@ var EntOneI18n = {
     attachments: "Prílohy",
     loading: "Načítava sa…",
     message_failed: "Správu sa nepodarilo prečítať:",
+    read: 'Čítať',
+    select_message: 'Vyberte správu, ktorú si chcete prečítať.',
+    select_word: 'Vyberte oznam, ktorý si chcete prečítať.',
+    back: 'Späť',
+    open_file: 'Otvoriť',
+    download: 'Stiahnuť',
     more: "+ďalšie {n}",
     action_failed: "ENT odmietol akciu:",
     tab_home: "Domov",
@@ -1551,6 +1659,12 @@ var EntOneI18n = {
     attachments: "Přílohy",
     loading: "Načítání…",
     message_failed: "Zprávu se nepodařilo přečíst:",
+    read: 'Číst',
+    select_message: 'Vyberte zprávu, kterou si chcete přečíst.',
+    select_word: 'Vyberte sdělení, které si chcete přečíst.',
+    back: 'Zpět',
+    open_file: 'Otevřít',
+    download: 'Stáhnout',
     more: "+další {n}",
     action_failed: "ENT akci odmítl:",
     tab_home: "Domů",
@@ -1634,6 +1748,12 @@ var EntOneI18n = {
     attachments: "Priloge",
     loading: "Nalaganje…",
     message_failed: "Sporočila ni bilo mogoče prebrati:",
+    read: 'Preberi',
+    select_message: 'Izberite sporočilo, da ga preberete.',
+    select_word: 'Izberite obvestilo, da ga preberete.',
+    back: 'Nazaj',
+    open_file: 'Odpri',
+    download: 'Prenesi',
     more: "+še {n}",
     action_failed: "ENT je zavrnil dejanje:",
     tab_home: "Domov",
@@ -1717,6 +1837,12 @@ var EntOneI18n = {
     attachments: "Pielikumi",
     loading: "Ielādē…",
     message_failed: "Ziņojumu neizdevās nolasīt:",
+    read: 'Lasīt',
+    select_message: 'Izvēlieties ziņojumu, lai to izlasītu.',
+    select_word: 'Izvēlieties ierakstu, lai to izlasītu.',
+    back: 'Atpakaļ',
+    open_file: 'Atvērt',
+    download: 'Lejupielādēt',
     more: "+vēl {n}",
     action_failed: "ENT noraidīja darbību:",
     tab_home: "Sākums",
@@ -1800,6 +1926,12 @@ var EntOneI18n = {
     attachments: "Συνημμένα",
     loading: "Φόρτωση…",
     message_failed: "Δεν ήταν δυνατή η ανάγνωση του μηνύματος:",
+    read: 'Ανάγνωση',
+    select_message: 'Επιλέξτε ένα μήνυμα για να το διαβάσετε.',
+    select_word: 'Επιλέξτε ένα σημείωμα για να το διαβάσετε.',
+    back: 'Πίσω',
+    open_file: 'Άνοιγμα',
+    download: 'Λήψη',
     more: "+{n} ακόμη",
     action_failed: "Το ENT απέρριψε την ενέργεια:",
     tab_home: "Αρχική",
@@ -2069,24 +2201,91 @@ function entOneUpcomingEvents(events) {
   });
 }
 
-// Attachments of a row: buttons opening the file through Home Assistant (the browser has no ENT session).
-function entOneFiles(files, t) {
-  if (!files?.length) return '';
-  return '<div class="files" role="list" aria-label="' + entOneEsc(t.attachments) + '">' +
-    files.map((f) => '<button class="file" role="listitem" data-action="file" data-path="' + entOneEsc(f.path) + '" title="' + entOneEsc(f.name) + '">' +
-      '<ha-icon icon="' + (f.kind === 'image' ? 'mdi:image-outline' : 'mdi:paperclip') + '"></ha-icon><span>' + entOneEsc(f.name) + '</span></button>').join('') +
-    '</div>';
+// Attachments are fetched through Home Assistant (the browser has no ENT session) with a signed URL, signed for an
+// hour and reused for 50 minutes: a redraw shows the same image or PDF from the browser cache.
+var entOneSigned = {};
+var ENT_ONE_SIGN_REUSE = 50 * 60 * 1000;
+
+function entOneFileUrl(hass, entryId, path, name) {
+  var key = entryId + ' ' + path;
+  var hit = entOneSigned[key];
+  if (hit && Date.now() - hit.at < ENT_ONE_SIGN_REUSE) return hit.promise;
+  var url = `/api/ent_one/file/${entryId}?path=${encodeURIComponent(path)}` + (name ? `&name=${encodeURIComponent(name)}` : '');
+  var entry = { at: Date.now(), url: '' };
+  entry.promise = hass.callWS({ type: 'auth/sign_path', path: url, expires: 3600 }).then((res) => {
+    entry.url = res.path;
+    return res.path;
+  });
+  entry.promise.catch(() => {
+    if (entOneSigned[key] === entry) delete entOneSigned[key];
+  });
+  entOneSigned[key] = entry;
+  return entry.promise;
 }
 
-// Opens an ENT file: a signed URL of the integration's file view, in a tab opened at once (a tab opened after
-// the await would be blocked as a popup).
-function entOneOpenFile(hass, entryId, path) {
+function entOneCachedUrl(entryId, path) {
+  var hit = entOneSigned[entryId + ' ' + path];
+  return hit?.url && Date.now() - hit.at < ENT_ONE_SIGN_REUSE ? hit.url : '';
+}
+
+// How an attachment is shown: an image, a PDF, or a file to download.
+function entOneFileKind(f) {
+  var name = String(f.name || f.path || '').split('?')[0].toLowerCase();
+  if (f.kind === 'image' || /\.(png|jpe?g|gif|webp)$/.test(name)) return 'image';
+  if (/\.pdf$/.test(name)) return 'pdf';
+  return 'file';
+}
+
+// Attachments shown, not linked. 'full' (panel reading pane): images at width, PDFs in a viewer, other files as a
+// download button. Otherwise (card): image thumbnails and buttons. Sources are set by entOneHydrate after drawing.
+function entOneFiles(files, t, entryId, full) {
+  if (!files?.length) return '';
+  var src = (f) => ' data-ent-src="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '"' + (entOneCachedUrl(entryId, f.path) ? ' src="' + entOneEsc(entOneCachedUrl(entryId, f.path)) + '"' : '');
+  var open = (f, label, icon) => '<button class="file" data-action="file" data-path="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '" title="' + entOneEsc(f.name) + '">' +
+    '<ha-icon icon="' + icon + '"></ha-icon><span>' + entOneEsc(label) + '</span></button>';
+  var images = files.filter((f) => entOneFileKind(f) === 'image');
+  var others = files.filter((f) => entOneFileKind(f) !== 'image');
+  var html = '<div class="atts' + (full ? ' full' : '') + '" role="group" aria-label="' + entOneEsc(t.attachments) + '">';
+  if (images.length) {
+    html += '<div class="att-images">' + images.map((f) =>
+      '<button class="att-img" data-action="file" data-path="' + entOneEsc(f.path) + '" data-name="' + entOneEsc(f.name) + '" title="' + entOneEsc(f.name) + '">' +
+      '<img alt="' + entOneEsc(f.name) + '" loading="lazy"' + src(f) + '></button>').join('') + '</div>';
+  }
+  others.forEach((f) => {
+    var pdf = entOneFileKind(f) === 'pdf';
+    if (full && pdf) {
+      html += '<div class="att-pdf"><div class="att-head"><ha-icon icon="mdi:file-pdf-box"></ha-icon><span class="att-name">' + entOneEsc(f.name) + '</span>' +
+        open(f, t.open_file, 'mdi:open-in-new') + '</div><iframe title="' + entOneEsc(f.name) + '"' + src(f) + '></iframe></div>';
+    } else {
+      html += '<div class="files">' + open(f, f.name, pdf ? 'mdi:file-pdf-box' : full ? 'mdi:download' : 'mdi:paperclip') + '</div>';
+    }
+  });
+  return html + '</div>';
+}
+
+// Gives the drawn images and PDF viewers their signed sources.
+function entOneHydrate(root, hass, entryId) {
+  root.querySelectorAll('[data-ent-src]:not([src])').forEach((el) => {
+    entOneFileUrl(hass, entryId, el.getAttribute('data-ent-src'), el.getAttribute('data-name'))
+      .then((url) => {
+        if (!el.getAttribute('src')) el.setAttribute('src', url);
+      })
+      .catch(() => el.closest('.att-img, .att-pdf')?.classList.add('broken'));
+  });
+}
+
+// Opens a file in a new tab (PDF and images shown by the browser, other files downloaded).
+function entOneOpenFile(hass, entryId, path, name) {
+  var cached = entOneCachedUrl(entryId, path);
+  if (cached) {
+    window.open(cached, '_blank', 'noopener');
+    return Promise.resolve();
+  }
   var tab = window.open('', '_blank');
-  return hass
-    .callWS({ type: 'auth/sign_path', path: `/api/ent_one/file/${entryId}?path=${encodeURIComponent(path)}`, expires: 120 })
-    .then((res) => {
-      if (tab) tab.location.href = res.path;
-      else window.location.href = res.path;
+  return entOneFileUrl(hass, entryId, path, name)
+    .then((url) => {
+      if (tab) tab.location.href = url;
+      else window.location.href = url;
     })
     .catch((err) => {
       if (tab) tab.close();
@@ -2135,7 +2334,8 @@ function entOneWordRow(w, t, locale, opts) {
     '<ha-icon class="item-icon" icon="' + (w.signed ? 'mdi:check-circle-outline' : 'mdi:notebook-edit-outline') + '"></ha-icon>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(w.title || w.category || '—') + '</div>' +
     '<div class="item-meta">' + entOneEsc(meta) + '</div>' +
-    (open && w.text ? '<div class="item-text">' + entOneEsc(w.text) + '</div>' : '') + (open ? entOneFiles(files, t) : '') + '</div>' + tg.chevron +
+    (open && w.text ? '<div class="item-text clamp">' + entOneEsc(w.text) + '</div>' : '') + (open ? entOneFiles(files, t, opts?.entryId) : '') +
+    (open && opts?.reader ? '<button class="link read" data-action="read" data-tab="words" data-item="' + entOneEsc(w.id + ':' + w.child_id) + '">' + entOneEsc(t.read) + '</button>' : '') + '</div>' + tg.chevron +
     (w.signed
       ? '<span class="chip ok">' + entOneEsc(t.signed) + '</span>'
       : opts?.canSign
@@ -2157,21 +2357,23 @@ function entOneHomeworkRow(h, t, locale, opts) {
     '<ha-icon icon="' + (h.done ? 'mdi:checkbox-marked-outline' : 'mdi:checkbox-blank-outline') + '"></ha-icon></button>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(h.title || (h.text || '').split('\n')[0] || h.book) + '</div>' +
     '<div class="item-meta">' + entOneEsc([h.book, entOneDue(h.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (open && h.text && h.title ? '<div class="item-text">' + entOneEsc(h.text) + '</div>' : '') + (open ? entOneFiles(files, t) : '') + '</div>' + tg.chevron + '</div>';
+    (open && h.text && h.title ? '<div class="item-text">' + entOneEsc(h.text) + '</div>' : '') + (open ? entOneFiles(files, t, opts?.entryId, opts?.full) : '') + '</div>' + tg.chevron + '</div>';
 }
 
-// A message unfolds to its text and attachments, fetched on demand (opts.detail: the cache entry of
-// entOneLoadMessage), with a link to the ENT messaging.
+// In the card, a message opens in the panel's reading pane (opts.reader); without the panel it unfolds to the
+// start of its text and its attachments, fetched on demand (opts.detail: the cache entry of entOneLoadMessage).
 function entOneMessageRow(m, t, locale, opts) {
   var key = 'message:' + m.id;
-  var open = entOneOpen(opts, key);
-  var tg = entOneToggle(key, open, true);
+  var open = !opts?.reader && entOneOpen(opts, key);
+  var tg = opts?.reader
+    ? { attrs: ' data-action="read" data-tab="messages" data-item="' + entOneEsc(m.id) + '" role="button" tabindex="0"', chevron: '<ha-icon class="chevron closed" icon="mdi:chevron-down"></ha-icon>' }
+    : entOneToggle(key, open, true);
   var detail = opts?.detail;
   var body = '';
   if (open) {
     if (!detail || detail.loading) body = '<div class="item-text muted">' + entOneEsc(t.loading) + '</div>';
     else if (detail.error) body = '<div class="item-text error-text">' + entOneEsc(t.message_failed + ' ' + detail.error) + '</div>';
-    else body = (detail.data.text ? '<div class="item-text">' + entOneEsc(detail.data.text) + '</div>' : '') + entOneFiles(detail.data.attachments, t);
+    else body = (detail.data.text ? '<div class="item-text clamp">' + entOneEsc(detail.data.text) + '</div>' : '') + entOneFiles(detail.data.attachments, t, opts?.entryId);
     if (opts?.url) {
       body += '<div class="item-text"><a class="link" href="' + entOneEsc(opts.url + '/conversation/conversation') + '" target="_blank" rel="noopener">' + entOneEsc(t.open_ent) + '</a></div>';
     }
@@ -2193,7 +2395,7 @@ function entOneNewsRow(n, t, locale, opts) {
     '<ha-icon class="item-icon" icon="mdi:newspaper-variant-outline"></ha-icon>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(n.title || '—') + '</div>' +
     '<div class="item-meta">' + entOneEsc([n.author, entOneDay(n.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (open && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + (open ? entOneFiles(files, t) : '') + '</div>' + tg.chevron + '</div>';
+    (open && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + (open ? entOneFiles(files, t, opts?.entryId, opts?.full) : '') + '</div>' + tg.chevron + '</div>';
 }
 
 function entOneEventRow(e, t, locale, opts) {
@@ -2231,7 +2433,23 @@ function entOneItemStyles(accent) {
     '.chevron.closed { transform: rotate(-90deg); }',
     '.link { color: color-mix(in srgb, ' + accent + ' 65%, var(--primary-text-color)); font-weight: 500; text-decoration: none; }',
     '.link:hover { text-decoration: underline; }',
-    '.files { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }',
+    '.item-text.clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }',
+    '.read { all: unset; cursor: pointer; display: inline-block; margin-top: 6px; font-size: 13px; color: color-mix(in srgb, ' + accent + ' 65%, var(--primary-text-color)); font-weight: 500; }',
+    '.read:hover { text-decoration: underline; }',
+    '.atts { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }',
+    '.att-images { display: flex; flex-wrap: wrap; gap: 6px; }',
+    '.att-img { all: unset; cursor: zoom-in; display: block; border-radius: 8px; overflow: hidden; border: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: color-mix(in srgb, var(--primary-text-color) 4%, transparent); }',
+    '.att-img img { display: block; height: 72px; width: auto; max-width: 160px; object-fit: cover; }',
+    '.atts.full .att-img { cursor: zoom-in; }',
+    '.atts.full .att-img img { height: auto; max-width: min(100%, 720px); max-height: 60vh; object-fit: contain; }',
+    '.att-img.broken, .att-pdf.broken iframe { display: none; }',
+    '.att-pdf { border: 1px solid var(--divider-color, rgba(0,0,0,.12)); border-radius: 8px; overflow: hidden; }',
+    '.att-head { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 10px; font-size: 13px; --mdc-icon-size: 18px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
+    '.att-head > ha-icon { color: ' + accent + '; flex: none; }',
+    '.att-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
+    '.att-pdf iframe { display: block; width: 100%; height: 70vh; border: 0; background: #fff; }',
+    '.att-img:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }',
+    '.files { display: flex; flex-wrap: wrap; gap: 6px; }',
     '.file { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; max-width: 100%; font-size: 12px; padding: 3px 10px 3px 6px; border-radius: 12px;' +
       ' border: 1px solid var(--divider-color, rgba(0,0,0,.2)); color: var(--primary-text-color); --mdc-icon-size: 16px; }',
     '.file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
@@ -2274,6 +2492,8 @@ window.EntOne = {
   setTimeFormat: entOneSetTimeFormat,
   sign: entOneSign,
   openFile: entOneOpenFile,
+  files: entOneFiles,
+  hydrate: entOneHydrate,
   loadMessage: entOneLoadMessage,
   canSign: entOneCanSign,
   setDone: entOneSetDone,
@@ -2375,6 +2595,9 @@ class EntOneCard extends HTMLElement {
       if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.hasAttribute?.('data-toggle')) {
         ev.preventDefault();
         this._toggleRow(ev.target.getAttribute('data-toggle'));
+      } else if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.getAttribute?.('data-action') === 'read') {
+        ev.preventDefault();
+        ev.target.click();
       }
     });
   }
@@ -2402,6 +2625,7 @@ class EntOneCard extends HTMLElement {
     var focused = this._root.activeElement?.getAttribute?.('data-toggle');
     body.innerHTML = this._renderTiles(t, data) + (this._compact() ? '' : this._renderSections(t, data));
     if (focused) body.querySelector(`[data-toggle="${CSS.escape(focused)}"]`)?.focus({ preventScroll: true });
+    entOneHydrate(body, this._hass, data.entryId);
   }
 
   _time(iso) {
@@ -2488,21 +2712,24 @@ class EntOneCard extends HTMLElement {
     var max = Math.max(1, Number(c.max_items) || ENT_ONE_DEFAULTS.max_items);
     var locale = this._locale();
     var isOpen = (key) => !!this._open[key];
+    // With the panel, words and messages are read in its reading pane.
+    var reader = !!this._hass?.panels?.[ENT_ONE_PANEL_PATH];
+    var entryId = data.entryId;
     var limit = (list) => ({ shown: list.slice(0, max), rest: Math.max(0, list.length - max) });
     var more = (n) => (n ? entOneFormat(t.more, { n: n }) : '');
     var html = '';
     if (c.show_words) {
       var canSign = entOneCanSign(this._hass);
       var words = limit(data.words.filter((w) => !w.signed));
-      html += this._section('words', t.section_words, words.shown.map((w) => entOneWordRow(w, t, locale, { canSign: canSign, isOpen: isOpen })), t.no_words, more(words.rest));
+      html += this._section('words', t.section_words, words.shown.map((w) => entOneWordRow(w, t, locale, { canSign: canSign, isOpen: isOpen, reader: reader, entryId: entryId })), t.no_words, more(words.rest));
     }
     if (c.show_homework) {
       var hw = limit(entOneSortedHomework(data.homework, c.show_done));
-      html += this._section('homework', t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale, { isOpen: isOpen })), t.no_homework, more(hw.rest));
+      html += this._section('homework', t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale, { isOpen: isOpen, entryId: entryId })), t.no_homework, more(hw.rest));
     }
     if (c.show_messages) {
       var msgs = limit(data.messages.filter((m) => m.unread || this._open['message:' + m.id]));
-      html += this._section('messages', t.section_messages, msgs.shown.map((m) => entOneMessageRow(m, t, locale, { url: data.url, isOpen: isOpen, detail: this._messages[m.id] })), t.no_messages, more(msgs.rest));
+      html += this._section('messages', t.section_messages, msgs.shown.map((m) => entOneMessageRow(m, t, locale, { url: data.url, isOpen: isOpen, detail: this._messages[m.id], reader: reader, entryId: entryId })), t.no_messages, more(msgs.rest));
     }
     if (c.show_events) {
       var events = limit(entOneUpcomingEvents(data.events));
@@ -2510,7 +2737,7 @@ class EntOneCard extends HTMLElement {
     }
     if (c.show_news) {
       var news = limit(data.news);
-      html += this._section('news', t.section_news, news.shown.map((n) => entOneNewsRow(n, t, locale, { isOpen: isOpen })), t.no_news, more(news.rest));
+      html += this._section('news', t.section_news, news.shown.map((n) => entOneNewsRow(n, t, locale, { isOpen: isOpen, entryId: entryId })), t.no_news, more(news.rest));
     }
     return html;
   }
@@ -2527,9 +2754,12 @@ class EntOneCard extends HTMLElement {
   }
 
   // A count opens the panel on its tab; without the panel, the card scrolls to the section (the mini card opens).
-  _goto(tab) {
+  _goto(tab, item) {
     if (this._hass?.panels?.[ENT_ONE_PANEL_PATH]) {
-      window.history.pushState(null, '', `/${ENT_ONE_PANEL_PATH}?tab=${tab}`);
+      var params = new URLSearchParams({ tab: tab });
+      if (item) params.set('item', item);
+      if (this._data && Object.keys(entOneAccounts(this._hass)).length > 1) params.set('entry', this._data.entryId);
+      window.history.pushState(null, '', `/${ENT_ONE_PANEL_PATH}?${params}`);
       window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
       return;
     }
@@ -2555,9 +2785,12 @@ class EntOneCard extends HTMLElement {
     else if (action === 'goto') {
       ev.stopPropagation();
       this._goto(el.getAttribute('data-tab'));
+    } else if (action === 'read') {
+      ev.stopPropagation();
+      this._goto(el.getAttribute('data-tab'), el.getAttribute('data-item'));
     } else if (action === 'file') {
       ev.stopPropagation();
-      entOneOpenFile(this._hass, data.entryId, el.getAttribute('data-path')).catch((err) => this._fail(err));
+      entOneOpenFile(this._hass, data.entryId, el.getAttribute('data-path'), el.getAttribute('data-name')).catch((err) => this._fail(err));
     } else if (action === 'dismiss') {
       this._error = '';
       this._render(true);

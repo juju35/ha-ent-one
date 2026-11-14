@@ -7,6 +7,7 @@ class EntOnePanel extends HTMLElement {
   constructor() {
     super();
     this._tab = this._tabFromUrl();
+    this._readUrl();
     // Homework filters are remembered in this browser (storage can be missing or refuse: then they are not).
     var saved = {};
     try {
@@ -16,9 +17,10 @@ class EntOnePanel extends HTMLElement {
     }
     this._book = typeof saved.book === 'string' ? saved.book : '';
     this._hideDone = saved.hideDone === true;
-    this._entry = '';
+    this._entry = this._entry || '';
     this._open = {};
-    this._messages = {};
+    // Messages read in full, by id (not `_messages`: that is the tab method).
+    this._bodies = {};
   }
 
   set panel(panel) {
@@ -51,6 +53,7 @@ class EntOnePanel extends HTMLElement {
   connectedCallback() {
     this._onPop = this._onPop || (() => {
       this._tab = this._tabFromUrl();
+      this._readUrl();
       this._render();
     });
     window.addEventListener('popstate', this._onPop);
@@ -60,6 +63,28 @@ class EntOnePanel extends HTMLElement {
   disconnectedCallback() {
     window.removeEventListener('popstate', this._onPop);
     this._confirm = null;
+  }
+
+  // Item open in the reading pane of the Messages or Liaison book tab, and the account, from the address.
+  _readUrl() {
+    var params = new URLSearchParams(window.location.search);
+    this._item = params.get('item') || '';
+    if (params.get('entry')) this._entry = params.get('entry');
+  }
+
+  _select(item) {
+    if (item === this._item) return;
+    this._item = item;
+    var params = new URLSearchParams(window.location.search);
+    if (item) params.set('item', item);
+    else params.delete('item');
+    try {
+      window.history.pushState(null, '', `${window.location.pathname}?${params}`);
+    } catch (_e) {
+      /* no history (embedded page): the pane still changes */
+    }
+    this._render();
+    if (item) this._root.querySelector('.reader')?.scrollTo?.(0, 0);
   }
 
   _tabFromUrl() {
@@ -93,6 +118,8 @@ class EntOnePanel extends HTMLElement {
     this._confirm = null;
     var params = new URLSearchParams(window.location.search);
     params.set('tab', tab);
+    params.delete('item');
+    this._item = '';
     window.history.pushState(null, '', `${window.location.pathname}?${params}`);
     if (tab === 'settings') this._settings = null;
     this._render();
@@ -108,9 +135,16 @@ class EntOnePanel extends HTMLElement {
     this._root.addEventListener('click', this._onClick.bind(this));
     this._root.addEventListener('change', this._onChange.bind(this));
     this._root.addEventListener('keydown', (ev) => {
-      if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.hasAttribute?.('data-toggle')) {
+      if ((ev.key === 'Enter' || ev.key === ' ') && (ev.target.hasAttribute?.('data-toggle') || ev.target.hasAttribute?.('data-select') || ev.target.getAttribute?.('data-action') === 'read')) {
         ev.preventDefault();
         ev.target.click();
+      } else if ((ev.key === 'ArrowDown' || ev.key === 'ArrowUp') && ev.target.hasAttribute?.('data-select')) {
+        ev.preventDefault();
+        var next = ev.key === 'ArrowDown' ? ev.target.nextElementSibling : ev.target.previousElementSibling;
+        if (next?.hasAttribute('data-select')) {
+          this._select(next.getAttribute('data-select'));
+          this._root.querySelector(`[data-select="${CSS.escape(next.getAttribute('data-select'))}"]`)?.focus();
+        }
       }
     });
     // Tabs: arrows, Home and End move between them (WAI-ARIA tabs pattern).
@@ -181,7 +215,9 @@ class EntOnePanel extends HTMLElement {
       return;
     }
     var html = { home: this._home, homework: this._homework, words: this._words, messages: this._messages, news: this._news }[this._tab].call(this, t, data);
-    content.innerHTML = '<div class="page">' + (this._error ? '<div class="error-text banner">' + E.esc(this._error) + '</div>' : '') + this._popup(t, data) + html + '</div>';
+    var mail = this._tab === 'messages' || this._tab === 'words';
+    content.innerHTML = '<div class="page' + (mail ? ' wide' : '') + '">' + (this._error ? '<div class="error-text banner">' + E.esc(this._error) + '</div>' : '') + this._popup(t, data) + html + '</div>';
+    E.hydrate(content, this._hass, data.entryId);
   }
 
   _count(tab, data) {
@@ -219,10 +255,10 @@ class EntOnePanel extends HTMLElement {
       ].map((x) => '<button class="tile' + (x[3] === 'words' && x[0] ? ' hot' : '') + '" data-tab="' + x[3] + '"><span class="v"><ha-icon icon="' + x[2] + '"></ha-icon>' + x[0] + '</span><span class="l">' + E.esc(x[1]) + '</span></button>').join('') +
       '</div>';
     return tiles + '<div class="grid">' +
-      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen })), t.no_words)) +
-      this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale, { isOpen: isOpen })), t.no_homework)) +
+      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen, reader: true, entryId: data.entryId })), t.no_words)) +
+      this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_homework)) +
       this._box(t.section_events, this._list(E.upcomingEvents(data.events).slice(0, 6).map((e) => R.event(e, t, locale, { isOpen: isOpen })), t.no_events)) +
-      this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen })), t.no_news)) +
+      this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_news)) +
       '</div>';
   }
 
@@ -244,9 +280,41 @@ class EntOnePanel extends HTMLElement {
       else last.items.push(h);
     });
     var body = days.length
-      ? days.map((d) => '<h3>' + E.esc(E.day(d.date, t, locale)) + '</h3>' + d.items.map((h) => E.rows.homework(h, t, locale, { full: true })).join('')).join('')
+      ? days.map((d) => '<h3>' + E.esc(E.day(d.date, t, locale)) + '</h3>' + d.items.map((h) => E.rows.homework(h, t, locale, { full: true, entryId: data.entryId })).join('')).join('')
       : '<div class="empty">' + E.esc(t.no_homework) + '</div>';
     return chips + this._box('', body, true);
+  }
+
+  // Liaison book and Messages: a list on the left and a reading pane on the right, like a mail client. On a narrow
+  // screen the list fills the page, and the item opened replaces it (Back returns to the list).
+  _mail(list, reader, empty, placeholder, icon) {
+    var E = window.EntOne;
+    var t = E.t(this._hass);
+    var open = !!reader;
+    return '<div class="mail' + (open ? ' has-item' : '') + '">' +
+      '<div class="mlist" role="listbox">' + (list.length ? list.join('') : '<div class="empty pad">' + E.esc(empty) + '</div>') + '</div>' +
+      '<div class="reader">' + (open
+        ? '<button class="back" data-action="back"><ha-icon icon="mdi:arrow-left"></ha-icon>' + E.esc(t.back) + '</button>' + reader
+        : '<div class="placeholder"><ha-icon icon="' + icon + '"></ha-icon><span>' + E.esc(placeholder) + '</span></div>') +
+      '</div></div>';
+  }
+
+  _mrow(id, on, unread, icon, title, meta, side) {
+    var E = window.EntOne;
+    return '<div class="mrow' + (on ? ' on' : '') + (unread ? ' unread' : '') + '" role="option" tabindex="0" aria-selected="' + on + '" data-select="' + E.esc(id) + '">' +
+      '<ha-icon class="mrow-icon" icon="' + icon + '"></ha-icon><div class="mrow-main"><div class="mrow-title">' + E.esc(title) + '</div>' +
+      '<div class="mrow-meta">' + E.esc(meta) + '</div></div>' + (side || '') + '</div>';
+  }
+
+  _readerHead(title, meta, side) {
+    var E = window.EntOne;
+    return '<div class="rhead"><div class="rhead-main"><h2 class="rtitle">' + E.esc(title) + '</h2><div class="rmeta">' + E.esc(meta) + '</div></div>' + (side || '') + '</div>';
+  }
+
+  _when(raw, t, locale) {
+    var E = window.EntOne;
+    var time = raw && String(raw).length > 10 ? E.time(raw, locale) : '';
+    return [E.day(raw, t, locale), time].filter(Boolean).join(' · ');
   }
 
   _words(t, data) {
@@ -254,20 +322,51 @@ class EntOnePanel extends HTMLElement {
     var locale = E.locale(this._hass);
     var words = data.words.slice().sort((a, b) => (a.signed === b.signed ? 0 : a.signed ? 1 : -1));
     var canSign = E.canSign(this._hass);
-    return this._box('', this._list(words.map((w) => E.rows.word(w, t, locale, { full: true, canSign: canSign })), t.no_words), true);
+    var key = (w) => w.id + ':' + w.child_id;
+    var sel = words.find((w) => key(w) === this._item);
+    var list = words.map((w) =>
+      this._mrow(key(w), w === sel, !w.signed, w.signed ? 'mdi:check-circle-outline' : 'mdi:notebook-edit-outline', w.title || w.category || '—',
+        [w.child, E.day(w.date, t, locale)].filter(Boolean).join(' · '),
+        (w.attachments || []).length ? '<ha-icon class="mrow-side" icon="mdi:paperclip"></ha-icon>' : ''));
+    var reader = '';
+    if (sel) {
+      var side = sel.signed
+        ? '<span class="chip ok">' + E.esc(t.signed) + '</span>'
+        : canSign
+          ? '<button class="act" data-action="sign" data-id="' + E.esc(sel.id) + '" data-child="' + E.esc(sel.child_id) + '">' + E.esc(t.sign) + '</button>'
+          : '<span class="chip">' + E.esc(t.tile_words) + '</span>';
+      reader = this._readerHead(sel.title || sel.category || '—', [sel.child, sel.author, this._when(sel.date, t, locale)].filter(Boolean).join(' · '), side) +
+        (sel.text ? '<div class="rbody">' + E.esc(sel.text) + '</div>' : '') + E.files(sel.attachments, t, data.entryId, true);
+    }
+    return this._mail(list, reader, t.no_words, t.select_word, 'mdi:notebook-outline');
   }
 
   _messages(t, data) {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
-    var link = data.url ? '<button class="act" data-action="open-messages">' + E.esc(t.open_ent) + '</button>' : '';
-    return '<div class="filters">' + link + '</div>' + this._box('', this._list(data.messages.map((m) => E.rows.message(m, t, locale, { url: data.url, isOpen: (k) => !!this._open[k], detail: this._messages[m.id] })), t.no_messages), true);
+    var sel = data.messages.find((m) => String(m.id) === this._item);
+    // Opening a message reads it in the ENT (which marks it read): only the one chosen is fetched.
+    if (sel && !this._bodies[sel.id]) E.loadMessage(this._hass, data.entryId, sel.id, this._bodies, () => this._render());
+    var list = data.messages.map((m) =>
+      this._mrow(String(m.id), m === sel, m.unread, m.unread ? 'mdi:email-outline' : 'mdi:email-open-outline', m.subject || '—',
+        [m.sender, E.day(m.date, t, locale)].filter(Boolean).join(' · '),
+        m.attachment ? '<ha-icon class="mrow-side" icon="mdi:paperclip"></ha-icon>' : ''));
+    var reader = '';
+    if (sel) {
+      var detail = this._bodies[sel.id];
+      var link = data.url ? '<button class="act ghost" data-action="open-messages">' + E.esc(t.open_ent) + '</button>' : '';
+      reader = this._readerHead(sel.subject || '—', [detail?.data?.sender || sel.sender, this._when(detail?.data?.date || sel.date, t, locale)].filter(Boolean).join(' · '), link);
+      if (!detail || detail.loading) reader += '<div class="rbody muted">' + E.esc(t.loading) + '</div>';
+      else if (detail.error) reader += '<div class="rbody error-text">' + E.esc(t.message_failed + ' ' + detail.error) + '</div>';
+      else reader += (detail.data.text ? '<div class="rbody">' + E.esc(detail.data.text) + '</div>' : '') + E.files(detail.data.attachments, t, data.entryId, true);
+    }
+    return this._mail(list, reader, t.no_messages, t.select_message, 'mdi:email-open-outline');
   }
 
   _news(t, data) {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
-    return this._box('', this._list(data.news.map((n) => E.rows.news(n, t, locale, { full: true })), t.no_news), true);
+    return this._box('', this._list(data.news.map((n) => E.rows.news(n, t, locale, { full: true, entryId: data.entryId })), t.no_news), true);
   }
 
   _popup(t, data) {
@@ -389,10 +488,21 @@ class EntOnePanel extends HTMLElement {
       else {
         this._open[key] = true;
         if (key.indexOf('message:') === 0 && this._data) {
-          E.loadMessage(this._hass, this._data.entryId, key.slice(8), this._messages, () => this._render());
+          E.loadMessage(this._hass, this._data.entryId, key.slice(8), this._bodies, () => this._render());
         }
       }
       this._render();
+      return;
+    }
+    var selEl = ev.target.closest('[data-select]');
+    if (selEl && !ev.target.closest('[data-action]')) {
+      this._select(selEl.getAttribute('data-select'));
+      return;
+    }
+    var readEl = ev.target.closest('[data-action="read"]');
+    if (readEl) {
+      this._setTab(readEl.getAttribute('data-tab'));
+      this._select(readEl.getAttribute('data-item'));
       return;
     }
     var tabEl = ev.target.closest('[data-tab]');
@@ -424,7 +534,8 @@ class EntOnePanel extends HTMLElement {
       return;
     } else if (action === 'refresh') this._refresh(data);
     else if (action === 'open') window.open(data.url, '_blank', 'noopener');
-    else if (action === 'file') E.openFile(this._hass, data.entryId, el.getAttribute('data-path')).catch((err) => this._fail(err));
+    else if (action === 'back') this._select('');
+    else if (action === 'file') E.openFile(this._hass, data.entryId, el.getAttribute('data-path'), el.getAttribute('data-name')).catch((err) => this._fail(err));
     else if (action === 'open-messages') window.open(`${data.url}/conversation/conversation`, '_blank', 'noopener');
     else if (action === 'sign' && E.canSign(this._hass)) {
       this._confirm = { id: el.getAttribute('data-id'), child: el.getAttribute('data-child') };
@@ -532,6 +643,36 @@ class EntOnePanel extends HTMLElement {
       '.url { font-size: 12px; color: var(--secondary-text-color); margin-bottom: 8px; }',
       '.msg { font-size: 13px; margin-right: auto; }',
       '.msg.ok { color: color-mix(in srgb, var(--success-color, #43a047) 55%, var(--primary-text-color)); }',
+      '.page.wide { max-width: 1400px; }',
+      // Mail layout: list and reading pane side by side, each scrolling on its own.
+      '.mail { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); height: calc(100vh - 56px - 46px - 32px); min-height: 360px;' +
+        ' background: var(--card-background-color, #fff); border-radius: var(--ha-card-border-radius, 12px); border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)); overflow: hidden; }',
+      '.mlist { overflow-y: auto; border-right: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
+      '.mrow { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.08)); border-left: 3px solid transparent; }',
+      '.mrow:hover { background: color-mix(in srgb, var(--primary-text-color) 4%, transparent); }',
+      '.mrow.on { background: color-mix(in srgb, ' + A + ' 10%, transparent); border-left-color: ' + A + '; }',
+      '.mrow:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }',
+      '.mrow-icon, .mrow-side { flex: none; --mdc-icon-size: 20px; color: var(--secondary-text-color); margin-top: 1px; }',
+      '.mrow.unread .mrow-icon { color: ' + A + '; }',
+      '.mrow-main { flex: 1; min-width: 0; }',
+      '.mrow-title { font-size: 14px; color: var(--primary-text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
+      '.mrow.unread .mrow-title { font-weight: 600; }',
+      '.mrow-meta { font-size: 12px; color: var(--secondary-text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
+      '.reader { overflow-y: auto; padding: 16px 20px; min-width: 0; }',
+      '.rhead { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
+      '.rhead-main { flex: 1; min-width: 0; }',
+      '.rtitle { margin: 0; font-size: 20px; font-weight: 500; overflow-wrap: anywhere; }',
+      '.rmeta { font-size: 13px; color: var(--secondary-text-color); margin-top: 2px; }',
+      '.rbody { font-size: 14px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; margin-bottom: 12px; }',
+      '.reader .atts { margin-top: 0; gap: 12px; }',
+      '.reader .att-images { gap: 12px; }',
+      '.placeholder { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--secondary-text-color); font-size: 14px; text-align: center; --mdc-icon-size: 48px; }',
+      '.placeholder ha-icon { opacity: .4; }',
+      '.back { all: unset; cursor: pointer; display: none; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 14px; color: var(--secondary-text-color); --mdc-icon-size: 20px; }',
+      '.back:focus-visible { outline: 2px solid var(--primary-color); }',
+      '.pad { padding: 12px; }',
+      '@media (max-width: 800px) { .mail { grid-template-columns: 1fr; height: auto; min-height: 0; } .mlist { border-right: none; } .mail.has-item .mlist { display: none; }' +
+        ' .mail:not(.has-item) .reader { display: none; } .back { display: inline-flex; } .reader { padding: 12px 14px; } }',
       '@media (max-width: 600px) { .updated { display: none; } .page { padding: 12px; } .tile .v { font-size: 22px; } }',
       '@media (prefers-reduced-motion: reduce) { .spinning ha-icon { animation: none; opacity: .5; } }',
     ].join('\n');
