@@ -163,4 +163,3 @@ test('attachments are shown: images, PDF viewer in the reading pane, other files
   assert.match(card, /<img alt="Map"/);
   assert.equal(E.entOneFiles([], t, 'abc', true), '');
 });
-
