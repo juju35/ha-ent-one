@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 import aiohttp
 import pytest
 from aiohttp import web
@@ -67,6 +69,16 @@ class FakeEnt:
 
     async def document(self, request: web.Request) -> web.StreamResponse:
         self._check(request)
+        if request.match_info["doc"] == "big":
+            # Sent in pieces with pauses, like a real ENT: the reader must wait for every piece.
+            resp = web.StreamResponse(headers={"Content-Type": "application/pdf"})
+            await resp.prepare(request)
+            for i in range(40):
+                await resp.write(bytes([65 + i % 26]) * 4096)
+                await asyncio.sleep(0.005)
+            await resp.write(b"%%EOF")
+            await resp.write_eof()
+            return resp
         return web.Response(
             body=b"%PDF-1.4",
             content_type="application/pdf",
@@ -106,6 +118,9 @@ async def test_silent_relogin_when_session_dropped(ent) -> None:
     fake.sessions.clear()
     assert (await api.user_info())["userId"] == "u1"
     assert fake.logins == 2
+    big, _, _ = await api.download("/workspace/document/big")
+    assert len(big) == 40 * 4096 + 5
+    assert big.endswith(b"%%EOF")
 
 
 async def test_refused_credentials_never_retried(ent) -> None:

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.3 (2026-11-15)
+
+- Attachments were cut short: only the first part of a file sent by the ENT was read, so a PDF showed as a white page and an image as an empty frame. The whole file is read now.
+- Faster updates: the ENT's applications, and each child, homework notebook and calendar, are read side by side (four requests at a time at most) instead of one after the other.
+- Opening a message no longer reads the whole ENT again: the message is marked read in the list at once, and a message opened again is not fetched a second time.
+- Files are kept 15 minutes (40 MB at most): showing an attachment again asks nothing of the ENT.
+- The card and the panel find their sensors through the entity registry instead of scanning every state at each Home Assistant update.
+
 ## 1.2.2 (2026-11-14)
 
 - Images and PDFs of the reading pane are fetched by the page and drawn from the file itself: a reverse proxy or Home Assistant that forbids framing (`X-Frame-Options`) left the PDF viewer white and could leave images empty.

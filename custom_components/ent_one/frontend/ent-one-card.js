@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.2.2';
+var ENT_ONE_CARD_VERSION = '1.2.3';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -2045,16 +2045,27 @@ function entOneErrorText(hass, err) {
 // The ENT ONE accounts found in the states: each sensor carries config_entry_id and its own list attribute.
 var ENT_ONE_KINDS = { messages: 'messages', words: 'words', homework: 'homework', news: 'news', account: 'last' };
 
+// Sensors of the integration. Home Assistant updates hass several times a second: scanning every state each time
+// cost a lot on large installations, so the ids are taken from the entity registry, read again only when it
+// changes (a new object). Without a registry (tests, screenshots), every sensor is looked at.
+var entOneIdCache = { entities: null, ids: null };
+
+function entOneSensorIds(hass) {
+  var entities = hass?.entities;
+  if (!entities || !Object.keys(entities).length) return Object.keys(hass?.states || {}).filter((id) => id.indexOf('sensor.') === 0);
+  if (entOneIdCache.entities !== entities) {
+    entOneIdCache.entities = entities;
+    entOneIdCache.ids = Object.keys(entities).filter((id) => id.indexOf('sensor.') === 0 && entities[id].platform === 'ent_one');
+  }
+  return entOneIdCache.ids;
+}
+
 function entOneAccounts(hass) {
   var accounts = {};
   var states = hass?.states || {};
-  var entities = hass?.entities || {};
-  Object.keys(states).forEach((id) => {
-    if (id.indexOf('sensor.') !== 0) return;
-    var reg = entities[id];
-    if (reg && reg.platform !== 'ent_one') return;
+  entOneSensorIds(hass).forEach((id) => {
     var st = states[id];
-    var entry = st.attributes?.config_entry_id;
+    var entry = st?.attributes?.config_entry_id;
     if (!entry) return;
     var kind = Object.keys(ENT_ONE_KINDS).find((k) => k in st.attributes);
     if (!kind) return;

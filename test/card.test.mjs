@@ -57,7 +57,9 @@ test('every language has the English keys', () => {
 });
 
 test('entOneData groups the sensors of one account', () => {
+  // The registry lists every sensor; only those of the integration are read.
   const entities = { 'sensor.other': { platform: 'other' } };
+  for (const id of Object.keys(states).filter((k) => k.startsWith('sensor.ent_'))) entities[id] = { platform: 'ent_one' };
   const d = E.entOneData({ states, entities }, 'abc');
   assert.equal(d.unread, 2);
   assert.equal(d.words.length, 1);

@@ -41,6 +41,8 @@ FILE_PREFIXES = (
 _SAFE_PATH = re.compile(r"^/[A-Za-z0-9/_.~%-]+(\?[A-Za-z0-9_.~%=&-]*)?$")
 # Largest file streamed through Home Assistant.
 MAX_FILE_SIZE = 25 * 1024 * 1024
+# Requests sent to the ENT at the same time.
+MAX_PARALLEL = 4
 
 
 class EntError(Exception):
@@ -223,6 +225,8 @@ class EntApi:
         self._password = password
         # Serializes logins: ten requests finding the session expired trigger a single login.
         self._login_lock = asyncio.Lock()
+        # Requests run side by side (children, notebooks, calendars), a few at a time to spare the ENT.
+        self._limit = asyncio.Semaphore(MAX_PARALLEL)
         self._generation = 0
         # Set once the ENT refused the credentials: no automatic retry until new ones (reauth).
         self._refused = False
@@ -312,15 +316,18 @@ class EntApi:
             if not read and (token := self._xsrf()):
                 headers[XSRF_HEADER] = token
             try:
-                async with self._session.request(
-                    method,
-                    self._url(path),
-                    params=params,
-                    json=json,
-                    headers=headers,
-                    allow_redirects=False,
-                    timeout=TIMEOUT,
-                ) as resp:
+                async with (
+                    self._limit,
+                    self._session.request(
+                        method,
+                        self._url(path),
+                        params=params,
+                        json=json,
+                        headers=headers,
+                        allow_redirects=False,
+                        timeout=TIMEOUT,
+                    ) as resp,
+                ):
                     if self._session_lost(resp.status, resp.headers.get("Location"), read):
                         if attempt:
                             raise EntError(f"Session expired again on {path}")
@@ -378,7 +385,10 @@ class EntApi:
                 generation = self._generation
             try:
                 # Files may be served from another host (storage): redirects are followed, cookies stay per host.
-                async with self._session.get(self._url(path), timeout=TIMEOUT, allow_redirects=True) as resp:
+                async with (
+                    self._limit,
+                    self._session.get(self._url(path), timeout=TIMEOUT, allow_redirects=True) as resp,
+                ):
                     landed = urlsplit(str(resp.url))
                     lost = resp.status == 401 or any(m in landed.path.lower() for m in AUTH_MARKERS)
                     if lost:
@@ -390,9 +400,16 @@ class EntApi:
                         raise EntError(f"HTTP {resp.status} on {path}")
                     if (resp.content_length or 0) > MAX_FILE_SIZE:
                         raise EntError(f"File too large ({resp.content_length} bytes)")
-                    body = await resp.content.read(MAX_FILE_SIZE + 1)
-                    if len(body) > MAX_FILE_SIZE:
-                        raise EntError("File too large")
+                    # The whole body, chunk by chunk: content.read(n) returns what has arrived so far, which cut
+                    # files short (a PDF without its end shows as a white page, an image as an empty frame).
+                    chunks: list[bytes] = []
+                    size = 0
+                    async for chunk in resp.content.iter_chunked(64 * 1024):
+                        size += len(chunk)
+                        if size > MAX_FILE_SIZE:
+                            raise EntError("File too large")
+                        chunks.append(chunk)
+                    body = b"".join(chunks)
                     return (
                         body,
                         resp.content_type or "application/octet-stream",
