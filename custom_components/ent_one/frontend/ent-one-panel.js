@@ -18,6 +18,7 @@ class EntOnePanel extends HTMLElement {
     this._hideDone = saved.hideDone === true;
     this._entry = '';
     this._open = {};
+    this._messages = {};
   }
 
   set panel(panel) {
@@ -130,6 +131,14 @@ class EntOnePanel extends HTMLElement {
     E.setTimeFormat(this._hass);
     var t = E.t(this._hass);
     this._lang = E.lang(this._hass);
+    // The panel is not among the cards the language loader redraws: draw again once the language file is in.
+    if (!E.langReady(this._hass) && !this._langRetry) {
+      this._langRetry = setTimeout(() => {
+        this._langRetry = null;
+        if (this._tab === 'settings') this._settings = null;
+        this._render();
+      }, 250);
+    }
     var menu = this._root.querySelector('ha-menu-button');
     menu.hass = this._hass;
     menu.narrow = this._narrow;
@@ -252,7 +261,7 @@ class EntOnePanel extends HTMLElement {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
     var link = data.url ? '<button class="act" data-action="open-messages">' + E.esc(t.open_ent) + '</button>' : '';
-    return '<div class="filters">' + link + '</div>' + this._box('', this._list(data.messages.map((m) => E.rows.message(m, t, locale, { url: data.url, full: true })), t.no_messages), true);
+    return '<div class="filters">' + link + '</div>' + this._box('', this._list(data.messages.map((m) => E.rows.message(m, t, locale, { url: data.url, isOpen: (k) => !!this._open[k], detail: this._messages[m.id] })), t.no_messages), true);
   }
 
   _news(t, data) {
@@ -377,7 +386,12 @@ class EntOnePanel extends HTMLElement {
     if (toggle && !ev.target.closest('[data-action], a')) {
       var key = toggle.getAttribute('data-toggle');
       if (this._open[key]) delete this._open[key];
-      else this._open[key] = true;
+      else {
+        this._open[key] = true;
+        if (key.indexOf('message:') === 0 && this._data) {
+          E.loadMessage(this._hass, this._data.entryId, key.slice(8), this._messages, () => this._render());
+        }
+      }
       this._render();
       return;
     }
@@ -410,6 +424,7 @@ class EntOnePanel extends HTMLElement {
       return;
     } else if (action === 'refresh') this._refresh(data);
     else if (action === 'open') window.open(data.url, '_blank', 'noopener');
+    else if (action === 'file') E.openFile(this._hass, data.entryId, el.getAttribute('data-path')).catch((err) => this._fail(err));
     else if (action === 'open-messages') window.open(`${data.url}/conversation/conversation`, '_blank', 'noopener');
     else if (action === 'sign' && E.canSign(this._hass)) {
       this._confirm = { id: el.getAttribute('data-id'), child: el.getAttribute('data-child') };

@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.0.0';
+var ENT_ONE_CARD_VERSION = '1.1.0';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -53,6 +53,9 @@ var EntOneI18n = {
     due_tomorrow: 'for tomorrow',
     all_day: 'All day',
     attachment: 'Attachment',
+    attachments: 'Attachments',
+    loading: 'Loading…',
+    message_failed: 'Could not read the message:',
     more: '+{n} more',
     action_failed: 'The ENT refused the action:',
     tab_home: 'Home',
@@ -134,6 +137,9 @@ var EntOneI18n = {
     due_tomorrow: 'pour demain',
     all_day: 'Toute la journée',
     attachment: 'Pièce jointe',
+    attachments: 'Pièces jointes',
+    loading: 'Chargement…',
+    message_failed: 'Impossible de lire le message :',
     more: '+{n} autres',
     action_failed: 'L\'ENT a refusé l\'action :',
     tab_home: 'Accueil',
@@ -214,6 +220,9 @@ var EntOneI18n = {
     due_tomorrow: "bis morgen",
     all_day: "Ganztägig",
     attachment: "Anhang",
+    attachments: "Anhänge",
+    loading: "Wird geladen…",
+    message_failed: "Die Nachricht konnte nicht gelesen werden:",
     more: "+{n} weitere",
     action_failed: "Das ENT hat die Aktion abgelehnt:",
     tab_home: "Start",
@@ -294,6 +303,9 @@ var EntOneI18n = {
     due_tomorrow: "para mañana",
     all_day: "Todo el día",
     attachment: "Adjunto",
+    attachments: "Adjuntos",
+    loading: "Cargando…",
+    message_failed: "No se pudo leer el mensaje:",
     more: "+{n} más",
     action_failed: "El ENT rechazó la acción:",
     tab_home: "Inicio",
@@ -374,6 +386,9 @@ var EntOneI18n = {
     due_tomorrow: "за сутра",
     all_day: "Цео дан",
     attachment: "Прилог",
+    attachments: "Прилози",
+    loading: "Учитавање…",
+    message_failed: "Порука није могла да се прочита:",
     more: "+још {n}",
     action_failed: "ENT је одбио радњу:",
     tab_home: "Почетна",
@@ -454,6 +469,9 @@ var EntOneI18n = {
     due_tomorrow: "za sutra",
     all_day: "Ceo dan",
     attachment: "Prilog",
+    attachments: "Prilozi",
+    loading: "Učitavanje…",
+    message_failed: "Poruka nije mogla da se pročita:",
     more: "+još {n}",
     action_failed: "ENT je odbio radnju:",
     tab_home: "Početna",
@@ -534,6 +552,9 @@ var EntOneI18n = {
     due_tomorrow: "per domani",
     all_day: "Tutto il giorno",
     attachment: "Allegato",
+    attachments: "Allegati",
+    loading: "Caricamento…",
+    message_failed: "Impossibile leggere il messaggio:",
     more: "+{n} altri",
     action_failed: "L'ENT ha rifiutato l'azione:",
     tab_home: "Home",
@@ -614,6 +635,9 @@ var EntOneI18n = {
     due_tomorrow: "voor morgen",
     all_day: "Hele dag",
     attachment: "Bijlage",
+    attachments: "Bijlagen",
+    loading: "Laden…",
+    message_failed: "Het bericht kon niet worden gelezen:",
     more: "+{n} meer",
     action_failed: "De ENT weigerde de actie:",
     tab_home: "Start",
@@ -694,6 +718,9 @@ var EntOneI18n = {
     due_tomorrow: "para amanhã",
     all_day: "Todo o dia",
     attachment: "Anexo",
+    attachments: "Anexos",
+    loading: "A carregar…",
+    message_failed: "Não foi possível ler a mensagem:",
     more: "+{n} mais",
     action_failed: "O ENT recusou a ação:",
     tab_home: "Início",
@@ -774,6 +801,9 @@ var EntOneI18n = {
     due_tomorrow: "na jutro",
     all_day: "Cały dzień",
     attachment: "Załącznik",
+    attachments: "Załączniki",
+    loading: "Ładowanie…",
+    message_failed: "Nie udało się odczytać wiadomości:",
     more: "+{n} więcej",
     action_failed: "ENT odrzucił operację:",
     tab_home: "Start",
@@ -854,6 +884,9 @@ var EntOneI18n = {
     due_tomorrow: "pentru mâine",
     all_day: "Toată ziua",
     attachment: "Atașament",
+    attachments: "Atașamente",
+    loading: "Se încarcă…",
+    message_failed: "Mesajul nu a putut fi citit:",
     more: "+încă {n}",
     action_failed: "ENT-ul a refuzat acțiunea:",
     tab_home: "Acasă",
@@ -934,6 +967,9 @@ var EntOneI18n = {
     due_tomorrow: "til i morgen",
     all_day: "Hele dagen",
     attachment: "Vedhæftet fil",
+    attachments: "Vedhæftede filer",
+    loading: "Indlæser…",
+    message_failed: "Beskeden kunne ikke læses:",
     more: "+{n} mere",
     action_failed: "ENT afviste handlingen:",
     tab_home: "Start",
@@ -1014,6 +1050,9 @@ var EntOneI18n = {
     due_tomorrow: "till imorgon",
     all_day: "Hela dagen",
     attachment: "Bilaga",
+    attachments: "Bilagor",
+    loading: "Läser in…",
+    message_failed: "Meddelandet kunde inte läsas:",
     more: "+{n} till",
     action_failed: "ENT avvisade åtgärden:",
     tab_home: "Start",
@@ -1094,6 +1133,9 @@ var EntOneI18n = {
     due_tomorrow: "за утре",
     all_day: "Цял ден",
     attachment: "Прикачен файл",
+    attachments: "Прикачени файлове",
+    loading: "Зареждане…",
+    message_failed: "Съобщението не можа да бъде прочетено:",
     more: "+още {n}",
     action_failed: "ENT отказа действието:",
     tab_home: "Начало",
@@ -1174,6 +1216,9 @@ var EntOneI18n = {
     due_tomorrow: "к завтра",
     all_day: "Весь день",
     attachment: "Вложение",
+    attachments: "Вложения",
+    loading: "Загрузка…",
+    message_failed: "Не удалось прочитать сообщение:",
     more: "+ещё {n}",
     action_failed: "ENT отклонил действие:",
     tab_home: "Главная",
@@ -1254,6 +1299,9 @@ var EntOneI18n = {
     due_tomorrow: "на завтра",
     all_day: "Увесь день",
     attachment: "Вкладення",
+    attachments: "Вкладення",
+    loading: "Завантаження…",
+    message_failed: "Не вдалося прочитати повідомлення:",
     more: "+ще {n}",
     action_failed: "ENT відхилив дію:",
     tab_home: "Головна",
@@ -1334,6 +1382,9 @@ var EntOneI18n = {
     due_tomorrow: "holnapra",
     all_day: "Egész nap",
     attachment: "Melléklet",
+    attachments: "Mellékletek",
+    loading: "Betöltés…",
+    message_failed: "Az üzenet nem olvasható:",
     more: "+{n} további",
     action_failed: "Az ENT elutasította a műveletet:",
     tab_home: "Kezdőlap",
@@ -1414,6 +1465,9 @@ var EntOneI18n = {
     due_tomorrow: "na zajtra",
     all_day: "Celý deň",
     attachment: "Príloha",
+    attachments: "Prílohy",
+    loading: "Načítava sa…",
+    message_failed: "Správu sa nepodarilo prečítať:",
     more: "+ďalšie {n}",
     action_failed: "ENT odmietol akciu:",
     tab_home: "Domov",
@@ -1494,6 +1548,9 @@ var EntOneI18n = {
     due_tomorrow: "na zítra",
     all_day: "Celý den",
     attachment: "Příloha",
+    attachments: "Přílohy",
+    loading: "Načítání…",
+    message_failed: "Zprávu se nepodařilo přečíst:",
     more: "+další {n}",
     action_failed: "ENT akci odmítl:",
     tab_home: "Domů",
@@ -1574,6 +1631,9 @@ var EntOneI18n = {
     due_tomorrow: "za jutri",
     all_day: "Ves dan",
     attachment: "Priloga",
+    attachments: "Priloge",
+    loading: "Nalaganje…",
+    message_failed: "Sporočila ni bilo mogoče prebrati:",
     more: "+še {n}",
     action_failed: "ENT je zavrnil dejanje:",
     tab_home: "Domov",
@@ -1654,6 +1714,9 @@ var EntOneI18n = {
     due_tomorrow: "uz rītdienu",
     all_day: "Visu dienu",
     attachment: "Pielikums",
+    attachments: "Pielikumi",
+    loading: "Ielādē…",
+    message_failed: "Ziņojumu neizdevās nolasīt:",
     more: "+vēl {n}",
     action_failed: "ENT noraidīja darbību:",
     tab_home: "Sākums",
@@ -1734,6 +1797,9 @@ var EntOneI18n = {
     due_tomorrow: "για αύριο",
     all_day: "Ολοήμερο",
     attachment: "Συνημμένο",
+    attachments: "Συνημμένα",
+    loading: "Φόρτωση…",
+    message_failed: "Δεν ήταν δυνατή η ανάγνωση του μηνύματος:",
     more: "+{n} ακόμη",
     action_failed: "Το ENT απέρριψε την ενέργεια:",
     tab_home: "Αρχική",
@@ -1824,6 +1890,13 @@ function entOneLocale(hass, config) {
 // English key by key until the language file is loaded (the split leaves `{}` in its place).
 function entOneT(hass, config) {
   return Object.assign({}, EntOneI18n.en, EntOneI18n[entOneLang(hass, config)]);
+}
+
+// False while the release's language file is still on its way (its table is still empty): reading the table
+// starts the download, and the caller draws again a moment later.
+function entOneLangReady(hass, config) {
+  var lang = entOneLang(hass, config);
+  return lang === 'en' || Object.keys(EntOneI18n[lang] || {}).length > 0;
 }
 
 function entOneErrorText(hass, err) {
@@ -1996,6 +2069,47 @@ function entOneUpcomingEvents(events) {
   });
 }
 
+// Attachments of a row: buttons opening the file through Home Assistant (the browser has no ENT session).
+function entOneFiles(files, t) {
+  if (!files?.length) return '';
+  return '<div class="files" role="list" aria-label="' + entOneEsc(t.attachments) + '">' +
+    files.map((f) => '<button class="file" role="listitem" data-action="file" data-path="' + entOneEsc(f.path) + '" title="' + entOneEsc(f.name) + '">' +
+      '<ha-icon icon="' + (f.kind === 'image' ? 'mdi:image-outline' : 'mdi:paperclip') + '"></ha-icon><span>' + entOneEsc(f.name) + '</span></button>').join('') +
+    '</div>';
+}
+
+// Opens an ENT file: a signed URL of the integration's file view, in a tab opened at once (a tab opened after
+// the await would be blocked as a popup).
+function entOneOpenFile(hass, entryId, path) {
+  var tab = window.open('', '_blank');
+  return hass
+    .callWS({ type: 'auth/sign_path', path: `/api/ent_one/file/${entryId}?path=${encodeURIComponent(path)}`, expires: 120 })
+    .then((res) => {
+      if (tab) tab.location.href = res.path;
+      else window.location.href = res.path;
+    })
+    .catch((err) => {
+      if (tab) tab.close();
+      throw err;
+    });
+}
+
+// A message in full, fetched once when unfolded (the ENT then marks it read). `cache` maps ids to
+// { loading } / { data } / { error }; `done` redraws.
+function entOneLoadMessage(hass, entryId, id, cache, done) {
+  if (cache[id] && !cache[id].error) return;
+  cache[id] = { loading: true };
+  hass
+    .callWS({ type: 'ent_one/message', config_entry_id: entryId, message_id: String(id) })
+    .then((data) => {
+      cache[id] = { data: data };
+    })
+    .catch((err) => {
+      cache[id] = { error: String(err?.message || err) };
+    })
+    .finally(done);
+}
+
 // Shared row renderers: the card and the panel draw the same rows. A row with more to read (text, description,
 // link) gets a chevron and data-toggle; opts.open shows that part (the panel always does with opts.full).
 function entOneToggle(key, open, hasMore) {
@@ -2015,12 +2129,13 @@ function entOneWordRow(w, t, locale, opts) {
   var meta = [w.child, w.author, entOneDay(w.date, t, locale)].filter(Boolean).join(' · ');
   var key = 'word:' + w.id + ':' + w.child_id;
   var open = entOneOpen(opts, key);
-  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!w.text);
+  var files = w.attachments || [];
+  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!w.text || files.length > 0);
   return '<div class="item word' + (w.signed ? ' done' : '') + '">' +
     '<ha-icon class="item-icon" icon="' + (w.signed ? 'mdi:check-circle-outline' : 'mdi:notebook-edit-outline') + '"></ha-icon>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(w.title || w.category || '—') + '</div>' +
     '<div class="item-meta">' + entOneEsc(meta) + '</div>' +
-    (open && w.text ? '<div class="item-text">' + entOneEsc(w.text) + '</div>' : '') + '</div>' + tg.chevron +
+    (open && w.text ? '<div class="item-text">' + entOneEsc(w.text) + '</div>' : '') + (open ? entOneFiles(files, t) : '') + '</div>' + tg.chevron +
     (w.signed
       ? '<span class="chip ok">' + entOneEsc(t.signed) + '</span>'
       : opts?.canSign
@@ -2033,7 +2148,8 @@ function entOneHomeworkRow(h, t, locale, opts) {
   var label = h.done ? t.mark_todo : t.mark_done;
   var key = 'homework:' + h.book_id + ':' + h.id;
   var open = entOneOpen(opts, key);
-  var more = !!(h.text && h.title);
+  var files = h.attachments || [];
+  var more = !!(h.text && h.title) || files.length > 0;
   var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, more);
   return '<div class="item hw' + (h.done ? ' done' : '') + '">' +
     '<button class="check" role="checkbox" aria-checked="' + !!h.done + '" aria-label="' + entOneEsc(label) + '" title="' + entOneEsc(label) + '"' +
@@ -2041,21 +2157,29 @@ function entOneHomeworkRow(h, t, locale, opts) {
     '<ha-icon icon="' + (h.done ? 'mdi:checkbox-marked-outline' : 'mdi:checkbox-blank-outline') + '"></ha-icon></button>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(h.title || (h.text || '').split('\n')[0] || h.book) + '</div>' +
     '<div class="item-meta">' + entOneEsc([h.book, entOneDue(h.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (open && more ? '<div class="item-text">' + entOneEsc(h.text) + '</div>' : '') + '</div>' + tg.chevron + '</div>';
+    (open && h.text && h.title ? '<div class="item-text">' + entOneEsc(h.text) + '</div>' : '') + (open ? entOneFiles(files, t) : '') + '</div>' + tg.chevron + '</div>';
 }
 
-// The message body is not read (that would mark it read in the ENT): the row opens on a link to the ENT messaging.
+// A message unfolds to its text and attachments, fetched on demand (opts.detail: the cache entry of
+// entOneLoadMessage), with a link to the ENT messaging.
 function entOneMessageRow(m, t, locale, opts) {
   var key = 'message:' + m.id;
   var open = entOneOpen(opts, key);
-  var tg = opts?.url && !opts.full ? entOneToggle(key, open, true) : { attrs: '', chevron: '' };
+  var tg = entOneToggle(key, open, true);
+  var detail = opts?.detail;
+  var body = '';
+  if (open) {
+    if (!detail || detail.loading) body = '<div class="item-text muted">' + entOneEsc(t.loading) + '</div>';
+    else if (detail.error) body = '<div class="item-text error-text">' + entOneEsc(t.message_failed + ' ' + detail.error) + '</div>';
+    else body = (detail.data.text ? '<div class="item-text">' + entOneEsc(detail.data.text) + '</div>' : '') + entOneFiles(detail.data.attachments, t);
+    if (opts?.url) {
+      body += '<div class="item-text"><a class="link" href="' + entOneEsc(opts.url + '/conversation/conversation') + '" target="_blank" rel="noopener">' + entOneEsc(t.open_ent) + '</a></div>';
+    }
+  }
   return '<div class="item msg' + (m.unread ? ' unread' : ' done') + '">' +
     '<ha-icon class="item-icon" icon="' + (m.unread ? 'mdi:email-outline' : 'mdi:email-open-outline') + '"></ha-icon>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(m.subject || '—') + '</div>' +
-    '<div class="item-meta">' + entOneEsc([m.sender, entOneDay(m.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (open && opts?.url
-      ? '<div class="item-text"><a class="link" href="' + entOneEsc(opts.url + '/conversation/conversation') + '" target="_blank" rel="noopener">' + entOneEsc(t.open_ent) + '</a></div>'
-      : '') + '</div>' +
+    '<div class="item-meta">' + entOneEsc([m.sender, entOneDay(m.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' + body + '</div>' +
     (m.attachment ? '<ha-icon class="item-side" icon="mdi:paperclip" title="' + entOneEsc(t.attachment) + '"></ha-icon>' : '') + tg.chevron +
     '</div>';
 }
@@ -2063,12 +2187,13 @@ function entOneMessageRow(m, t, locale, opts) {
 function entOneNewsRow(n, t, locale, opts) {
   var key = 'news:' + n.id;
   var open = entOneOpen(opts, key);
-  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!n.text);
+  var files = n.attachments || [];
+  var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, !!n.text || files.length > 0);
   return '<div class="item news">' +
     '<ha-icon class="item-icon" icon="mdi:newspaper-variant-outline"></ha-icon>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(n.title || '—') + '</div>' +
     '<div class="item-meta">' + entOneEsc([n.author, entOneDay(n.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
-    (open && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + '</div>' + tg.chevron + '</div>';
+    (open && n.text ? '<div class="item-text">' + entOneEsc(n.text) + '</div>' : '') + (open ? entOneFiles(files, t) : '') + '</div>' + tg.chevron + '</div>';
 }
 
 function entOneEventRow(e, t, locale, opts) {
@@ -2106,6 +2231,14 @@ function entOneItemStyles(accent) {
     '.chevron.closed { transform: rotate(-90deg); }',
     '.link { color: color-mix(in srgb, ' + accent + ' 65%, var(--primary-text-color)); font-weight: 500; text-decoration: none; }',
     '.link:hover { text-decoration: underline; }',
+    '.files { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }',
+    '.file { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; max-width: 100%; font-size: 12px; padding: 3px 10px 3px 6px; border-radius: 12px;' +
+      ' border: 1px solid var(--divider-color, rgba(0,0,0,.2)); color: var(--primary-text-color); --mdc-icon-size: 16px; }',
+    '.file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
+    '.file ha-icon { color: ' + accent + '; flex: none; }',
+    '.file:hover { background: color-mix(in srgb, ' + accent + ' 10%, transparent); }',
+    '.file:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 1px; }',
+    '.muted { color: var(--secondary-text-color); }',
     '@media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }',
     '.hw.done .check { color: var(--success-color, #43a047); }',
     '.check:focus-visible, .act:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }',
@@ -2128,6 +2261,7 @@ window.EntOne = {
   icon: ENT_ONE_ICON,
   i18n: EntOneI18n,
   t: entOneT,
+  langReady: entOneLangReady,
   lang: entOneLang,
   locale: entOneLocale,
   esc: entOneEsc,
@@ -2139,6 +2273,8 @@ window.EntOne = {
   time: entOneTime,
   setTimeFormat: entOneSetTimeFormat,
   sign: entOneSign,
+  openFile: entOneOpenFile,
+  loadMessage: entOneLoadMessage,
   canSign: entOneCanSign,
   setDone: entOneSetDone,
   refresh: entOneRefresh,
@@ -2164,6 +2300,7 @@ class EntOneCard extends HTMLElement {
     this._config = Object.assign({}, ENT_ONE_DEFAULTS, config || {});
     this.toggleAttribute?.('hide-title', config?.show_title === false);
     this._open = this._open || {};
+    this._messages = this._messages || {};
     if (this._hass) this._render(true);
   }
 
@@ -2364,8 +2501,8 @@ class EntOneCard extends HTMLElement {
       html += this._section('homework', t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale, { isOpen: isOpen })), t.no_homework, more(hw.rest));
     }
     if (c.show_messages) {
-      var msgs = limit(data.messages.filter((m) => m.unread));
-      html += this._section('messages', t.section_messages, msgs.shown.map((m) => entOneMessageRow(m, t, locale, { url: data.url, isOpen: isOpen })), t.no_messages, more(msgs.rest));
+      var msgs = limit(data.messages.filter((m) => m.unread || this._open['message:' + m.id]));
+      html += this._section('messages', t.section_messages, msgs.shown.map((m) => entOneMessageRow(m, t, locale, { url: data.url, isOpen: isOpen, detail: this._messages[m.id] })), t.no_messages, more(msgs.rest));
     }
     if (c.show_events) {
       var events = limit(entOneUpcomingEvents(data.events));
@@ -2380,7 +2517,12 @@ class EntOneCard extends HTMLElement {
 
   _toggleRow(key) {
     if (this._open[key]) delete this._open[key];
-    else this._open[key] = true;
+    else {
+      this._open[key] = true;
+      if (key.indexOf('message:') === 0 && this._data) {
+        entOneLoadMessage(this._hass, this._data.entryId, key.slice(8), this._messages, () => this._render(true));
+      }
+    }
     this._render(true);
   }
 
@@ -2413,6 +2555,9 @@ class EntOneCard extends HTMLElement {
     else if (action === 'goto') {
       ev.stopPropagation();
       this._goto(el.getAttribute('data-tab'));
+    } else if (action === 'file') {
+      ev.stopPropagation();
+      entOneOpenFile(this._hass, data.entryId, el.getAttribute('data-path')).catch((err) => this._fail(err));
     } else if (action === 'dismiss') {
       this._error = '';
       this._render(true);

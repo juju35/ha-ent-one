@@ -34,6 +34,7 @@ custom_components/ent_one/
 - Ids placed in a path are checked against `[A-Za-z0-9_-]+`.
 
 ## Card and panel
+- frontend/ent-one-icons.js registers the icon set `ent_one` (window.customIcons / customIconsets) on every page (add_extra_js_url); the sidebar entry uses `ent_one:panda`.
 - Sensors are found by their `config_entry_id` attribute and list attribute (messages / words / homework / news / account), filtered on `platform: ent_one` when the registry is there.
 - sign_word is an admin service; the card and the panel show the Sign button only when hass.user.is_admin isn't false.
 - Rows with more to read carry data-toggle (chevron right / down); the card and the panel keep their open keys, folded by a click outside. Tiles: data-action=goto → /ent-one?tab=… when hass.panels has the panel. entOneSetTimeFormat(hass) follows hass.locale.time_format.
