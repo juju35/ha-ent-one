@@ -1893,6 +1893,11 @@ function entOneTime(raw, locale) {
   }
 }
 
+// Signing is an admin-only action (a child's Home Assistant account must not sign): true while hass.user is unknown.
+function entOneCanSign(hass) {
+  return hass?.user?.is_admin !== false;
+}
+
 function entOneSign(hass, entryId, word) {
   return hass.callService('ent_one', 'sign_word', { config_entry_id: entryId, word_id: String(word.id), child_id: String(word.child_id) });
 }
@@ -1942,7 +1947,9 @@ function entOneWordRow(w, t, locale, opts) {
     (opts?.full && w.text ? '<div class="item-text">' + entOneEsc(w.text) + '</div>' : '') + '</div>' +
     (w.signed
       ? '<span class="chip ok">' + entOneEsc(t.signed) + '</span>'
-      : '<button class="act" data-action="sign" data-id="' + entOneEsc(w.id) + '" data-child="' + entOneEsc(w.child_id) + '">' + entOneEsc(t.sign) + '</button>') +
+      : opts?.canSign
+        ? '<button class="act" data-action="sign" data-id="' + entOneEsc(w.id) + '" data-child="' + entOneEsc(w.child_id) + '">' + entOneEsc(t.sign) + '</button>'
+        : '<span class="chip">' + entOneEsc(t.tile_words) + '</span>') +
     '</div>';
 }
 
@@ -2025,6 +2032,7 @@ window.EntOne = {
   data: entOneData,
   day: entOneDay,
   sign: entOneSign,
+  canSign: entOneCanSign,
   setDone: entOneSetDone,
   refresh: entOneRefresh,
   sortedHomework: entOneSortedHomework,
@@ -2212,7 +2220,8 @@ class EntOneCard extends HTMLElement {
     var html = '';
     if (c.show_words) {
       var words = limit(data.words.filter((w) => !w.signed));
-      html += this._section(t.section_words, words.shown.map((w) => entOneWordRow(w, t, locale)), t.no_words, more(words.rest));
+      var canSign = entOneCanSign(this._hass);
+      html += this._section(t.section_words, words.shown.map((w) => entOneWordRow(w, t, locale, { canSign: canSign })), t.no_words, more(words.rest));
     }
     if (c.show_homework) {
       var hw = limit(entOneSortedHomework(data.homework, c.show_done));
@@ -2241,7 +2250,7 @@ class EntOneCard extends HTMLElement {
     if (action === 'refresh') this._refresh();
     else if (action === 'open') window.open(data.url, '_blank', 'noopener');
     else if (action === 'detail') this._toggleDetail(ev);
-    else if (action === 'sign') {
+    else if (action === 'sign' && entOneCanSign(this._hass)) {
       ev.stopPropagation();
       this._confirm = { id: el.getAttribute('data-id'), child: el.getAttribute('data-child') };
       this._render(true);

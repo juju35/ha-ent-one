@@ -10,8 +10,9 @@ import pytest
 from homeassistant.components import frontend
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_PASSWORD, CONF_URL, CONF_USERNAME
-from homeassistant.core import HomeAssistant
+from homeassistant.core import Context, HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.exceptions import Unauthorized
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_capture_events
 
@@ -46,6 +47,8 @@ class FakeApi:
             }
         ]
         self.news_fails = False
+        self.words_fail = False
+        self.books = [{"_id": "b1", "title": "CE2 A"}]
 
     def update_credentials(self, username: str, password: str) -> None:
         self.username, self.password = username, password
@@ -80,13 +83,15 @@ class FakeApi:
         ]
 
     async def words(self, child_id: str) -> list[dict[str, Any]]:
+        if self.words_fail:
+            raise EntError("HTTP 500 on /schoolbook")
         return list(self.words_list)
 
     async def sign_word(self, word_id: str, child_id: str) -> None:
         self.signed.append((word_id, child_id))
 
     async def homework_books(self) -> list[dict[str, Any]]:
-        return [{"_id": "b1", "title": "CE2 A"}]
+        return list(self.books)
 
     async def homework_book(self, book_id: str) -> dict[str, Any]:
         return {
@@ -336,3 +341,97 @@ async def test_username_and_password_from_secrets(hass: HomeAssistant, api) -> N
     entry = ok["result"]
     assert entry.state is ConfigEntryState.LOADED
     assert api["api"].username == "parent"
+
+
+async def test_sign_word_is_admin_only(hass: HomeAssistant, api, entry, hass_read_only_user) -> None:
+    await _setup(hass, entry)
+    with pytest.raises(Unauthorized):
+        await hass.services.async_call(
+            DOMAIN,
+            "sign_word",
+            {"word_id": "11", "child_id": "c1"},
+            blocking=True,
+            context=Context(user_id=hass_read_only_user.id),
+        )
+    assert api["api"].signed == []
+
+
+async def test_no_event_burst_after_a_first_failed_read(hass: HomeAssistant, entry) -> None:
+    """A section failing at startup records what is there at its first good read instead of firing it all."""
+    holder: dict[str, FakeApi] = {}
+
+    def factory(*args: Any) -> FakeApi:
+        holder["api"] = FakeApi(*args)
+        holder["api"].words_fail = True
+        return holder["api"]
+
+    with patch("custom_components.ent_one.EntApi", side_effect=factory):
+        await _setup(hass, entry)
+    events = async_capture_events(hass, EVENT_NEW_WORD)
+    holder["api"].words_fail = False
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert events == []
+    holder["api"].words_list.append({"id": 12, "title": "Photos", "text": "", "acknowledgments": []})
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert [e.data["id"] for e in events] == ["12"]
+
+
+async def test_marking_done_does_not_touch_written_states(hass: HomeAssistant, api, entry) -> None:
+    await _setup(hass, entry)
+    sensor = _entity(hass, "sensor", "homework")
+    before = hass.states.get(sensor)
+    await entry.runtime_data.async_set_homework_done("b1", "e1", True)
+    assert before.attributes["homework"][0]["done"] is False
+    assert hass.states.get(sensor).attributes["homework"][0]["done"] is True
+
+
+async def test_settings_update_checks_types(hass: HomeAssistant, api, entry, hass_ws_client) -> None:
+    await _setup(hass, entry)
+    client = await hass_ws_client(hass)
+    await client.send_json(
+        {"id": 1, "type": "ent_one/settings/update", "entry_id": entry.entry_id, "options": {"notify_services": "x"}}
+    )
+    msg = await client.receive_json()
+    assert not msg["success"]
+    assert msg["error"]["code"] == "invalid_format"
+
+
+async def test_list_of_a_removed_notebook_goes(hass: HomeAssistant, api, entry) -> None:
+    from homeassistant.helpers import entity_registry as er
+
+    api_books = [{"_id": "b1", "title": "CE2 A"}, {"_id": "b9", "title": "Old"}]
+
+    def factory(*args: Any) -> FakeApi:
+        fake = FakeApi(*args)
+        fake.books = list(api_books)
+        api["api"] = fake
+        return fake
+
+    with patch("custom_components.ent_one.EntApi", side_effect=factory):
+        await _setup(hass, entry)
+    registry = er.async_get(hass)
+    assert registry.async_get_entity_id("todo", DOMAIN, f"{entry.entry_id}_homework_b9")
+    api["api"].books = [{"_id": "b1", "title": "CE2 A"}]
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert registry.async_get_entity_id("todo", DOMAIN, f"{entry.entry_id}_homework_b9") is None
+    assert registry.async_get_entity_id("todo", DOMAIN, f"{entry.entry_id}_homework_b1")
+
+
+def test_all_day_end() -> None:
+    from datetime import date
+
+    from custom_components.ent_one.calendar import school_event
+
+    midnight = school_event(
+        {"id": "x", "title": "Trip", "all_day": True, "start": "2026-12-19T00:00:00", "end": "2026-12-20T00:00:00"}
+    )
+    assert (midnight.start, midnight.end) == (date(2026, 12, 19), date(2026, 12, 20))
+    late = school_event(
+        {"id": "y", "title": "Trip", "all_day": True, "start": "2026-12-19T00:00:00", "end": "2026-12-19T23:59:00"}
+    )
+    assert (late.start, late.end) == (date(2026, 12, 19), date(2026, 12, 20))
+    days = school_event({"id": "z", "title": "Holidays", "all_day": True, "start": "2026-12-19", "end": "2027-01-03"})
+    assert (days.start, days.end) == (date(2026, 12, 19), date(2027, 1, 4))

@@ -16,6 +16,7 @@ from homeassistant.const import CONF_URL, EVENT_HOMEASSISTANT_STARTED, Platform
 from homeassistant.core import Event, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ConfigEntryNotReady, HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.service import async_register_admin_service
 from homeassistant.helpers.typing import ConfigType
 
 from .api import EntApi, EntError
@@ -25,6 +26,9 @@ from .const import (
     ATTR_CONFIG_ENTRY_ID,
     ATTR_WORD_ID,
     CARD_FILENAME,
+    CONF_HOMEWORK_DAYS,
+    CONF_NOTIFY,
+    CONF_SCAN_INTERVAL,
     CONF_SHOW_PANEL,
     DEFAULT_SHOW_PANEL,
     DOMAIN,
@@ -82,7 +86,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             ) from err
 
     hass.services.async_register(DOMAIN, SERVICE_REFRESH, refresh, REFRESH_SCHEMA)
-    hass.services.async_register(DOMAIN, SERVICE_SIGN_WORD, sign_word, SIGN_WORD_SCHEMA)
+    # Signing is final in the ENT and stands for a parent's signature: administrators only (a child with a Home
+    # Assistant account must not sign their own words). The card and the panel hide the button from other users.
+    async_register_admin_service(hass, DOMAIN, SERVICE_SIGN_WORD, sign_word, SIGN_WORD_SCHEMA)
     return True
 
 
@@ -232,7 +238,18 @@ def ws_settings(hass: HomeAssistant, connection: websocket_api.ActiveConnection,
 
 @websocket_api.require_admin
 @websocket_api.websocket_command(
-    {vol.Required("type"): "ent_one/settings/update", vol.Required("entry_id"): str, vol.Required("options"): dict}
+    {
+        vol.Required("type"): "ent_one/settings/update",
+        vol.Required("entry_id"): str,
+        vol.Required("options"): vol.Schema(
+            {
+                vol.Optional(CONF_SCAN_INTERVAL): vol.Coerce(int),
+                vol.Optional(CONF_HOMEWORK_DAYS): vol.Coerce(int),
+                vol.Optional(CONF_NOTIFY): [str],
+                vol.Optional(CONF_SHOW_PANEL): bool,
+            }
+        ),
+    }
 )
 @callback
 def ws_update_settings(hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]) -> None:
@@ -241,11 +258,7 @@ def ws_update_settings(hass: HomeAssistant, connection: websocket_api.ActiveConn
     if entry is None or entry.domain != DOMAIN:
         connection.send_error(msg["id"], "not_found", "Unknown ENT ONE account")
         return
-    try:
-        options = clean_options({**entry.options, **msg["options"]})
-    except (TypeError, ValueError) as err:
-        connection.send_error(msg["id"], "invalid_format", str(err))
-        return
+    options = clean_options({**entry.options, **msg["options"]})
     hass.config_entries.async_update_entry(entry, options=options)
     connection.send_result(msg["id"], {"options": options})
 

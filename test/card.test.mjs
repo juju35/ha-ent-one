@@ -19,7 +19,7 @@ const context = {
   Intl,
 };
 vm.createContext(context);
-vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, EntOneI18n };`, context);
+vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, EntOneI18n };`, context);
 const E = context.e;
 
 const sensor = (id, state, attrs) => ({ entity_id: id, state: String(state), attributes: { config_entry_id: 'abc', stale: [], ...attrs } });
@@ -100,4 +100,14 @@ test('actions send the account and ids', async () => {
     { type: 'ent_one/homework_done', config_entry_id: 'abc', book_id: 'b1', homework_id: 'h1', done: true },
     ['ent_one', 'sign_word', { config_entry_id: 'abc', word_id: '7', child_id: 'c1' }],
   ]);
+});
+
+test('only administrators get the sign button', () => {
+  const t = E.entOneT({ language: 'en' });
+  const word = { id: '1', child_id: 'c1', title: 'Trip', signed: false };
+  assert.equal(E.entOneCanSign({ user: { is_admin: false } }), false);
+  assert.equal(E.entOneCanSign({ user: { is_admin: true } }), true);
+  assert.equal(E.entOneCanSign({}), true, 'unknown user: the backend still refuses non-admins');
+  assert.match(E.entOneWordRow(word, t, 'en', { canSign: true }), /data-action="sign"/);
+  assert.doesNotMatch(E.entOneWordRow(word, t, 'en', { canSign: false }), /data-action="sign"/);
 });

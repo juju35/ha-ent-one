@@ -5,6 +5,7 @@ from __future__ import annotations
 from homeassistant.components.todo import TodoItem, TodoItemStatus, TodoListEntity, TodoListEntityFeature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
@@ -18,18 +19,28 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: EntConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator = entry.runtime_data
+    registry = er.async_get(hass)
+    prefix = f"{entry.entry_id}_homework_"
     known: set[str] = set()
 
     @callback
-    def add_new_books() -> None:
-        books = coordinator.data.books if coordinator.data else {}
+    def sync_books() -> None:
+        """Add a list for each new notebook, and remove the lists of notebooks gone from the ENT."""
+        data = coordinator.data
+        if not data or "homework" in data.stale:
+            return  # Notebooks of the update before: nothing to decide on.
+        books = data.books
         new = [EntHomeworkTodo(coordinator, book_id) for book_id in books if book_id not in known]
         known.update(e.book_id for e in new)
         if new:
             async_add_entities(new)
+        for reg in er.async_entries_for_config_entry(registry, entry.entry_id):
+            if reg.domain == "todo" and reg.unique_id.startswith(prefix) and reg.unique_id[len(prefix) :] not in books:
+                known.discard(reg.unique_id[len(prefix) :])
+                registry.async_remove(reg.entity_id)
 
-    add_new_books()
-    entry.async_on_unload(coordinator.async_add_listener(add_new_books))
+    sync_books()
+    entry.async_on_unload(coordinator.async_add_listener(sync_books))
 
 
 class EntHomeworkTodo(EntEntity, TodoListEntity):

@@ -24,7 +24,7 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 - **Unread messages**, **Words to sign**, **Homework to do** and **News** sensors: a count, with the items (title, author, date, text) as attributes
 - **Last update** sensor with the account (school, classes, children) and the upcoming events of the ENT's calendars
 - **School** calendar: the ENT's events and every homework on its due date
-- One **to-do list per homework notebook**: ticking an item marks the homework done in the ENT, like its check box
+- One **to-do list per homework notebook**: ticking an item marks the homework done in the ENT, like its check box (a notebook gone from the ENT has its list removed)
 - `ent_one.sign_word` action to sign a word of the liaison book (read receipt), `ent_one.refresh` to read the ENT now
 - `ent_one_new_message`, `ent_one_new_word` and `ent_one_new_homework` events for automations, and optional **notifications** to the notify actions of your choice
 - `custom:ent-one-card` card, **shipped with the integration** and loaded automatically: counts, words to sign (with confirmation), homework to tick, unread messages, calendar and news
@@ -113,7 +113,7 @@ type: custom:ent-one-card
 | `max_items` | `5` | Items per section |
 | `language` | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
-**Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. The check box of a homework marks it done (or not done) in the ENT.
+**Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. It is shown to administrators only (a child with a Home Assistant account must not sign their own words); other users see the words to sign without the button. The check box of a homework marks it done (or not done) in the ENT.
 
 ### Mini card
 
@@ -151,7 +151,7 @@ data:
   child_id: "abcd-1234"
 ```
 
-`word_id` and `child_id` come from the `words` attribute of the **Words to sign** sensor. `ent_one.refresh` reads the ENT now. With several accounts, add `config_entry_id`. Errors are translated in the Home Assistant language.
+`word_id` and `child_id` come from the `words` attribute of the **Words to sign** sensor. `ent_one.sign_word` is reserved to administrators. `ent_one.refresh` reads the ENT now. With several accounts, add `config_entry_id`. Errors are translated in the Home Assistant language.
 
 ### Events
 
@@ -161,7 +161,7 @@ data:
 | `ent_one_new_word` | A word to sign appears | `id`, `child_id`, `child`, `title` |
 | `ent_one_new_homework` | A homework to do appears | `id`, `book`, `date`, `title` |
 
-Every event also carries `config_entry_id`. Nothing fires at startup or after a reload, and an item fires once only.
+Every event also carries `config_entry_id`. Nothing fires at startup or after a reload, nor for what a section holds when it is first read after failing, and an item fires once only. A homework fires when it enters the homework window (14 days by default), which can be later than when the teacher posted it.
 
 ```yaml
 triggers:

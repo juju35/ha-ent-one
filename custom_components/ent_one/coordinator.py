@@ -83,7 +83,8 @@ def parse_when(value: Any) -> datetime | date | None:
     text = _str(value).strip()
     if not text:
         return None
-    parsed = dt_util.parse_datetime(text)
+    # A date alone is a day, not that day's midnight (an all-day event's last day, a homework due date).
+    parsed = None if len(text) == 10 else dt_util.parse_datetime(text)
     if parsed is None:
         return dt_util.parse_date(text[:10])
     # The ENT sometimes stores local times without offset.
@@ -115,8 +116,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         self.api = api
         self.homework_days = int(entry.options.get(CONF_HOMEWORK_DAYS, DEFAULT_HOMEWORK_DAYS))
         self.notify_services: list[str] = list(entry.options.get(CONF_NOTIFY, []))
-        # Ids already seen per kind; None until the first successful update, so nothing fires at startup.
-        self._seen: dict[str, set[str]] | None = None
+        # Ids present at the last successful read of each kind; a kind is absent until its first one.
+        self._seen: dict[str, set[str]] = {}
         self._auth_failed = False
 
     async def _async_update_data(self) -> EntData:
@@ -308,31 +309,34 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         data.events = events
 
     def _fire_new(self, data: EntData) -> None:
-        """Fire ent_one_new_* for unread messages, unsigned words and homework seen for the first time."""
-        current = {
-            "message": {m["id"]: m for m in data.messages if m["unread"]},
-            "word": {w["id"]: w for w in data.words if not w["signed"]},
-            "homework": {h["id"]: h for h in data.homework if not h["done"]},
-        }
-        seen = self._seen
-        # Ids are remembered even once read or signed, so a word signed then shown again never fires twice.
-        self._seen = {kind: set(items) | (seen or {}).get(kind, set()) for kind, items in current.items()}
-        if seen is None:
-            return
-        for message in (m for key, m in current["message"].items() if key not in seen["message"]):
-            self._fire(
-                EVENT_NEW_MESSAGE, {"id": message["id"], "subject": message["subject"], "sender": message["sender"]}
-            )
-        for word in (w for key, w in current["word"].items() if key not in seen["word"]):
-            self._fire(
-                EVENT_NEW_WORD,
-                {"id": word["id"], "child_id": word["child_id"], "child": word["child"], "title": word["title"]},
-            )
-        for item in (h for key, h in current["homework"].items() if key not in seen["homework"]):
-            self._fire(
+        """Fire ent_one_new_* for unread messages, unsigned words and homework to do seen for the first time.
+
+        A kind starts being followed at its first successful read, which only records what is there: a section that
+        failed at startup does not fire everything it holds once it comes back. The ids remembered are the ones
+        present in the last read (read, signed or done included), so the set stays small and an item signed then
+        shown again never fires twice.
+        """
+        kinds = {
+            "message": ("messages", data.messages, lambda m: m["unread"], EVENT_NEW_MESSAGE, ("subject", "sender")),
+            "word": ("words", data.words, lambda w: not w["signed"], EVENT_NEW_WORD, ("child_id", "child", "title")),
+            "homework": (
+                "homework",
+                data.homework,
+                lambda h: not h["done"],
                 EVENT_NEW_HOMEWORK,
-                {"id": item["id"], "book": item["book"], "date": item["date"], "title": item["title"]},
-            )
+                ("book", "date", "title"),
+            ),
+        }
+        for kind, (section, items, pending, event, fields) in kinds.items():
+            if section in data.stale:
+                continue  # Content of the update before: nothing new to look at.
+            seen = self._seen.get(kind)
+            self._seen[kind] = {item["id"] for item in items}
+            if seen is None:
+                continue
+            for item in items:
+                if pending(item) and item["id"] not in seen:
+                    self._fire(event, {"id": item["id"], **{f: item[f] for f in fields}})
 
     def _fire(self, event: str, data: dict[str, Any]) -> None:
         data = {"config_entry_id": self.config_entry.entry_id, **data}
@@ -379,9 +383,11 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
 
     async def async_set_homework_done(self, book_id: str, entry_id: str, done: bool) -> None:
         await self.api.set_homework_done(book_id, entry_id, done)
-        # Shown at once; the next update confirms it with the ENT's own status.
+        # Shown at once; the next update confirms it with the ENT's own status. New dicts: the previous ones are
+        # shared with the states already written.
         if self.data:
-            for item in self.data.homework:
-                if item["id"] == entry_id and item["book_id"] == book_id:
-                    item["done"] = done
+            self.data.homework = [
+                {**item, "done": done} if item["id"] == entry_id and item["book_id"] == book_id else item
+                for item in self.data.homework
+            ]
             self.async_update_listeners()

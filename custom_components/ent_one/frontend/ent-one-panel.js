@@ -183,7 +183,7 @@ class EntOnePanel extends HTMLElement {
       ].map((x) => '<button class="tile' + (x[3] === 'words' && x[0] ? ' hot' : '') + '" data-tab="' + x[3] + '"><span class="v"><ha-icon icon="' + x[2] + '"></ha-icon>' + x[0] + '</span><span class="l">' + E.esc(x[1]) + '</span></button>').join('') +
       '</div>';
     return tiles + '<div class="grid">' +
-      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale)), t.no_words)) +
+      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass) })), t.no_words)) +
       this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale)), t.no_homework)) +
       this._box(t.section_events, this._list(E.upcomingEvents(data.events).slice(0, 6).map((e) => R.event(e, t, locale)), t.no_events)) +
       this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale)), t.no_news)) +
@@ -217,7 +217,8 @@ class EntOnePanel extends HTMLElement {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
     var words = data.words.slice().sort((a, b) => (a.signed === b.signed ? 0 : a.signed ? 1 : -1));
-    return this._box('', this._list(words.map((w) => E.rows.word(w, t, locale, { full: true })), t.no_words), true);
+    var canSign = E.canSign(this._hass);
+    return this._box('', this._list(words.map((w) => E.rows.word(w, t, locale, { full: true, canSign: canSign })), t.no_words), true);
   }
 
   _messages(t, data) {
@@ -357,7 +358,7 @@ class EntOnePanel extends HTMLElement {
     } else if (action === 'refresh') this._refresh(data);
     else if (action === 'open') window.open(data.url, '_blank', 'noopener');
     else if (action === 'open-messages') window.open(`${data.url}/conversation/conversation`, '_blank', 'noopener');
-    else if (action === 'sign') {
+    else if (action === 'sign' && E.canSign(this._hass)) {
       this._confirm = { id: el.getAttribute('data-id'), child: el.getAttribute('data-child') };
       this._render();
       this._root.querySelector('.popup')?.scrollIntoView({ block: 'nearest' });

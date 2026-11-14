@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from typing import Any
 
 from homeassistant.components.calendar import CalendarEntity, CalendarEvent
@@ -23,6 +23,20 @@ async def async_setup_entry(
     async_add_entities([EntCalendar(entry.runtime_data)])
 
 
+def _all_day_end(first: date, end: datetime | date | None) -> date:
+    """Exclusive end date of an all-day event.
+
+    An end at midnight already is the exclusive end (Friday 00:00 after a Thursday event); any other end time
+    (23:59, or a date alone) is the last day, followed by the exclusive end the day after.
+    """
+    if isinstance(end, datetime):
+        local = dt_util.as_local(end)
+        if local.time() == time.min and local.date() > first:
+            return local.date()
+        end = local.date()
+    return max(end or first, first) + timedelta(days=1)
+
+
 def school_event(event: dict[str, Any]) -> CalendarEvent | None:
     start = parse_when(event.get("start"))
     if start is None:
@@ -30,8 +44,7 @@ def school_event(event: dict[str, Any]) -> CalendarEvent | None:
     end = parse_when(event.get("end"))
     if event.get("all_day") or not isinstance(start, datetime):
         first = dt_util.as_local(start).date() if isinstance(start, datetime) else start
-        last = (dt_util.as_local(end).date() if isinstance(end, datetime) else end) or first
-        start, end = first, max(last, first) + timedelta(days=1)
+        start, end = first, _all_day_end(first, end)
     elif not isinstance(end, datetime) or end <= start:
         end = start + TIMED_EVENT_LENGTH
     return CalendarEvent(
