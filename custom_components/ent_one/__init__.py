@@ -384,7 +384,7 @@ class EntFileView(HomeAssistantView):
         except (EntError, ServiceValidationError) as err:
             return web.Response(status=HTTPStatus.BAD_REQUEST, text=str(err))
         try:
-            body, content_type, name = await coordinator.api.download(path)
+            body, content_type, name = await coordinator.async_file(path)
         except EntError as err:
             _LOGGER.warning("ENT file %s not fetched: %s", path, err)
             return web.Response(status=HTTPStatus.BAD_GATEWAY, text=str(err))

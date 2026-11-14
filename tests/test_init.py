@@ -49,6 +49,7 @@ class FakeApi:
         self.news_fails = False
         self.words_fail = False
         self.books = [{"_id": "b1", "title": "CE2 A"}]
+        self.calls: dict[str, int] = {}
 
     def update_credentials(self, username: str, password: str) -> None:
         self.username, self.password = username, password
@@ -69,6 +70,7 @@ class FakeApi:
         }
 
     async def unread_count(self) -> int:
+        self.calls["unread"] = self.calls.get("unread", 0) + 1
         return 2
 
     async def inbox(self, size: int) -> list[dict[str, Any]]:
@@ -88,6 +90,7 @@ class FakeApi:
         return list(self.words_list)
 
     async def message(self, message_id: str) -> dict[str, Any]:
+        self.calls["message"] = self.calls.get("message", 0) + 1
         return {
             "id": message_id,
             "subject": "Piscine",
@@ -96,6 +99,7 @@ class FakeApi:
         }
 
     async def download(self, path: str) -> tuple[bytes, str, str | None]:
+        self.calls["download"] = self.calls.get("download", 0) + 1
         if path.endswith("page"):
             return b"<script>alert(1)</script>", "text/html", "page.html"
         if path.endswith("a2"):
@@ -532,3 +536,29 @@ def test_sniff_type() -> None:
     # An undecodable character never reaches the header (it made the view fail).
     assert file_name("agr\udce9ment.pdf", "", "/x") == "agrment.pdf"
     assert file_name("affiche.png", "d2", "/workspace/document/d2") == "affiche.png"
+
+
+async def test_message_read_once_and_marked_read(hass: HomeAssistant, api, entry, hass_ws_client) -> None:
+    """Opening a message marks it read in the list at once, without reading the whole ENT; a second look is cached."""
+    await _setup(hass, entry)
+    coordinator = entry.runtime_data
+    reads = coordinator.api.calls.get("unread", 0)
+    client = await hass_ws_client(hass)
+    for i in (1, 2):
+        await client.send_json(
+            {"id": i, "type": "ent_one/message", "config_entry_id": entry.entry_id, "message_id": "m1"}
+        )
+        assert (await client.receive_json())["success"]
+    await hass.async_block_till_done()
+    assert coordinator.api.calls["message"] == 1
+    assert coordinator.api.calls.get("unread", 0) == reads
+    assert hass.states.get(_entity(hass, "sensor", "unread_messages")).state == "1"
+
+
+async def test_files_cached(hass: HomeAssistant, api, entry, hass_client) -> None:
+    await _setup(hass, entry)
+    client = await hass_client()
+    for _ in range(3):
+        resp = await client.get(f"/api/ent_one/file/{entry.entry_id}", params={"path": "/workspace/document/d1"})
+        assert resp.status == 200
+    assert entry.runtime_data.api.calls["download"] == 1

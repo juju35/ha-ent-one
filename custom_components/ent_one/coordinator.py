@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
-from dataclasses import dataclass, field
+import time
+from collections import OrderedDict
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from typing import Any
 
@@ -41,6 +44,11 @@ from .const import (
 from .secret import SecretNotFoundError, async_credentials
 
 _LOGGER = logging.getLogger(__name__)
+
+# Messages read in full kept for the session, and files kept for a few minutes within a size budget.
+MESSAGE_CACHE = 30
+FILE_CACHE_TTL = 15 * 60
+FILE_CACHE_BYTES = 40 * 1024 * 1024
 
 # School calendar events kept around today: past ones for the calendar view, upcoming ones for the card.
 EVENTS_PAST = timedelta(days=30)
@@ -127,6 +135,9 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         self.notify_services: list[str] = list(entry.options.get(CONF_NOTIFY, []))
         # Ids present at the last successful read of each kind; a kind is absent until its first one.
         self._seen: dict[str, set[str]] = {}
+        # Messages read in full and files fetched, kept a while: reopening one asks nothing of the ENT.
+        self._message_cache: OrderedDict[str, dict[str, Any]] = OrderedDict()
+        self._file_cache: OrderedDict[str, tuple[float, bytes, str, str | None]] = OrderedDict()
         self._auth_failed = False
 
     async def _async_update_data(self) -> EntData:
@@ -181,16 +192,19 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             "news": self._read_news,
             "events": self._read_events,
         }
-        for section, reader in readers.items():
-            try:
-                await reader(data)
-            except (EntAuthError, EntActionRequiredError):
-                raise
-            except EntError as err:
+        # The applications are read side by side (the client keeps a few requests at a time).
+        results = await asyncio.gather(*(reader(data) for reader in readers.values()), return_exceptions=True)
+        for section, result in zip(readers, results, strict=True):
+            if isinstance(result, (EntAuthError, EntActionRequiredError)):
+                raise result
+            if isinstance(result, EntError):
                 # An application missing from this ENT, or a hiccup: keep that section as it was.
-                _LOGGER.debug("ENT section %s not updated: %s", section, err)
+                _LOGGER.debug("ENT section %s not updated: %s", section, result)
                 data.stale.append(section)
                 self._keep(section, previous, data)
+            elif isinstance(result, BaseException):
+                raise result
+        data.stale.sort(key=list(readers).index)
         self._fire_new(data)
         return data
 
@@ -204,7 +218,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             setattr(data, section, getattr(previous, section))
 
     async def _read_messages(self, data: EntData) -> None:
-        data.unread = await self.api.unread_count()
+        unread, inbox = await asyncio.gather(self.api.unread_count(), self.api.inbox(MESSAGES_KEPT))
+        data.unread = unread
         data.messages = [
             {
                 "id": _str(m.get("id")),
@@ -214,14 +229,15 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                 "unread": bool(m.get("unread")),
                 "attachment": bool(m.get("hasAttachment")),
             }
-            for m in await self.api.inbox(MESSAGES_KEPT)
+            for m in inbox
         ]
 
     async def _read_words(self, data: EntData) -> None:
         me = data.account["user_id"]
         words: list[dict[str, Any]] = []
-        for child_id, child in data.children.items():
-            for w in await self.api.words(child_id):
+        lists = await asyncio.gather(*(self.api.words(child_id) for child_id in data.children))
+        for (child_id, child), child_words in zip(data.children.items(), lists, strict=True):
+            for w in child_words:
                 acks = w.get("acknowledgments") or []
                 words.append(
                     {
@@ -245,18 +261,19 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         today = dt_util.now().date()
         first, last = today - HOMEWORK_PAST, today + timedelta(days=self.homework_days)
         homework: list[dict[str, Any]] = []
-        for book in await self.api.homework_books():
-            book_id = _str(book.get("_id"))
-            if not book_id:
-                continue
+        books = {_str(b.get("_id")): b for b in await self.api.homework_books() if b.get("_id")}
+
+        async def read_book(book_id: str) -> tuple[dict[str, Any], set[str]]:
             content = await self.api.homework_book(book_id)
-            title = content.get("title") or book.get("title") or ""
+            days = [d for d in content.get("data") or [] if isinstance(d, dict)]
+            due = any((when := day(d.get("date"))) and first <= when <= last for d in days)
+            return content, (await self.api.homework_done(book_id) if due else set())
+
+        for book_id, (content, done) in zip(books, await asyncio.gather(*map(read_book, books)), strict=True):
+            title = content.get("title") or books[book_id].get("title") or ""
             data.books[book_id] = title
             days = [d for d in content.get("data") or [] if isinstance(d, dict)]
             due = [(when, d) for d in days if (when := day(d.get("date"))) and first <= when <= last]
-            if not due:
-                continue
-            done = await self.api.homework_done(book_id)
             for when, d in due:
                 for entry in d.get("entries") or []:
                     if not isinstance(entry, dict) or not entry.get("_id"):
@@ -269,8 +286,8 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                             "book": title,
                             "date": when.isoformat(),
                             "title": entry.get("title") or "",
-                            "text": (content := html_content(entry.get("value"), self.api.base_url))[0],
-                            "attachments": content[1],
+                            "text": (text := html_content(entry.get("value"), self.api.base_url))[0],
+                            "attachments": text[1],
                             "done": entry_id in done,
                         }
                     )
@@ -295,11 +312,11 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         now = dt_util.now()
         first, last = (now - EVENTS_PAST).date(), (now + EVENTS_AHEAD).date()
         events: list[dict[str, Any]] = []
-        for calendar in await self.api.calendars():
-            calendar_id = _str(calendar.get("_id") or calendar.get("id"))
-            if not calendar_id:
-                continue
-            for e in await self.api.calendar_events(calendar_id):
+        calendars = {_str(c.get("_id") or c.get("id")): c for c in await self.api.calendars()}
+        calendars.pop("", None)
+        lists = await asyncio.gather(*(self.api.calendar_events(i) for i in calendars))
+        for calendar, calendar_events in zip(calendars.values(), lists, strict=True):
+            for e in calendar_events:
                 start = e.get("startMoment") or e.get("start")
                 end = e.get("endMoment") or e.get("end") or start
                 start_day, end_day = day(start), day(end)
@@ -390,9 +407,13 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
                 _LOGGER.exception("Could not notify with notify.%s", target)
 
     async def async_message(self, message_id: str) -> dict[str, Any]:
-        """A message in full, for the card and the panel. The ENT marks it read: the counts follow."""
+        """A message in full, for the card and the panel. The ENT marks it read: the list follows at once, without
+        reading the whole ENT again."""
+        message_id = _str(message_id)
+        if message_id in self._message_cache:
+            self._message_cache.move_to_end(message_id)
+            return self._message_cache[message_id]
         m = await self.api.message(message_id)
-        message_id = _str(m.get("id") or message_id)
         attachments = [
             {
                 "path": f"/conversation/message/{message_id}/attachment/{_str(a.get('id'))}",
@@ -407,8 +428,7 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
         attachments += [
             f for f in html_files(body, self.api.base_url) if f["path"] not in {a["path"] for a in attachments}
         ]
-        await self.async_request_refresh()
-        return {
+        result = {
             "id": message_id,
             "subject": m.get("subject") or "",
             "sender": _person(m.get("from")),
@@ -416,6 +436,30 @@ class EntCoordinator(DataUpdateCoordinator[EntData]):
             "text": without_file_names(html_to_text(body), attachments),
             "attachments": attachments,
         }
+        self._message_cache[message_id] = result
+        while len(self._message_cache) > MESSAGE_CACHE:
+            self._message_cache.popitem(last=False)
+        data = self.data
+        if data and any(msg["id"] == message_id and msg["unread"] for msg in data.messages):
+            messages = [{**msg, "unread": False} if msg["id"] == message_id else msg for msg in data.messages]
+            self.async_set_updated_data(replace(data, messages=messages, unread=max(0, data.unread - 1)))
+        return result
+
+    async def async_file(self, path: str) -> tuple[bytes, str, str | None]:
+        """An ENT file, kept a few minutes within a size budget: a redraw or a second look is instant."""
+        now = time.monotonic()
+        hit = self._file_cache.get(path)
+        if hit and now - hit[0] < FILE_CACHE_TTL:
+            self._file_cache.move_to_end(path)
+            return hit[1], hit[2], hit[3]
+        body, content_type, name = await self.api.download(path)
+        self._file_cache[path] = (now, body, content_type, name)
+        self._file_cache.move_to_end(path)
+        total = sum(len(v[1]) for v in self._file_cache.values())
+        while total > FILE_CACHE_BYTES and len(self._file_cache) > 1:
+            _, old = self._file_cache.popitem(last=False)
+            total -= len(old[1])
+        return body, content_type, name
 
     async def async_sign_word(self, word_id: str, child_id: str) -> None:
         await self.api.sign_word(word_id, child_id)
