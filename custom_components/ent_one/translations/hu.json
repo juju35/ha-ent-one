@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Jelentkezz be az ENT ONE felhasználóneveddel és jelszavaddal (nem ÉduConnect). A cím az akadémiád ENT-jének címe, például {example}.",
+        "data": {
+          "url": "ENT címe",
+          "username": "Felhasználónév",
+          "username_secret": "Felhasználónév titok",
+          "password": "Jelszó",
+          "password_secret": "Jelszó titok"
+        },
+        "data_description": {
+          "username": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "username_secret": "A felhasználónevet tartalmazó secrets.yaml bejegyzés neve, például ent_one_username.",
+          "password": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "password_secret": "A jelszót tartalmazó secrets.yaml bejegyzés neve, például ent_one_password. Minden frissítéskor újraolvassa: jelszócsere után elég a titkot módosítani."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "Az ENT elutasította {username} jelszavát. Add meg a jelenlegit.",
+        "data": {
+          "password": "Jelszó"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "Az ENT elutasította a(z) {secret} titok jelszavát ({username}). Frissítsd a secrets.yaml fájlban, majd küldd el."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Módosítsd {username} felhasználónevét és jelszavát, vagy az ezeket tartalmazó secrets.yaml bejegyzéseket.",
+        "data": {
+          "username": "Felhasználónév",
+          "username_secret": "Felhasználónév titok",
+          "password": "Jelszó",
+          "password_secret": "Jelszó titok"
+        },
+        "data_description": {
+          "username": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "username_secret": "A felhasználónevet tartalmazó secrets.yaml bejegyzés neve, például ent_one_username.",
+          "password": "Hagyd üresen, hogy a secrets.yaml fájlból olvassa.",
+          "password_secret": "A jelszót tartalmazó secrets.yaml bejegyzés neve, például ent_one_password. Minden frissítéskor újraolvassa: jelszócsere után elég a titkot módosítani."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Érvénytelen cím.",
+      "invalid_auth": "Érvénytelen felhasználónév vagy jelszó.",
+      "action_required": "Az ENT előbb egy műveletet kér (új feltételek, jelszócsere). Jelentkezz be egyszer böngészőben, majd próbáld újra.",
+      "cannot_connect": "Az ENT nem érhető el. Ellenőrizd a címet, és próbáld újra.",
+      "password_or_secret": "Adj meg vagy egy jelszót, vagy egy titok nevét.",
+      "secret_not_found": "Ez a bejegyzés hiányzik a secrets.yaml fájlból.",
+      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik.",
+      "username_or_secret": "Adj meg vagy egy felhasználónevet, vagy egy titok nevét."
+    },
+    "abort": {
+      "already_configured": "Ez a fiók már be van állítva.",
+      "reauth_successful": "Jelszó frissítve.",
+      "wrong_account": "Ez a jelszó egy másik fiókhoz tartozik.",
+      "reconfigure_successful": "A jelszó beállításai frissítve."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT ONE beállításai",
+        "data": {
+          "scan_interval": "Frissítési időköz",
+          "homework_days": "Házi feladatok időszaka",
+          "notify_services": "Értesítési műveletek",
+          "show_panel": "A panel megjelenítése az oldalsávon"
+        },
+        "data_description": {
+          "scan_interval": "Az ENT-et az egész iskola használja: legalább 10 perc.",
+          "homework_days": "Az ennyi napon belül esedékes házi feladatok jelennek meg.",
+          "notify_services": "Az új üzenetek, aláírandó bejegyzések és házi feladatok ezekre a műveletekre mennek."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Olvasatlan üzenetek"
+      },
+      "words_to_sign": {
+        "name": "Aláírandó bejegyzések"
+      },
+      "homework": {
+        "name": "Házi feladatok"
+      },
+      "news": {
+        "name": "Hírek"
+      },
+      "last_update": {
+        "name": "Utolsó frissítés"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Iskola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Házi feladatok – {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Frissítés",
+      "description": "Most olvassa be az ENT-et.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT fiók",
+          "description": "Csak több ENT fiók esetén szükséges."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Bejegyzés aláírása",
+      "description": "Aláír egy üzenőfüzet-bejegyzést (olvasási visszaigazolás) egy gyermeknek.",
+      "fields": {
+        "word_id": {
+          "name": "Bejegyzés",
+          "description": "A bejegyzés azonosítója az Aláírandó bejegyzések érzékelő words attribútumából."
+        },
+        "child_id": {
+          "name": "Gyermek",
+          "description": "A gyermek azonosítója, akinek a bejegyzés szól, ugyanabból az attribútumból."
+        },
+        "config_entry_id": {
+          "name": "ENT fiók",
+          "description": "Csak több ENT fiók esetén szükséges."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Nincs betöltött ENT ONE fiók."
+    },
+    "several_accounts": {
+      "message": "Több ENT ONE fiók van beállítva: add meg a config_entry_id értéket."
+    },
+    "refresh_failed": {
+      "message": "A frissítés sikertelen: {error}"
+    },
+    "action_failed": {
+      "message": "Az ENT elutasította a műveletet: {error}"
+    },
+    "notify_new_message": {
+      "message": "Új ENT üzenet"
+    },
+    "notify_new_word": {
+      "message": "Aláírandó · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Új házi feladat"
+    }
+  }
+}

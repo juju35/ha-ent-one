@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Inicie sessão com o utilizador e a palavra-passe do ENT ONE (não ÉduConnect). O endereço é o do ENT da sua academia, por exemplo {example}.",
+        "data": {
+          "url": "Endereço do ENT",
+          "username": "Utilizador",
+          "username_secret": "Segredo do utilizador",
+          "password": "Palavra-passe",
+          "password_secret": "Segredo da palavra-passe"
+        },
+        "data_description": {
+          "username": "Deixe vazio para o ler de secrets.yaml.",
+          "username_secret": "Nome da entrada de secrets.yaml que contém o utilizador, por exemplo ent_one_username.",
+          "password": "Deixe vazio para a ler de secrets.yaml.",
+          "password_secret": "Nome da entrada de secrets.yaml que contém a palavra-passe, por exemplo ent_one_password. É lida de novo a cada atualização: depois de mudar a palavra-passe, basta editar o segredo."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "O ENT recusou a palavra-passe de {username}. Introduza a atual.",
+        "data": {
+          "password": "Palavra-passe"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "O ENT recusou a palavra-passe do segredo {secret} ({username}). Atualize-a em secrets.yaml e confirme."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Altere o utilizador e a palavra-passe de {username}, ou as entradas de secrets.yaml que os contêm.",
+        "data": {
+          "username": "Utilizador",
+          "username_secret": "Segredo do utilizador",
+          "password": "Palavra-passe",
+          "password_secret": "Segredo da palavra-passe"
+        },
+        "data_description": {
+          "username": "Deixe vazio para o ler de secrets.yaml.",
+          "username_secret": "Nome da entrada de secrets.yaml que contém o utilizador, por exemplo ent_one_username.",
+          "password": "Deixe vazio para a ler de secrets.yaml.",
+          "password_secret": "Nome da entrada de secrets.yaml que contém a palavra-passe, por exemplo ent_one_password. É lida de novo a cada atualização: depois de mudar a palavra-passe, basta editar o segredo."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Endereço inválido.",
+      "invalid_auth": "Utilizador ou palavra-passe inválidos.",
+      "action_required": "O ENT pede primeiro uma ação (novas condições, alteração da palavra-passe). Inicie sessão uma vez num navegador e tente de novo.",
+      "cannot_connect": "Não é possível contactar o ENT. Verifique o endereço e tente de novo.",
+      "password_or_secret": "Introduza uma palavra-passe ou o nome de um segredo.",
+      "secret_not_found": "Esta entrada não existe em secrets.yaml.",
+      "wrong_account": "Esta palavra-passe pertence a outra conta.",
+      "username_or_secret": "Introduza um utilizador ou o nome de um segredo."
+    },
+    "abort": {
+      "already_configured": "Esta conta já está configurada.",
+      "reauth_successful": "Palavra-passe atualizada.",
+      "wrong_account": "Esta palavra-passe pertence a outra conta.",
+      "reconfigure_successful": "Definições da palavra-passe atualizadas."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opções do ENT ONE",
+        "data": {
+          "scan_interval": "Intervalo de atualização",
+          "homework_days": "Janela dos trabalhos",
+          "notify_services": "Ações de notificação",
+          "show_panel": "Mostrar este painel na barra lateral"
+        },
+        "data_description": {
+          "scan_interval": "O ENT é partilhado por toda a escola: 10 minutos no mínimo.",
+          "homework_days": "São mostrados os trabalhos de casa para dentro deste número de dias.",
+          "notify_services": "Novas mensagens, notas por assinar e trabalhos de casa são enviados para estas ações."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Mensagens por ler"
+      },
+      "words_to_sign": {
+        "name": "Notas por assinar"
+      },
+      "homework": {
+        "name": "Trabalhos de casa"
+      },
+      "news": {
+        "name": "Notícias"
+      },
+      "last_update": {
+        "name": "Última atualização"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Escola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Trabalhos de casa {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Atualizar",
+      "description": "Lê o ENT agora.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Conta ENT",
+          "description": "Só é necessário quando há várias contas ENT configuradas."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Assinar uma nota",
+      "description": "Assina uma nota da caderneta (confirmação de leitura) para um filho.",
+      "fields": {
+        "word_id": {
+          "name": "Nota",
+          "description": "Id da nota, do atributo words do sensor Notas por assinar."
+        },
+        "child_id": {
+          "name": "Filho",
+          "description": "Id do filho a quem se destina a nota, do mesmo atributo."
+        },
+        "config_entry_id": {
+          "name": "Conta ENT",
+          "description": "Só é necessário quando há várias contas ENT configuradas."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Nenhuma conta ENT ONE carregada."
+    },
+    "several_accounts": {
+      "message": "Há várias contas ENT ONE configuradas: defina config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Falha ao atualizar: {error}"
+    },
+    "action_failed": {
+      "message": "O ENT recusou a ação: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nova mensagem do ENT"
+    },
+    "notify_new_word": {
+      "message": "Nota por assinar · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Novo trabalho de casa"
+    }
+  }
+}

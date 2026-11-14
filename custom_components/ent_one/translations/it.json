@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Accedi con nome utente e password ENT ONE (non ÉduConnect). L'indirizzo è quello dell'ENT della tua accademia, per esempio {example}.",
+        "data": {
+          "url": "Indirizzo dell'ENT",
+          "username": "Nome utente",
+          "username_secret": "Segreto del nome utente",
+          "password": "Password",
+          "password_secret": "Segreto della password"
+        },
+        "data_description": {
+          "username": "Lascia vuoto per leggerlo da secrets.yaml.",
+          "username_secret": "Nome della voce di secrets.yaml che contiene il nome utente, per esempio ent_one_username.",
+          "password": "Lascia vuoto per leggerla da secrets.yaml.",
+          "password_secret": "Nome della voce di secrets.yaml che contiene la password, per esempio ent_one_password. Viene riletta a ogni aggiornamento: dopo un cambio di password basta modificare il segreto."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "L'ENT ha rifiutato la password di {username}. Inserisci quella attuale.",
+        "data": {
+          "password": "Password"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "L'ENT ha rifiutato la password del segreto {secret} ({username}). Aggiornala in secrets.yaml, poi conferma."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Modifica nome utente e password di {username}, o le voci di secrets.yaml che li contengono.",
+        "data": {
+          "username": "Nome utente",
+          "username_secret": "Segreto del nome utente",
+          "password": "Password",
+          "password_secret": "Segreto della password"
+        },
+        "data_description": {
+          "username": "Lascia vuoto per leggerlo da secrets.yaml.",
+          "username_secret": "Nome della voce di secrets.yaml che contiene il nome utente, per esempio ent_one_username.",
+          "password": "Lascia vuoto per leggerla da secrets.yaml.",
+          "password_secret": "Nome della voce di secrets.yaml che contiene la password, per esempio ent_one_password. Viene riletta a ogni aggiornamento: dopo un cambio di password basta modificare il segreto."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Indirizzo non valido.",
+      "invalid_auth": "Nome utente o password non validi.",
+      "action_required": "L'ENT chiede prima un'azione (nuove condizioni, cambio password). Accedi una volta da un browser e riprova.",
+      "cannot_connect": "Impossibile raggiungere l'ENT. Controlla l'indirizzo e riprova.",
+      "password_or_secret": "Inserisci una password oppure il nome di un segreto.",
+      "secret_not_found": "Questa voce manca in secrets.yaml.",
+      "wrong_account": "Questa password appartiene a un altro account.",
+      "username_or_secret": "Inserisci un nome utente oppure il nome di un segreto."
+    },
+    "abort": {
+      "already_configured": "Questo account è già configurato.",
+      "reauth_successful": "Password aggiornata.",
+      "wrong_account": "Questa password appartiene a un altro account.",
+      "reconfigure_successful": "Impostazioni della password aggiornate."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni ENT ONE",
+        "data": {
+          "scan_interval": "Intervallo di aggiornamento",
+          "homework_days": "Finestra dei compiti",
+          "notify_services": "Azioni di notifica",
+          "show_panel": "Mostra questo pannello nella barra laterale"
+        },
+        "data_description": {
+          "scan_interval": "L'ENT è condiviso da tutta la scuola: almeno 10 minuti.",
+          "homework_days": "Vengono mostrati i compiti in scadenza entro questo numero di giorni.",
+          "notify_services": "Nuovi messaggi, avvisi da firmare e compiti vengono inviati a queste azioni."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Messaggi non letti"
+      },
+      "words_to_sign": {
+        "name": "Avvisi da firmare"
+      },
+      "homework": {
+        "name": "Compiti"
+      },
+      "news": {
+        "name": "Notizie"
+      },
+      "last_update": {
+        "name": "Ultimo aggiornamento"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Scuola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Compiti {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Aggiorna",
+      "description": "Legge l'ENT adesso.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account ENT",
+          "description": "Necessario solo se sono configurati più account ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Firma un avviso",
+      "description": "Firma un avviso del diario (conferma di lettura) per un figlio.",
+      "fields": {
+        "word_id": {
+          "name": "Avviso",
+          "description": "Id dell'avviso, dall'attributo words del sensore Avvisi da firmare."
+        },
+        "child_id": {
+          "name": "Figlio",
+          "description": "Id del figlio a cui è destinato l'avviso, dallo stesso attributo."
+        },
+        "config_entry_id": {
+          "name": "Account ENT",
+          "description": "Necessario solo se sono configurati più account ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Nessun account ENT ONE caricato."
+    },
+    "several_accounts": {
+      "message": "Sono configurati più account ENT ONE: imposta config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Aggiornamento non riuscito: {error}"
+    },
+    "action_failed": {
+      "message": "L'ENT ha rifiutato l'azione: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nuovo messaggio ENT"
+    },
+    "notify_new_word": {
+      "message": "Avviso da firmare · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nuovi compiti"
+    }
+  }
+}

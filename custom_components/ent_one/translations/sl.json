@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Prijavite se z uporabniškim imenom in geslom ENT ONE (ne ÉduConnect). Naslov je naslov ENT vaše akademije, na primer {example}.",
+        "data": {
+          "url": "Naslov ENT",
+          "username": "Uporabniško ime",
+          "username_secret": "Skrivnost uporabniškega imena",
+          "password": "Geslo",
+          "password_secret": "Skrivnost gesla"
+        },
+        "data_description": {
+          "username": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "username_secret": "Ime vnosa v secrets.yaml z uporabniškim imenom, na primer ent_one_username.",
+          "password": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "password_secret": "Ime vnosa v secrets.yaml z geslom, na primer ent_one_password. Prebere se ob vsaki posodobitvi: po spremembi gesla je dovolj urediti skrivnost."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT je zavrnil geslo za {username}. Vnesite trenutno.",
+        "data": {
+          "password": "Geslo"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT je zavrnil geslo iz skrivnosti {secret} ({username}). Posodobite ga v secrets.yaml in potrdite."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Spremenite uporabniško ime in geslo za {username} ali vnose v secrets.yaml, ki ju vsebujejo.",
+        "data": {
+          "username": "Uporabniško ime",
+          "username_secret": "Skrivnost uporabniškega imena",
+          "password": "Geslo",
+          "password_secret": "Skrivnost gesla"
+        },
+        "data_description": {
+          "username": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "username_secret": "Ime vnosa v secrets.yaml z uporabniškim imenom, na primer ent_one_username.",
+          "password": "Pustite prazno, da se prebere iz secrets.yaml.",
+          "password_secret": "Ime vnosa v secrets.yaml z geslom, na primer ent_one_password. Prebere se ob vsaki posodobitvi: po spremembi gesla je dovolj urediti skrivnost."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Neveljaven naslov.",
+      "invalid_auth": "Neveljavno uporabniško ime ali geslo.",
+      "action_required": "ENT najprej zahteva dejanje (novi pogoji, sprememba gesla). Enkrat se prijavite v brskalniku in poskusite znova.",
+      "cannot_connect": "ENT ni dosegljiv. Preverite naslov in poskusite znova.",
+      "password_or_secret": "Vnesite geslo ali ime skrivnosti.",
+      "secret_not_found": "Tega vnosa ni v secrets.yaml.",
+      "wrong_account": "To geslo pripada drugemu računu.",
+      "username_or_secret": "Vnesite uporabniško ime ali ime skrivnosti."
+    },
+    "abort": {
+      "already_configured": "Ta račun je že nastavljen.",
+      "reauth_successful": "Geslo posodobljeno.",
+      "wrong_account": "To geslo pripada drugemu računu.",
+      "reconfigure_successful": "Nastavitve gesla posodobljene."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti ENT ONE",
+        "data": {
+          "scan_interval": "Interval posodabljanja",
+          "homework_days": "Obdobje nalog",
+          "notify_services": "Dejanja obvestil",
+          "show_panel": "Prikaži ta panel v stranski vrstici"
+        },
+        "data_description": {
+          "scan_interval": "ENT uporablja vsa šola: najmanj 10 minut.",
+          "homework_days": "Prikazane so naloge z rokom v tem številu dni.",
+          "notify_services": "Nova sporočila, obvestila za podpis in domače naloge se pošljejo tem dejanjem."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Neprebrana sporočila"
+      },
+      "words_to_sign": {
+        "name": "Obvestila za podpis"
+      },
+      "homework": {
+        "name": "Domače naloge"
+      },
+      "news": {
+        "name": "Novice"
+      },
+      "last_update": {
+        "name": "Zadnja posodobitev"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Šola"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Naloge {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Osveži",
+      "description": "Prebere ENT zdaj.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Račun ENT",
+          "description": "Potrebno le, če je nastavljenih več računov ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Podpiši obvestilo",
+      "description": "Podpiše obvestilo v beležki (potrdilo o branju) za otroka.",
+      "fields": {
+        "word_id": {
+          "name": "Obvestilo",
+          "description": "ID obvestila iz atributa words senzorja Obvestila za podpis."
+        },
+        "child_id": {
+          "name": "Otrok",
+          "description": "ID otroka, ki mu je obvestilo namenjeno, iz istega atributa."
+        },
+        "config_entry_id": {
+          "name": "Račun ENT",
+          "description": "Potrebno le, če je nastavljenih več računov ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Noben račun ENT ONE ni naložen."
+    },
+    "several_accounts": {
+      "message": "Nastavljenih je več računov ENT ONE: nastavite config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Osvežitev ni uspela: {error}"
+    },
+    "action_failed": {
+      "message": "ENT je zavrnil dejanje: {error}"
+    },
+    "notify_new_message": {
+      "message": "Novo sporočilo ENT"
+    },
+    "notify_new_word": {
+      "message": "Za podpis · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nova domača naloga"
+    }
+  }
+}

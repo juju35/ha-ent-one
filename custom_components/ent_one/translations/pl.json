@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Zaloguj się nazwą użytkownika i hasłem ENT ONE (nie ÉduConnect). Adres to adres ENT Twojej akademii, na przykład {example}.",
+        "data": {
+          "url": "Adres ENT",
+          "username": "Nazwa użytkownika",
+          "username_secret": "Sekret nazwy użytkownika",
+          "password": "Hasło",
+          "password_secret": "Sekret hasła"
+        },
+        "data_description": {
+          "username": "Pozostaw puste, aby odczytać ją z secrets.yaml.",
+          "username_secret": "Nazwa wpisu w secrets.yaml z nazwą użytkownika, na przykład ent_one_username.",
+          "password": "Pozostaw puste, aby odczytać je z secrets.yaml.",
+          "password_secret": "Nazwa wpisu w secrets.yaml z hasłem, na przykład ent_one_password. Jest odczytywany przy każdej aktualizacji: po zmianie hasła wystarczy zmienić sekret."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT odrzucił hasło użytkownika {username}. Wpisz aktualne.",
+        "data": {
+          "password": "Hasło"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT odrzucił hasło z sekretu {secret} ({username}). Zaktualizuj je w secrets.yaml i zatwierdź."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Zmień nazwę użytkownika i hasło {username} lub wpisy w secrets.yaml, które je zawierają.",
+        "data": {
+          "username": "Nazwa użytkownika",
+          "username_secret": "Sekret nazwy użytkownika",
+          "password": "Hasło",
+          "password_secret": "Sekret hasła"
+        },
+        "data_description": {
+          "username": "Pozostaw puste, aby odczytać ją z secrets.yaml.",
+          "username_secret": "Nazwa wpisu w secrets.yaml z nazwą użytkownika, na przykład ent_one_username.",
+          "password": "Pozostaw puste, aby odczytać je z secrets.yaml.",
+          "password_secret": "Nazwa wpisu w secrets.yaml z hasłem, na przykład ent_one_password. Jest odczytywany przy każdej aktualizacji: po zmianie hasła wystarczy zmienić sekret."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Nieprawidłowy adres.",
+      "invalid_auth": "Nieprawidłowa nazwa użytkownika lub hasło.",
+      "action_required": "ENT wymaga najpierw działania (nowy regulamin, zmiana hasła). Zaloguj się raz w przeglądarce i spróbuj ponownie.",
+      "cannot_connect": "Nie można połączyć się z ENT. Sprawdź adres i spróbuj ponownie.",
+      "password_or_secret": "Wpisz hasło albo nazwę sekretu.",
+      "secret_not_found": "Tego wpisu brakuje w secrets.yaml.",
+      "wrong_account": "To hasło należy do innego konta.",
+      "username_or_secret": "Wpisz nazwę użytkownika albo nazwę sekretu."
+    },
+    "abort": {
+      "already_configured": "To konto jest już skonfigurowane.",
+      "reauth_successful": "Hasło zaktualizowane.",
+      "wrong_account": "To hasło należy do innego konta.",
+      "reconfigure_successful": "Ustawienia hasła zaktualizowane."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje ENT ONE",
+        "data": {
+          "scan_interval": "Interwał aktualizacji",
+          "homework_days": "Okres prac domowych",
+          "notify_services": "Akcje powiadomień",
+          "show_panel": "Pokaż ten panel na pasku bocznym"
+        },
+        "data_description": {
+          "scan_interval": "Z ENT korzysta cała szkoła: co najmniej 10 minut.",
+          "homework_days": "Pokazywane są prace domowe z terminem w ciągu tylu dni.",
+          "notify_services": "Nowe wiadomości, uwagi do podpisania i prace domowe są wysyłane do tych akcji."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Nieprzeczytane wiadomości"
+      },
+      "words_to_sign": {
+        "name": "Uwagi do podpisania"
+      },
+      "homework": {
+        "name": "Prace domowe"
+      },
+      "news": {
+        "name": "Aktualności"
+      },
+      "last_update": {
+        "name": "Ostatnia aktualizacja"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Szkoła"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Prace domowe {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Odśwież",
+      "description": "Odczytuje ENT teraz.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Konto ENT",
+          "description": "Potrzebne tylko, gdy skonfigurowano kilka kont ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Podpisz uwagę",
+      "description": "Podpisuje uwagę w dzienniczku (potwierdzenie przeczytania) dla dziecka.",
+      "fields": {
+        "word_id": {
+          "name": "Uwaga",
+          "description": "Id uwagi z atrybutu words czujnika Uwagi do podpisania."
+        },
+        "child_id": {
+          "name": "Dziecko",
+          "description": "Id dziecka, którego dotyczy uwaga, z tego samego atrybutu."
+        },
+        "config_entry_id": {
+          "name": "Konto ENT",
+          "description": "Potrzebne tylko, gdy skonfigurowano kilka kont ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Nie załadowano konta ENT ONE."
+    },
+    "several_accounts": {
+      "message": "Skonfigurowano kilka kont ENT ONE: ustaw config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Nie udało się odświeżyć: {error}"
+    },
+    "action_failed": {
+      "message": "ENT odrzucił operację: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nowa wiadomość ENT"
+    },
+    "notify_new_word": {
+      "message": "Do podpisania · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nowa praca domowa"
+    }
+  }
+}

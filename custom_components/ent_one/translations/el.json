@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Συνδεθείτε με το όνομα χρήστη και τον κωδικό του ENT ONE (όχι ÉduConnect). Η διεύθυνση είναι αυτή του ENT της ακαδημίας σας, για παράδειγμα {example}.",
+        "data": {
+          "url": "Διεύθυνση ENT",
+          "username": "Όνομα χρήστη",
+          "username_secret": "Μυστικό ονόματος χρήστη",
+          "password": "Κωδικός πρόσβασης",
+          "password_secret": "Μυστικό κωδικού"
+        },
+        "data_description": {
+          "username": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
+          "username_secret": "Όνομα της καταχώρισης του secrets.yaml με το όνομα χρήστη, για παράδειγμα ent_one_username.",
+          "password": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
+          "password_secret": "Όνομα της καταχώρισης του secrets.yaml με τον κωδικό, για παράδειγμα ent_one_password. Διαβάζεται ξανά σε κάθε ενημέρωση: μετά από αλλαγή κωδικού αρκεί να αλλάξετε το μυστικό."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "Το ENT απέρριψε τον κωδικό του {username}. Εισαγάγετε τον τρέχοντα.",
+        "data": {
+          "password": "Κωδικός πρόσβασης"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "Το ENT απέρριψε τον κωδικό του μυστικού {secret} ({username}). Ενημερώστε τον στο secrets.yaml και υποβάλετε."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Αλλάξτε το όνομα χρήστη και τον κωδικό του {username} ή τις καταχωρίσεις του secrets.yaml που τα περιέχουν.",
+        "data": {
+          "username": "Όνομα χρήστη",
+          "username_secret": "Μυστικό ονόματος χρήστη",
+          "password": "Κωδικός πρόσβασης",
+          "password_secret": "Μυστικό κωδικού"
+        },
+        "data_description": {
+          "username": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
+          "username_secret": "Όνομα της καταχώρισης του secrets.yaml με το όνομα χρήστη, για παράδειγμα ent_one_username.",
+          "password": "Αφήστε κενό για ανάγνωση από το secrets.yaml.",
+          "password_secret": "Όνομα της καταχώρισης του secrets.yaml με τον κωδικό, για παράδειγμα ent_one_password. Διαβάζεται ξανά σε κάθε ενημέρωση: μετά από αλλαγή κωδικού αρκεί να αλλάξετε το μυστικό."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Μη έγκυρη διεύθυνση.",
+      "invalid_auth": "Μη έγκυρο όνομα χρήστη ή κωδικός.",
+      "action_required": "Το ENT ζητά πρώτα μια ενέργεια (νέοι όροι, αλλαγή κωδικού). Συνδεθείτε μία φορά σε πρόγραμμα περιήγησης και δοκιμάστε ξανά.",
+      "cannot_connect": "Δεν είναι δυνατή η σύνδεση με το ENT. Ελέγξτε τη διεύθυνση και δοκιμάστε ξανά.",
+      "password_or_secret": "Εισαγάγετε είτε κωδικό είτε όνομα μυστικού.",
+      "secret_not_found": "Αυτή η καταχώριση λείπει από το secrets.yaml.",
+      "wrong_account": "Αυτός ο κωδικός ανήκει σε άλλο λογαριασμό.",
+      "username_or_secret": "Εισαγάγετε είτε όνομα χρήστη είτε όνομα μυστικού."
+    },
+    "abort": {
+      "already_configured": "Αυτός ο λογαριασμός έχει ήδη ρυθμιστεί.",
+      "reauth_successful": "Ο κωδικός ενημερώθηκε.",
+      "wrong_account": "Αυτός ο κωδικός ανήκει σε άλλο λογαριασμό.",
+      "reconfigure_successful": "Οι ρυθμίσεις κωδικού ενημερώθηκαν."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Επιλογές ENT ONE",
+        "data": {
+          "scan_interval": "Διάστημα ενημέρωσης",
+          "homework_days": "Περίοδος εργασιών",
+          "notify_services": "Ενέργειες ειδοποίησης",
+          "show_panel": "Εμφάνιση αυτού του πίνακα στην πλαϊνή μπάρα"
+        },
+        "data_description": {
+          "scan_interval": "Το ENT το μοιράζεται όλο το σχολείο: τουλάχιστον 10 λεπτά.",
+          "homework_days": "Εμφανίζονται οι εργασίες με προθεσμία εντός τόσων ημερών.",
+          "notify_services": "Τα νέα μηνύματα, τα σημειώματα για υπογραφή και οι εργασίες αποστέλλονται σε αυτές τις ενέργειες."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Μη αναγνωσμένα μηνύματα"
+      },
+      "words_to_sign": {
+        "name": "Σημειώματα για υπογραφή"
+      },
+      "homework": {
+        "name": "Εργασίες"
+      },
+      "news": {
+        "name": "Νέα"
+      },
+      "last_update": {
+        "name": "Τελευταία ενημέρωση"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Σχολείο"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Εργασίες {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Ανανέωση",
+      "description": "Διαβάζει το ENT τώρα.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Λογαριασμός ENT",
+          "description": "Χρειάζεται μόνο όταν υπάρχουν πολλοί λογαριασμοί ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Υπογραφή σημειώματος",
+      "description": "Υπογράφει ένα σημείωμα του τετραδίου επικοινωνίας (επιβεβαίωση ανάγνωσης) για ένα παιδί.",
+      "fields": {
+        "word_id": {
+          "name": "Σημείωμα",
+          "description": "Αναγνωριστικό του σημειώματος από το χαρακτηριστικό words του αισθητήρα Σημειώματα για υπογραφή."
+        },
+        "child_id": {
+          "name": "Παιδί",
+          "description": "Αναγνωριστικό του παιδιού στο οποίο απευθύνεται το σημείωμα, από το ίδιο χαρακτηριστικό."
+        },
+        "config_entry_id": {
+          "name": "Λογαριασμός ENT",
+          "description": "Χρειάζεται μόνο όταν υπάρχουν πολλοί λογαριασμοί ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Δεν έχει φορτωθεί λογαριασμός ENT ONE."
+    },
+    "several_accounts": {
+      "message": "Υπάρχουν πολλοί λογαριασμοί ENT ONE: ορίστε config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Η ανανέωση απέτυχε: {error}"
+    },
+    "action_failed": {
+      "message": "Το ENT απέρριψε την ενέργεια: {error}"
+    },
+    "notify_new_message": {
+      "message": "Νέο μήνυμα ENT"
+    },
+    "notify_new_word": {
+      "message": "Για υπογραφή · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Νέα εργασία"
+    }
+  }
+}

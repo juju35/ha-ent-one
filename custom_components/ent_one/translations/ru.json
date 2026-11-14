@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Войдите с логином и паролем ENT ONE (не ÉduConnect). Адрес — это ENT вашей академии, например {example}.",
+        "data": {
+          "url": "Адрес ENT",
+          "username": "Имя пользователя",
+          "username_secret": "Секрет имени пользователя",
+          "password": "Пароль",
+          "password_secret": "Секрет пароля"
+        },
+        "data_description": {
+          "username": "Оставьте пустым, чтобы читать его из secrets.yaml.",
+          "username_secret": "Имя записи в secrets.yaml с именем пользователя, например ent_one_username.",
+          "password": "Оставьте пустым, чтобы читать его из secrets.yaml.",
+          "password_secret": "Имя записи в secrets.yaml с паролем, например ent_one_password. Она перечитывается при каждом обновлении: после смены пароля достаточно изменить секрет."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "ENT отклонил пароль пользователя {username}. Введите текущий.",
+        "data": {
+          "password": "Пароль"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "ENT отклонил пароль из секрета {secret} ({username}). Обновите его в secrets.yaml и подтвердите."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Измените имя пользователя и пароль {username} или записи в secrets.yaml, в которых они хранятся.",
+        "data": {
+          "username": "Имя пользователя",
+          "username_secret": "Секрет имени пользователя",
+          "password": "Пароль",
+          "password_secret": "Секрет пароля"
+        },
+        "data_description": {
+          "username": "Оставьте пустым, чтобы читать его из secrets.yaml.",
+          "username_secret": "Имя записи в secrets.yaml с именем пользователя, например ent_one_username.",
+          "password": "Оставьте пустым, чтобы читать его из secrets.yaml.",
+          "password_secret": "Имя записи в secrets.yaml с паролем, например ent_one_password. Она перечитывается при каждом обновлении: после смены пароля достаточно изменить секрет."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Неверный адрес.",
+      "invalid_auth": "Неверное имя пользователя или пароль.",
+      "action_required": "ENT сначала требует действие (новые условия, смена пароля). Войдите один раз в браузере и повторите попытку.",
+      "cannot_connect": "Не удаётся связаться с ENT. Проверьте адрес и повторите попытку.",
+      "password_or_secret": "Введите либо пароль, либо имя секрета.",
+      "secret_not_found": "Эта запись отсутствует в secrets.yaml.",
+      "wrong_account": "Этот пароль принадлежит другой учётной записи.",
+      "username_or_secret": "Введите либо имя пользователя, либо имя секрета."
+    },
+    "abort": {
+      "already_configured": "Эта учётная запись уже настроена.",
+      "reauth_successful": "Пароль обновлён.",
+      "wrong_account": "Этот пароль принадлежит другой учётной записи.",
+      "reconfigure_successful": "Настройки пароля обновлены."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметры ENT ONE",
+        "data": {
+          "scan_interval": "Интервал обновления",
+          "homework_days": "Период домашних заданий",
+          "notify_services": "Действия уведомлений",
+          "show_panel": "Показывать эту панель на боковой панели"
+        },
+        "data_description": {
+          "scan_interval": "ENT используется всей школой: минимум 10 минут.",
+          "homework_days": "Показываются домашние задания со сроком в пределах этого числа дней.",
+          "notify_services": "Новые сообщения, записи на подпись и домашние задания отправляются этим действиям."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Непрочитанные сообщения"
+      },
+      "words_to_sign": {
+        "name": "Записи на подпись"
+      },
+      "homework": {
+        "name": "Домашние задания"
+      },
+      "news": {
+        "name": "Новости"
+      },
+      "last_update": {
+        "name": "Последнее обновление"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "Школа"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Домашние задания {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Обновить",
+      "description": "Считывает ENT сейчас.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Учётная запись ENT",
+          "description": "Нужно, только если настроено несколько учётных записей ENT."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Подписать запись",
+      "description": "Подписывает запись в дневнике (подтверждение прочтения) для ребёнка.",
+      "fields": {
+        "word_id": {
+          "name": "Запись",
+          "description": "Идентификатор записи из атрибута words датчика «Записи на подпись»."
+        },
+        "child_id": {
+          "name": "Ребёнок",
+          "description": "Идентификатор ребёнка, которому адресована запись, из того же атрибута."
+        },
+        "config_entry_id": {
+          "name": "Учётная запись ENT",
+          "description": "Нужно, только если настроено несколько учётных записей ENT."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Учётная запись ENT ONE не загружена."
+    },
+    "several_accounts": {
+      "message": "Настроено несколько учётных записей ENT ONE: укажите config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Не удалось обновить: {error}"
+    },
+    "action_failed": {
+      "message": "ENT отклонил действие: {error}"
+    },
+    "notify_new_message": {
+      "message": "Новое сообщение ENT"
+    },
+    "notify_new_word": {
+      "message": "На подпись · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Новое домашнее задание"
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Sign in with your ENT ONE username and password (not ÉduConnect). The address is the one of your académie's ENT, for example {example}.",
+        "data": {
+          "url": "ENT address",
+          "username": "Username",
+          "username_secret": "Username secret",
+          "password": "Password",
+          "password_secret": "Password secret"
+        },
+        "data_description": {
+          "username": "Leave empty to read it from secrets.yaml instead.",
+          "username_secret": "Name of the secrets.yaml entry holding the username, for example ent_one_username.",
+          "password": "Leave empty to read it from secrets.yaml instead.",
+          "password_secret": "Name of the secrets.yaml entry holding the password, for example ent_one_password. It is read again at every update: after a password change, editing the secret is enough."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "The ENT refused the password of {username}. Enter the current one.",
+        "data": {
+          "password": "Password"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "The ENT refused the password of the secret {secret} ({username}). Update it in secrets.yaml, then submit."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Change the username and password of {username}, or the secrets.yaml entries that hold them.",
+        "data": {
+          "username": "Username",
+          "username_secret": "Username secret",
+          "password": "Password",
+          "password_secret": "Password secret"
+        },
+        "data_description": {
+          "username": "Leave empty to read it from secrets.yaml instead.",
+          "username_secret": "Name of the secrets.yaml entry holding the username, for example ent_one_username.",
+          "password": "Leave empty to read it from secrets.yaml instead.",
+          "password_secret": "Name of the secrets.yaml entry holding the password, for example ent_one_password. It is read again at every update: after a password change, editing the secret is enough."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Invalid address.",
+      "invalid_auth": "Invalid username or password.",
+      "action_required": "The ENT asks for an action first (new terms, password change). Sign in once in a browser, then try again.",
+      "cannot_connect": "Cannot reach the ENT. Check the address and try again.",
+      "password_or_secret": "Enter either a password or a secret name.",
+      "secret_not_found": "This entry is missing from secrets.yaml.",
+      "wrong_account": "This password belongs to another account.",
+      "username_or_secret": "Enter either a username or a secret name."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "reauth_successful": "Password updated.",
+      "wrong_account": "This password belongs to another account.",
+      "reconfigure_successful": "Password settings updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT ONE options",
+        "data": {
+          "scan_interval": "Update interval",
+          "homework_days": "Homework window",
+          "notify_services": "Notify actions",
+          "show_panel": "Show the ENT ONE panel in the sidebar"
+        },
+        "data_description": {
+          "scan_interval": "The ENT is shared by the whole school: 10 minutes minimum.",
+          "homework_days": "Homework due within this many days is shown.",
+          "notify_services": "Tell these actions (notify.mobile_app_…) about new messages, words to sign and homework. Leave empty for none."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Unread messages"
+      },
+      "words_to_sign": {
+        "name": "Words to sign"
+      },
+      "homework": {
+        "name": "Homework to do"
+      },
+      "news": {
+        "name": "News"
+      },
+      "last_update": {
+        "name": "Last update"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "School"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Homework {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Refresh",
+      "description": "Reads the ENT now.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT account",
+          "description": "Only needed when several ENT accounts are configured."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Sign a word",
+      "description": "Signs a word of the liaison book (read receipt) for a child.",
+      "fields": {
+        "word_id": {
+          "name": "Word",
+          "description": "Id of the word, from the words attribute of the Words to sign sensor."
+        },
+        "child_id": {
+          "name": "Child",
+          "description": "Id of the child the word is for, from the same attribute."
+        },
+        "config_entry_id": {
+          "name": "ENT account",
+          "description": "Only needed when several ENT accounts are configured."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "No ENT ONE account is loaded."
+    },
+    "several_accounts": {
+      "message": "Several ENT ONE accounts are configured: set config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "ENT update failed: {error}"
+    },
+    "action_failed": {
+      "message": "The ENT refused the action: {error}"
+    },
+    "notify_new_message": {
+      "message": "New ENT message"
+    },
+    "notify_new_word": {
+      "message": "Word to sign · {child}"
+    },
+    "notify_new_homework": {
+      "message": "New homework"
+    }
+  }
+}

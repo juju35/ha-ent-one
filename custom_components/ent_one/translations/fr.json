@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Connectez-vous avec l'identifiant et le mot de passe de l'ENT ONE (pas ÉduConnect). L'adresse est celle de l'ENT de votre académie, par exemple {example}.",
+        "data": {
+          "url": "Adresse de l'ENT",
+          "username": "Identifiant",
+          "username_secret": "Secret de l'identifiant",
+          "password": "Mot de passe",
+          "password_secret": "Secret du mot de passe"
+        },
+        "data_description": {
+          "username": "Laissez vide pour le lire dans secrets.yaml.",
+          "username_secret": "Nom de l'entrée de secrets.yaml qui contient l'identifiant, par exemple ent_one_username.",
+          "password": "Laissez vide pour le lire dans secrets.yaml.",
+          "password_secret": "Nom de l'entrée de secrets.yaml qui contient le mot de passe, par exemple ent_one_password. Il est relu à chaque mise à jour : après un changement de mot de passe, il suffit de modifier le secret."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "L'ENT a refusé le mot de passe de {username}. Saisissez le mot de passe actuel.",
+        "data": {
+          "password": "Mot de passe"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "L'ENT a refusé le mot de passe du secret {secret} ({username}). Mettez-le à jour dans secrets.yaml, puis validez."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Modifiez l'identifiant et le mot de passe de {username}, ou les entrées de secrets.yaml qui les contiennent.",
+        "data": {
+          "username": "Identifiant",
+          "username_secret": "Secret de l'identifiant",
+          "password": "Mot de passe",
+          "password_secret": "Secret du mot de passe"
+        },
+        "data_description": {
+          "username": "Laissez vide pour le lire dans secrets.yaml.",
+          "username_secret": "Nom de l'entrée de secrets.yaml qui contient l'identifiant, par exemple ent_one_username.",
+          "password": "Laissez vide pour le lire dans secrets.yaml.",
+          "password_secret": "Nom de l'entrée de secrets.yaml qui contient le mot de passe, par exemple ent_one_password. Il est relu à chaque mise à jour : après un changement de mot de passe, il suffit de modifier le secret."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Adresse invalide.",
+      "invalid_auth": "Identifiant ou mot de passe invalide.",
+      "action_required": "L'ENT demande d'abord une action (nouvelles conditions, changement de mot de passe). Connectez-vous une fois dans un navigateur, puis réessayez.",
+      "cannot_connect": "Impossible de joindre l'ENT. Vérifiez l'adresse et réessayez.",
+      "password_or_secret": "Saisissez soit un mot de passe, soit un nom de secret.",
+      "secret_not_found": "Cette entrée est absente de secrets.yaml.",
+      "wrong_account": "Ce mot de passe appartient à un autre compte.",
+      "username_or_secret": "Saisissez soit un identifiant, soit un nom de secret."
+    },
+    "abort": {
+      "already_configured": "Ce compte est déjà configuré.",
+      "reauth_successful": "Mot de passe mis à jour.",
+      "wrong_account": "Ce mot de passe appartient à un autre compte.",
+      "reconfigure_successful": "Mot de passe mis à jour."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options ENT ONE",
+        "data": {
+          "scan_interval": "Intervalle de mise à jour",
+          "homework_days": "Fenêtre des devoirs",
+          "notify_services": "Actions de notification",
+          "show_panel": "Afficher ce panneau dans la barre latérale"
+        },
+        "data_description": {
+          "scan_interval": "L'ENT est partagé par toute l'école : 10 minutes minimum.",
+          "homework_days": "Les devoirs à rendre dans ce nombre de jours sont affichés.",
+          "notify_services": "Les nouveaux messages, mots à signer et devoirs sont envoyés à ces actions."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Messages non lus"
+      },
+      "words_to_sign": {
+        "name": "Mots à signer"
+      },
+      "homework": {
+        "name": "Devoirs"
+      },
+      "news": {
+        "name": "Actualités"
+      },
+      "last_update": {
+        "name": "Dernière mise à jour"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "École"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Devoirs {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Actualiser",
+      "description": "Lit l'ENT maintenant.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Compte ENT",
+          "description": "Seulement si plusieurs comptes ENT sont configurés."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Signer un mot",
+      "description": "Signe un mot du carnet de liaison (accusé de lecture) pour un enfant.",
+      "fields": {
+        "word_id": {
+          "name": "Mot",
+          "description": "Identifiant du mot, dans l'attribut words du capteur Mots à signer."
+        },
+        "child_id": {
+          "name": "Enfant",
+          "description": "Identifiant de l'enfant concerné, dans le même attribut."
+        },
+        "config_entry_id": {
+          "name": "Compte ENT",
+          "description": "Seulement si plusieurs comptes ENT sont configurés."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Aucun compte ENT ONE chargé."
+    },
+    "several_accounts": {
+      "message": "Plusieurs comptes ENT ONE sont configurés : renseignez config_entry_id."
+    },
+    "refresh_failed": {
+      "message": "Actualisation impossible : {error}"
+    },
+    "action_failed": {
+      "message": "L'ENT a refusé l'action : {error}"
+    },
+    "notify_new_message": {
+      "message": "Nouveau message ENT"
+    },
+    "notify_new_word": {
+      "message": "Mot à signer · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nouveau devoir"
+    }
+  }
+}

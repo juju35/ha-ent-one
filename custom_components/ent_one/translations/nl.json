@@ -1,0 +1,166 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ENT ONE",
+        "description": "Meld je aan met je ENT ONE-gebruikersnaam en -wachtwoord (niet ÉduConnect). Het adres is dat van de ENT van je academie, bijvoorbeeld {example}.",
+        "data": {
+          "url": "ENT-adres",
+          "username": "Gebruikersnaam",
+          "username_secret": "Gebruikersnaamgeheim",
+          "password": "Wachtwoord",
+          "password_secret": "Wachtwoordgeheim"
+        },
+        "data_description": {
+          "username": "Laat leeg om hem uit secrets.yaml te lezen.",
+          "username_secret": "Naam van de vermelding in secrets.yaml met de gebruikersnaam, bijvoorbeeld ent_one_username.",
+          "password": "Laat leeg om het uit secrets.yaml te lezen.",
+          "password_secret": "Naam van de vermelding in secrets.yaml met het wachtwoord, bijvoorbeeld ent_one_password. Die wordt bij elke update opnieuw gelezen: na een wachtwoordwijziging volstaat het het geheim aan te passen."
+        }
+      },
+      "reauth_confirm": {
+        "title": "ENT ONE",
+        "description": "De ENT weigerde het wachtwoord van {username}. Voer het huidige in.",
+        "data": {
+          "password": "Wachtwoord"
+        }
+      },
+      "reauth_secret": {
+        "title": "ENT ONE",
+        "description": "De ENT weigerde het wachtwoord van geheim {secret} ({username}). Werk het bij in secrets.yaml en bevestig."
+      },
+      "reconfigure": {
+        "title": "ENT ONE",
+        "description": "Wijzig gebruikersnaam en wachtwoord van {username}, of de vermeldingen in secrets.yaml die ze bevatten.",
+        "data": {
+          "username": "Gebruikersnaam",
+          "username_secret": "Gebruikersnaamgeheim",
+          "password": "Wachtwoord",
+          "password_secret": "Wachtwoordgeheim"
+        },
+        "data_description": {
+          "username": "Laat leeg om hem uit secrets.yaml te lezen.",
+          "username_secret": "Naam van de vermelding in secrets.yaml met de gebruikersnaam, bijvoorbeeld ent_one_username.",
+          "password": "Laat leeg om het uit secrets.yaml te lezen.",
+          "password_secret": "Naam van de vermelding in secrets.yaml met het wachtwoord, bijvoorbeeld ent_one_password. Die wordt bij elke update opnieuw gelezen: na een wachtwoordwijziging volstaat het het geheim aan te passen."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Ongeldig adres.",
+      "invalid_auth": "Ongeldige gebruikersnaam of wachtwoord.",
+      "action_required": "De ENT vraagt eerst een actie (nieuwe voorwaarden, wachtwoordwijziging). Meld je één keer aan in een browser en probeer het opnieuw.",
+      "cannot_connect": "Kan de ENT niet bereiken. Controleer het adres en probeer het opnieuw.",
+      "password_or_secret": "Vul een wachtwoord of een geheimnaam in.",
+      "secret_not_found": "Deze vermelding ontbreekt in secrets.yaml.",
+      "wrong_account": "Dit wachtwoord hoort bij een ander account.",
+      "username_or_secret": "Vul een gebruikersnaam of een geheimnaam in."
+    },
+    "abort": {
+      "already_configured": "Dit account is al ingesteld.",
+      "reauth_successful": "Wachtwoord bijgewerkt.",
+      "wrong_account": "Dit wachtwoord hoort bij een ander account.",
+      "reconfigure_successful": "Wachtwoordinstellingen bijgewerkt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ENT ONE-opties",
+        "data": {
+          "scan_interval": "Update-interval",
+          "homework_days": "Huiswerkperiode",
+          "notify_services": "Meldingsacties",
+          "show_panel": "Dit paneel in de zijbalk tonen"
+        },
+        "data_description": {
+          "scan_interval": "De ENT wordt door de hele school gedeeld: minimaal 10 minuten.",
+          "homework_days": "Huiswerk dat binnen zoveel dagen af moet, wordt getoond.",
+          "notify_services": "Nieuwe berichten, te ondertekenen berichten en huiswerk worden naar deze acties gestuurd."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "unread_messages": {
+        "name": "Ongelezen berichten"
+      },
+      "words_to_sign": {
+        "name": "Te ondertekenen berichten"
+      },
+      "homework": {
+        "name": "Huiswerk"
+      },
+      "news": {
+        "name": "Nieuws"
+      },
+      "last_update": {
+        "name": "Laatste update"
+      }
+    },
+    "calendar": {
+      "school": {
+        "name": "School"
+      }
+    },
+    "todo": {
+      "homework_book": {
+        "name": "Huiswerk {book}"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Vernieuwen",
+      "description": "Leest de ENT nu.",
+      "fields": {
+        "config_entry_id": {
+          "name": "ENT-account",
+          "description": "Alleen nodig als er meerdere ENT-accounts zijn ingesteld."
+        }
+      }
+    },
+    "sign_word": {
+      "name": "Bericht ondertekenen",
+      "description": "Ondertekent een bericht uit het heen-en-weerschrift (leesbevestiging) voor een kind.",
+      "fields": {
+        "word_id": {
+          "name": "Bericht",
+          "description": "Id van het bericht, uit het attribuut words van de sensor Te ondertekenen berichten."
+        },
+        "child_id": {
+          "name": "Kind",
+          "description": "Id van het kind voor wie het bericht is, uit hetzelfde attribuut."
+        },
+        "config_entry_id": {
+          "name": "ENT-account",
+          "description": "Alleen nodig als er meerdere ENT-accounts zijn ingesteld."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_account": {
+      "message": "Geen ENT ONE-account geladen."
+    },
+    "several_accounts": {
+      "message": "Er zijn meerdere ENT ONE-accounts ingesteld: vul config_entry_id in."
+    },
+    "refresh_failed": {
+      "message": "Vernieuwen mislukt: {error}"
+    },
+    "action_failed": {
+      "message": "De ENT weigerde de actie: {error}"
+    },
+    "notify_new_message": {
+      "message": "Nieuw ENT-bericht"
+    },
+    "notify_new_word": {
+      "message": "Te ondertekenen · {child}"
+    },
+    "notify_new_homework": {
+      "message": "Nieuw huiswerk"
+    }
+  }
+}
