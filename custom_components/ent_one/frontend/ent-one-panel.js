@@ -230,8 +230,14 @@ class EntOnePanel extends HTMLElement {
   _count(tab, data) {
     if (tab === 'words') return data.words.filter((w) => !w.signed).length;
     if (tab === 'homework') return data.homework.filter((h) => !h.done).length;
-    if (tab === 'messages') return data.unread;
+    // The unread messages actually in the list, not the server's inbox count: an unread message older than the kept
+    // window (or one the inbox endpoint does not return) must not light a badge with nothing to show for it.
+    if (tab === 'messages') return this._unread(data);
     return 0;
+  }
+
+  _unread(data) {
+    return data.messages.filter((m) => m.unread).length;
   }
 
   _time(iso) {
@@ -255,7 +261,7 @@ class EntOnePanel extends HTMLElement {
     var todo = E.sortedHomework(data.homework, false).slice(0, 6);
     var on = (tab) => data.panelTabs.indexOf(tab) !== -1;
     var tileList = [
-      [data.unread, t.tile_messages, 'mdi:email-outline', 'messages'],
+      [this._unread(data), t.tile_messages, 'mdi:email-outline', 'messages'],
       [toSign.length, t.tile_words, 'mdi:notebook-edit-outline', 'words'],
       [data.homework.filter((h) => !h.done).length, t.tile_homework, 'mdi:pencil-outline', 'homework'],
     ].filter((x) => on(x[3]));

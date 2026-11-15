@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.2 (2026-11-15)
+
+### Fixed
+- The Messages tab (and its home tile) counted the server's inbox unread total, which could sit above the messages actually kept in the panel — so the tab showed a badge with nothing unread to open. It now counts the unread messages present in the list, like the Words and Homework tabs.
+
 ## 1.3.1 (2026-11-15)
 
 - Panel: choose the tabs shown (option *Tabs shown in the panel*, in Settings or the integration options). A hidden tab also leaves the home page (its count and its box); Home and Settings always stay.
