@@ -71,7 +71,8 @@
           "scan_interval": "Интервал ажурирања",
           "homework_days": "Период домаћих задатака",
           "notify_services": "Радње обавештења",
-          "show_panel": "Прикажи овај панел на бочној траци"
+          "show_panel": "Прикажи овај панел на бочној траци",
+          "panel_tabs": "Картице приказане на панелу"
         },
         "data_description": {
           "scan_interval": "ENT користи цела школа: најмање 10 минута.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Нова објава · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Домаћи",
+        "words": "Ђачка књижица",
+        "messages": "Поруке",
+        "news": "Вести",
+        "blog": "Блог"
+      }
     }
   }
 }

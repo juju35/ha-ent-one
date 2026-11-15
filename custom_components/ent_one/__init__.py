@@ -34,6 +34,7 @@ from .const import (
     CARD_FILENAME,
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
+    CONF_PANEL_TABS,
     CONF_SCAN_INTERVAL,
     CONF_SHOW_PANEL,
     DEFAULT_SHOW_PANEL,
@@ -42,6 +43,7 @@ from .const import (
     ICONS_FILENAME,
     PANEL_FILENAME,
     PANEL_ICON,
+    PANEL_TABS,
     PANEL_URL_PATH,
     SERVICE_REFRESH,
     SERVICE_SIGN_WORD,
@@ -270,6 +272,7 @@ def ws_settings(hass: HomeAssistant, connection: websocket_api.ActiveConnection,
                 vol.Optional(CONF_HOMEWORK_DAYS): vol.Coerce(int),
                 vol.Optional(CONF_NOTIFY): [str],
                 vol.Optional(CONF_SHOW_PANEL): bool,
+                vol.Optional(CONF_PANEL_TABS): [vol.In(PANEL_TABS)],
             }
         ),
     }

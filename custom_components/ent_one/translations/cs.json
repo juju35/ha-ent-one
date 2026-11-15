@@ -71,7 +71,8 @@
           "scan_interval": "Interval aktualizace",
           "homework_days": "Období úkolů",
           "notify_services": "Akce oznámení",
-          "show_panel": "Zobrazit tento panel v postranním panelu"
+          "show_panel": "Zobrazit tento panel v postranním panelu",
+          "panel_tabs": "Karty zobrazené v panelu"
         },
         "data_description": {
           "scan_interval": "ENT používá celá škola: minimálně 10 minut.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nový příspěvek · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Domácí úkoly",
+        "words": "Žákovská knížka",
+        "messages": "Zprávy",
+        "news": "Novinky",
+        "blog": "Blog"
+      }
     }
   }
 }

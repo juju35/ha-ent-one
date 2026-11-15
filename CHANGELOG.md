@@ -2,6 +2,7 @@
 
 ## 1.3.1 (2026-11-15)
 
+- Panel: choose the tabs shown (option *Tabs shown in the panel*, in Settings or the integration options). A hidden tab also leaves the home page (its count and its box); Home and Settings always stay.
 - Cards: `show_homework`, `show_words` and `show_messages` hide the matching count too (it stayed at the top of the card and the mini card); the counts left share the width.
 - New blog posts fire `ent_one_new_blog_post` (`id`, `blog_id`, `blog`, `title`, `author`) and are sent to the notify actions chosen in the options, like messages, words and homework. The posts there at startup or after a reload never fire.
 

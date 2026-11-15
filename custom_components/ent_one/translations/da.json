@@ -71,7 +71,8 @@
           "scan_interval": "Opdateringsinterval",
           "homework_days": "Lektieperiode",
           "notify_services": "Notifikationshandlinger",
-          "show_panel": "Vis dette panel i sidebjælken"
+          "show_panel": "Vis dette panel i sidebjælken",
+          "panel_tabs": "Faner vist i panelet"
         },
         "data_description": {
           "scan_interval": "ENT deles af hele skolen: mindst 10 minutter.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nyt indlæg · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Lektier",
+        "words": "Kontaktbog",
+        "messages": "Beskeder",
+        "news": "Nyheder",
+        "blog": "Blog"
+      }
     }
   }
 }

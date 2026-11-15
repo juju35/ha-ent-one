@@ -71,7 +71,8 @@
           "scan_interval": "Interval aktualizácie",
           "homework_days": "Obdobie úloh",
           "notify_services": "Akcie upozornení",
-          "show_panel": "Zobraziť tento panel na bočnom paneli"
+          "show_panel": "Zobraziť tento panel na bočnom paneli",
+          "panel_tabs": "Karty zobrazené v paneli"
         },
         "data_description": {
           "scan_interval": "ENT používa celá škola: minimálne 10 minút.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nový príspevok · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Domáce úlohy",
+        "words": "Žiacka knižka",
+        "messages": "Správy",
+        "news": "Novinky",
+        "blog": "Blog"
+      }
     }
   }
 }

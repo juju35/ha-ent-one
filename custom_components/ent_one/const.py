@@ -45,6 +45,9 @@ EVENT_NEW_BLOG_POST: Final = f"{DOMAIN}_new_blog_post"
 
 CONF_SHOW_PANEL: Final = "show_panel"
 DEFAULT_SHOW_PANEL: Final = True
+# Tabs of the panel (and sections of its home page) shown; Home and Settings always are.
+CONF_PANEL_TABS: Final = "panel_tabs"
+PANEL_TABS: Final = ("homework", "words", "messages", "news", "blog")
 
 FRONTEND_URL: Final = "/ent_one_static"
 CARD_FILENAME: Final = "ent-one-card.js"

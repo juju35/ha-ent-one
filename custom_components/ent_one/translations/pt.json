@@ -71,7 +71,8 @@
           "scan_interval": "Intervalo de atualização",
           "homework_days": "Janela dos trabalhos",
           "notify_services": "Ações de notificação",
-          "show_panel": "Mostrar este painel na barra lateral"
+          "show_panel": "Mostrar este painel na barra lateral",
+          "panel_tabs": "Separadores mostrados no painel"
         },
         "data_description": {
           "scan_interval": "O ENT é partilhado por toda a escola: 10 minutos no mínimo.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nova publicação · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Trabalhos de casa",
+        "words": "Caderneta",
+        "messages": "Mensagens",
+        "news": "Notícias",
+        "blog": "Blog"
+      }
     }
   }
 }

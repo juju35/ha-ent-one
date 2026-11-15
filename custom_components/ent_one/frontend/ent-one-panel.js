@@ -151,11 +151,12 @@ class EntOnePanel extends HTMLElement {
     });
     // Tabs: arrows, Home and End move between them (WAI-ARIA tabs pattern).
     this._root.querySelector('.tabs').addEventListener('keydown', (ev) => {
-      var i = ENT_ONE_PANEL_TABS.indexOf(this._tab);
-      var next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: ENT_ONE_PANEL_TABS.length - 1 }[ev.key];
+      var tabs = this._shownTabs || ENT_ONE_PANEL_TABS;
+      var i = tabs.indexOf(this._tab);
+      var next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[ev.key];
       if (next === undefined) return;
       ev.preventDefault();
-      this._setTab(ENT_ONE_PANEL_TABS[(next + ENT_ONE_PANEL_TABS.length) % ENT_ONE_PANEL_TABS.length]);
+      this._setTab(tabs[(next + tabs.length) % tabs.length]);
       this._root.querySelector('.tab.on')?.focus();
     });
   }
@@ -197,7 +198,11 @@ class EntOnePanel extends HTMLElement {
       (data?.updated ? '<span class="updated">' + E.esc(E.format(t.last_update, { time: this._time(data.updated) })) + '</span>' : '') +
       (data ? '<ha-icon-button class="' + (this._refreshing ? 'spinning' : '') + '" data-action="refresh" label="' + E.esc(t.refresh) + '"><ha-icon icon="mdi:refresh"></ha-icon></ha-icon-button>' : '') +
       (data?.url ? '<ha-icon-button data-action="open" label="' + E.esc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></ha-icon-button>' : '');
-    this._root.querySelector('.tabs').innerHTML = ENT_ONE_PANEL_TABS.map((tab) => {
+    // Tabs hidden in the options are left out, with their part of the home page.
+    var shown = ENT_ONE_PANEL_TABS.filter((tab) => tab === 'home' || tab === 'settings' || !data || data.panelTabs.indexOf(tab) !== -1);
+    this._shownTabs = shown;
+    if (shown.indexOf(this._tab) === -1) this._tab = 'home';
+    this._root.querySelector('.tabs').innerHTML = shown.map((tab) => {
       var count = data ? this._count(tab, data) : 0;
       var on = tab === this._tab;
       return '<button role="tab" class="tab' + (on ? ' on' : '') + '" aria-selected="' + on + '" tabindex="' + (on ? 0 : -1) + '" data-tab="' + tab + '">' +
@@ -248,19 +253,22 @@ class EntOnePanel extends HTMLElement {
     var isOpen = (key) => !!this._open[key];
     var toSign = data.words.filter((w) => !w.signed);
     var todo = E.sortedHomework(data.homework, false).slice(0, 6);
-    var tiles =
-      '<div class="tiles">' +
-      [
-        [data.unread, t.tile_messages, 'mdi:email-outline', 'messages'],
-        [toSign.length, t.tile_words, 'mdi:notebook-edit-outline', 'words'],
-        [data.homework.filter((h) => !h.done).length, t.tile_homework, 'mdi:pencil-outline', 'homework'],
-      ].map((x) => '<button class="tile' + (x[3] === 'words' && x[0] ? ' hot' : '') + '" data-tab="' + x[3] + '"><span class="v"><ha-icon icon="' + x[2] + '"></ha-icon>' + x[0] + '</span><span class="l">' + E.esc(x[1]) + '</span></button>').join('') +
+    var on = (tab) => data.panelTabs.indexOf(tab) !== -1;
+    var tileList = [
+      [data.unread, t.tile_messages, 'mdi:email-outline', 'messages'],
+      [toSign.length, t.tile_words, 'mdi:notebook-edit-outline', 'words'],
+      [data.homework.filter((h) => !h.done).length, t.tile_homework, 'mdi:pencil-outline', 'homework'],
+    ].filter((x) => on(x[3]));
+    var tiles = !tileList.length
+      ? ''
+      : '<div class="tiles" style="grid-template-columns: repeat(' + tileList.length + ', minmax(0, 1fr))">' +
+      tileList.map((x) => '<button class="tile' + (x[3] === 'words' && x[0] ? ' hot' : '') + '" data-tab="' + x[3] + '"><span class="v"><ha-icon icon="' + x[2] + '"></ha-icon>' + x[0] + '</span><span class="l">' + E.esc(x[1]) + '</span></button>').join('') +
       '</div>';
     return tiles + '<div class="grid">' +
-      this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen, reader: true, entryId: data.entryId })), t.no_words)) +
-      this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_homework)) +
+      (on('words') ? this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen, reader: true, entryId: data.entryId })), t.no_words)) : '') +
+      (on('homework') ? this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_homework)) : '') +
       this._box(t.section_events, this._list(E.upcomingEvents(data.events).slice(0, 6).map((e) => R.event(e, t, locale, { isOpen: isOpen })), t.no_events)) +
-      this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_news)) +
+      (on('news') ? this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_news)) : '') +
       '</div>';
   }
 
@@ -449,7 +457,7 @@ class EntOnePanel extends HTMLElement {
         '<div class="url">' + E.esc(acc.url) + '</div><div class="form" data-entry="' + E.esc(acc.entry_id) + '"></div>' +
         (s.admin ? '<div class="popup-actions"><span class="msg"></span><button class="act" data-action="save" data-entry="' + E.esc(acc.entry_id) + '">' + E.esc(t.save) + '</button></div>' : ''),
         true)).join('') + '</div>';
-    var labels = { scan_interval: t.settings_scan, homework_days: t.settings_days, notify_services: t.settings_notify, show_panel: t.settings_panel };
+    var labels = { scan_interval: t.settings_scan, homework_days: t.settings_days, notify_services: t.settings_notify, show_panel: t.settings_panel, panel_tabs: t.settings_tabs };
     var helpers = { scan_interval: t.settings_scan_hint, notify_services: t.settings_notify_hint };
     s.accounts.forEach((acc) => {
       var form = document.createElement('ha-form');
@@ -461,6 +469,16 @@ class EntOnePanel extends HTMLElement {
         { name: 'homework_days', selector: { number: { min: 1, max: 60, step: 1, mode: 'box', unit_of_measurement: 'd' } } },
         { name: 'notify_services', selector: { select: { multiple: true, custom_value: true, mode: 'dropdown', options: notify } } },
         { name: 'show_panel', selector: { boolean: {} } },
+        {
+          name: 'panel_tabs',
+          selector: {
+            select: {
+              multiple: true,
+              mode: 'list',
+              options: ['homework', 'words', 'messages', 'news', 'blog'].map((tab) => ({ value: tab, label: t[ENT_ONE_TAB_KEYS[tab]] })),
+            },
+          },
+        },
       ];
       form.data = this._drafts[acc.entry_id] || acc.options;
       form.computeLabel = (field) => labels[field.name] || field.name;
@@ -489,6 +507,7 @@ class EntOnePanel extends HTMLElement {
           homework_days: Number(options.homework_days),
           notify_services: options.notify_services || [],
           show_panel: !!options.show_panel,
+          panel_tabs: options.panel_tabs || [],
         },
       })
       .then((res) => {

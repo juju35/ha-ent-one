@@ -71,7 +71,8 @@
           "scan_interval": "Interval posodabljanja",
           "homework_days": "Obdobje nalog",
           "notify_services": "Dejanja obvestil",
-          "show_panel": "Prikaži ta panel v stranski vrstici"
+          "show_panel": "Prikaži ta panel v stranski vrstici",
+          "panel_tabs": "Zavihki na plošči"
         },
         "data_description": {
           "scan_interval": "ENT uporablja vsa šola: najmanj 10 minut.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nova objava · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Domače naloge",
+        "words": "Beležka",
+        "messages": "Sporočila",
+        "news": "Novice",
+        "blog": "Blog"
+      }
     }
   }
 }

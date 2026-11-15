@@ -71,7 +71,8 @@
           "scan_interval": "Интервал на обновяване",
           "homework_days": "Период за домашните",
           "notify_services": "Действия за известяване",
-          "show_panel": "Покажи този панел в страничната лента"
+          "show_panel": "Покажи този панел в страничната лента",
+          "panel_tabs": "Раздели в панела"
         },
         "data_description": {
           "scan_interval": "ENT се ползва от цялото училище: минимум 10 минути.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Нова публикация · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Домашни",
+        "words": "Бележник",
+        "messages": "Съобщения",
+        "news": "Новини",
+        "blog": "Блог"
+      }
     }
   }
 }

@@ -71,7 +71,8 @@
           "scan_interval": "Uppdateringsintervall",
           "homework_days": "Läxperiod",
           "notify_services": "Aviseringsåtgärder",
-          "show_panel": "Visa den här panelen i sidofältet"
+          "show_panel": "Visa den här panelen i sidofältet",
+          "panel_tabs": "Flikar som visas i panelen"
         },
         "data_description": {
           "scan_interval": "ENT delas av hela skolan: minst 10 minuter.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nytt inlägg · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Läxor",
+        "words": "Kontaktbok",
+        "messages": "Meddelanden",
+        "news": "Nyheter",
+        "blog": "Blogg"
+      }
     }
   }
 }

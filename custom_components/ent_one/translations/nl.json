@@ -71,7 +71,8 @@
           "scan_interval": "Update-interval",
           "homework_days": "Huiswerkperiode",
           "notify_services": "Meldingsacties",
-          "show_panel": "Dit paneel in de zijbalk tonen"
+          "show_panel": "Dit paneel in de zijbalk tonen",
+          "panel_tabs": "Tabbladen in het paneel"
         },
         "data_description": {
           "scan_interval": "De ENT wordt door de hele school gedeeld: minimaal 10 minuten.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Nieuw blogbericht · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Huiswerk",
+        "words": "Heen-en-weerschrift",
+        "messages": "Berichten",
+        "news": "Nieuws",
+        "blog": "Blog"
+      }
     }
   }
 }

@@ -145,7 +145,7 @@ The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab pe
 | Messages | Like a mail client: the last messages of the inbox on the left, the one chosen on the right with its text and its attachments shown (images, PDF viewer), and a link to the ENT's messaging. On a phone, the message replaces the list (*Back* returns to it) |
 | News | The school news in full |
 | Blog | Like ONE's blog: a filter per blog, a feed of post cards (start of the text, pictures, comments) and the post read in full with *Read more* |
-| Settings | The account options; only administrators can change them |
+| Settings | The account options, including the tabs shown in the panel (Homework, Liaison book, Messages, News, Blog: a hidden tab also leaves the home page); only administrators can change them |
 
 With several accounts, a menu in the header bar switches between them. The Homework filters are remembered in the browser, the Home rows unfold like the card's, and the tabs can be browsed with the arrow keys.
 

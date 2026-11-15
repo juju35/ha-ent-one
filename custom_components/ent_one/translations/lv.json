@@ -71,7 +71,8 @@
           "scan_interval": "Atjaunināšanas intervāls",
           "homework_days": "Mājasdarbu periods",
           "notify_services": "Paziņojumu darbības",
-          "show_panel": "Rādīt šo paneli sānjoslā"
+          "show_panel": "Rādīt šo paneli sānjoslā",
+          "panel_tabs": "Panelī rādītās cilnes"
         },
         "data_description": {
           "scan_interval": "ENT izmanto visa skola: vismaz 10 minūtes.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Jauns ieraksts · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Mājasdarbi",
+        "words": "Dienasgrāmata",
+        "messages": "Ziņojumi",
+        "news": "Jaunumi",
+        "blog": "Emuārs"
+      }
     }
   }
 }

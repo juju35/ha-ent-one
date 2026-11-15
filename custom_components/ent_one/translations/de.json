@@ -71,7 +71,8 @@
           "scan_interval": "Aktualisierungsintervall",
           "homework_days": "Zeitraum für Hausaufgaben",
           "notify_services": "Benachrichtigungsaktionen",
-          "show_panel": "Dieses Panel in der Seitenleiste anzeigen"
+          "show_panel": "Dieses Panel in der Seitenleiste anzeigen",
+          "panel_tabs": "Im Panel angezeigte Reiter"
         },
         "data_description": {
           "scan_interval": "Das ENT wird von der ganzen Schule genutzt: mindestens 10 Minuten.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Neuer Blogbeitrag · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Hausaufgaben",
+        "words": "Mitteilungsheft",
+        "messages": "Nachrichten",
+        "news": "Neuigkeiten",
+        "blog": "Blog"
+      }
     }
   }
 }

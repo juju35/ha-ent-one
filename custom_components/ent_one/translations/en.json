@@ -71,7 +71,8 @@
           "scan_interval": "Update interval",
           "homework_days": "Homework window",
           "notify_services": "Notify actions",
-          "show_panel": "Show the ENT ONE panel in the sidebar"
+          "show_panel": "Show the ENT ONE panel in the sidebar",
+          "panel_tabs": "Tabs shown in the panel"
         },
         "data_description": {
           "scan_interval": "The ENT is shared by the whole school: 10 minutes minimum.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "New blog post · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Homework",
+        "words": "Liaison book",
+        "messages": "Messages",
+        "news": "News",
+        "blog": "Blog"
+      }
     }
   }
 }

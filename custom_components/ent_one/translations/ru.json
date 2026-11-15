@@ -71,7 +71,8 @@
           "scan_interval": "Интервал обновления",
           "homework_days": "Период домашних заданий",
           "notify_services": "Действия уведомлений",
-          "show_panel": "Показывать эту панель на боковой панели"
+          "show_panel": "Показывать эту панель на боковой панели",
+          "panel_tabs": "Вкладки на панели"
         },
         "data_description": {
           "scan_interval": "ENT используется всей школой: минимум 10 минут.",
@@ -167,6 +168,17 @@
     },
     "notify_new_blog_post": {
       "message": "Новая запись · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Домашние задания",
+        "words": "Дневник",
+        "messages": "Сообщения",
+        "news": "Новости",
+        "blog": "Блог"
+      }
     }
   }
 }
