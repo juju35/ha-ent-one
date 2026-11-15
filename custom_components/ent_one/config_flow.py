@@ -29,6 +29,7 @@ from .api import EntActionRequiredError, EntApi, EntAuthError, EntError, normali
 from .const import (
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
+    CONF_PANEL_TABS,
     CONF_PASSWORD_SECRET,
     CONF_SCAN_INTERVAL,
     CONF_SHOW_PANEL,
@@ -39,6 +40,7 @@ from .const import (
     DEFAULT_URL,
     DOMAIN,
     MIN_SCAN_INTERVAL,
+    PANEL_TABS,
 )
 from .secret import SecretNotFoundError, async_credentials
 
@@ -271,7 +273,14 @@ def clean_options(options: dict[str, Any]) -> dict[str, Any]:
             {f"notify.{n.strip().removeprefix('notify.')}" for n in options.get(CONF_NOTIFY, []) if n.strip()}
         ),
         CONF_SHOW_PANEL: bool(options.get(CONF_SHOW_PANEL, DEFAULT_SHOW_PANEL)),
+        CONF_PANEL_TABS: panel_tabs(options),
     }
+
+
+def panel_tabs(options: Mapping[str, Any]) -> list[str]:
+    """Tabs shown in the panel, in the panel's order; all of them when the option was never set."""
+    chosen = options.get(CONF_PANEL_TABS)
+    return list(PANEL_TABS) if chosen is None else [t for t in PANEL_TABS if t in chosen]
 
 
 def notify_choices(hass: HomeAssistant, current: list[str]) -> list[str]:
@@ -307,5 +316,13 @@ def options_schema(hass: HomeAssistant, options: Mapping[str, Any]) -> vol.Schem
                 )
             ),
             vol.Required(CONF_SHOW_PANEL, default=options.get(CONF_SHOW_PANEL, DEFAULT_SHOW_PANEL)): BooleanSelector(),
+            vol.Optional(CONF_PANEL_TABS, default=panel_tabs(options)): SelectSelector(
+                SelectSelectorConfig(
+                    options=list(PANEL_TABS),
+                    multiple=True,
+                    translation_key=CONF_PANEL_TABS,
+                    mode=SelectSelectorMode.LIST,
+                )
+            ),
         }
     )

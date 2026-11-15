@@ -71,12 +71,13 @@
           "scan_interval": "Interval ažuriranja",
           "homework_days": "Period domaćih zadataka",
           "notify_services": "Radnje obaveštenja",
-          "show_panel": "Prikaži ovaj panel na bočnoj traci"
+          "show_panel": "Prikaži ovaj panel na bočnoj traci",
+          "panel_tabs": "Kartice prikazane na panelu"
         },
         "data_description": {
           "scan_interval": "ENT koristi cela škola: najmanje 10 minuta.",
           "homework_days": "Prikazuju se domaći zadaci sa rokom u okviru ovog broja dana.",
-          "notify_services": "Nove poruke, beleške za potpis i domaći zadaci šalju se ovim radnjama."
+          "notify_services": "Nove poruke, beleške za potpis, domaći zadaci i objave na blogu šalju se ovim radnjama."
         }
       }
     }
@@ -164,6 +165,20 @@
     },
     "notify_new_homework": {
       "message": "Novi domaći zadatak"
+    },
+    "notify_new_blog_post": {
+      "message": "Nova objava · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Domaći",
+        "words": "Đačka knjižica",
+        "messages": "Poruke",
+        "news": "Vesti",
+        "blog": "Blog"
+      }
     }
   }
 }

@@ -28,9 +28,9 @@ Home Assistant integration for **ENT ONE**, the digital workspace of French prim
 - **School** calendar: the ENT's events and every homework on its due date
 - One **to-do list per homework notebook**: ticking an item marks the homework done in the ENT, like its check box (a notebook gone from the ENT has its list removed)
 - `ent_one.sign_word` action to sign a word of the liaison book (read receipt), `ent_one.refresh` to read the ENT now
-- `ent_one_new_message`, `ent_one_new_word` and `ent_one_new_homework` events for automations, and optional **notifications** to the notify actions of your choice
+- `ent_one_new_message`, `ent_one_new_word`, `ent_one_new_homework` and `ent_one_new_blog_post` events for automations, and optional **notifications** to the notify actions of your choice
 - `custom:ent-one-card` card, **shipped with the integration** and loaded automatically: counts, words to sign (with confirmation), homework to tick, unread messages, calendar and news
-- `custom:ent-one-mini-card` compact card: the three counts, with a button to open the full card
+- `custom:ent-one-mini-card` compact card: the counts (each one hidden with its `show_*` option), with a button to open the full card
 - **ENT ONE sidebar panel** with Home, Homework, Liaison book, Messages, News, Blog and Settings tabs
 - Username and password stored in the entry or read from `secrets.yaml` at every update
 - Silent re-login when the ENT session expires; after refused credentials it never retries on its own, so the account is not locked
@@ -106,10 +106,10 @@ type: custom:ent-one-card
 | `title` | school name | Card title |
 | `show_title` | `true` | Show the title in the header |
 | `show_refresh` | `true` | Show the refresh button |
-| `show_words` | `true` | Show the words of the liaison book to sign |
-| `show_homework` | `true` | Show the homework |
+| `show_words` | `true` | Show the words of the liaison book to sign (section and count) |
+| `show_homework` | `true` | Show the homework (section and count) |
 | `show_done` | `true` | Show the homework already done (after the rest, struck through) |
-| `show_messages` | `true` | Show the unread messages |
+| `show_messages` | `true` | Show the unread messages (section and count) |
 | `show_events` | `true` | Show the upcoming events of the ENT's calendars |
 | `show_news` | `false` | Show the school news |
 | `show_blog` | `false` | Show the latest blog posts |
@@ -145,7 +145,7 @@ The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab pe
 | Messages | Like a mail client: the last messages of the inbox on the left, the one chosen on the right with its text and its attachments shown (images, PDF viewer), and a link to the ENT's messaging. On a phone, the message replaces the list (*Back* returns to it) |
 | News | The school news in full |
 | Blog | Like ONE's blog: a filter per blog, a feed of post cards (start of the text, pictures, comments) and the post read in full with *Read more* |
-| Settings | The account options; only administrators can change them |
+| Settings | The account options, including the tabs shown in the panel (Homework, Liaison book, Messages, News, Blog: a hidden tab also leaves the home page); only administrators can change them |
 
 With several accounts, a menu in the header bar switches between them. The Homework filters are remembered in the browser, the Home rows unfold like the card's, and the tabs can be browsed with the arrow keys.
 
@@ -167,6 +167,7 @@ data:
 | `ent_one_new_message` | An unread message appears | `id`, `subject`, `sender` |
 | `ent_one_new_word` | A word to sign appears | `id`, `child_id`, `child`, `title` |
 | `ent_one_new_homework` | A homework to do appears | `id`, `book`, `date`, `title` |
+| `ent_one_new_blog_post` | A blog post appears | `id`, `blog_id`, `blog`, `title`, `author` |
 
 Every event also carries `config_entry_id`. Nothing fires at startup or after a reload, nor for what a section holds when it is first read after failing, and an item fires once only. A homework fires when it enters the homework window (14 days by default), which can be later than when the teacher posted it.
 

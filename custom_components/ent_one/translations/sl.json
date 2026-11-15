@@ -71,12 +71,13 @@
           "scan_interval": "Interval posodabljanja",
           "homework_days": "Obdobje nalog",
           "notify_services": "Dejanja obvestil",
-          "show_panel": "Prikaži ta panel v stranski vrstici"
+          "show_panel": "Prikaži ta panel v stranski vrstici",
+          "panel_tabs": "Zavihki na plošči"
         },
         "data_description": {
           "scan_interval": "ENT uporablja vsa šola: najmanj 10 minut.",
           "homework_days": "Prikazane so naloge z rokom v tem številu dni.",
-          "notify_services": "Nova sporočila, obvestila za podpis in domače naloge se pošljejo tem dejanjem."
+          "notify_services": "Nova sporočila, obvestila za podpis, domače naloge in objave na blogu se pošljejo tem dejanjem."
         }
       }
     }
@@ -164,6 +165,20 @@
     },
     "notify_new_homework": {
       "message": "Nova domača naloga"
+    },
+    "notify_new_blog_post": {
+      "message": "Nova objava · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Domače naloge",
+        "words": "Beležka",
+        "messages": "Sporočila",
+        "news": "Novice",
+        "blog": "Blog"
+      }
     }
   }
 }

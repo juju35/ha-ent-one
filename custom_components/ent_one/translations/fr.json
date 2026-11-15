@@ -71,12 +71,13 @@
           "scan_interval": "Intervalle de mise à jour",
           "homework_days": "Fenêtre des devoirs",
           "notify_services": "Actions de notification",
-          "show_panel": "Afficher ce panneau dans la barre latérale"
+          "show_panel": "Afficher ce panneau dans la barre latérale",
+          "panel_tabs": "Onglets affichés dans le panneau"
         },
         "data_description": {
           "scan_interval": "L'ENT est partagé par toute l'école : 10 minutes minimum.",
           "homework_days": "Les devoirs à rendre dans ce nombre de jours sont affichés.",
-          "notify_services": "Les nouveaux messages, mots à signer et devoirs sont envoyés à ces actions."
+          "notify_services": "Les nouveaux messages, mots à signer, devoirs et billets de blog sont envoyés à ces actions."
         }
       }
     }
@@ -164,6 +165,20 @@
     },
     "notify_new_homework": {
       "message": "Nouveau devoir"
+    },
+    "notify_new_blog_post": {
+      "message": "Nouveau billet · {blog}"
+    }
+  },
+  "selector": {
+    "panel_tabs": {
+      "options": {
+        "homework": "Devoirs",
+        "words": "Carnet de liaison",
+        "messages": "Messagerie",
+        "news": "Actualités",
+        "blog": "Blog"
+      }
     }
   }
 }

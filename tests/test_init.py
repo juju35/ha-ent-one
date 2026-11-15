@@ -600,3 +600,48 @@ async def test_blog(hass: HomeAssistant, api, entry) -> None:
     state = hass.states.get(_entity(hass, "sensor", "blog"))
     assert state.state == "0"
     assert "blog" not in state.attributes["stale"]
+
+
+async def test_new_blog_post_event(hass: HomeAssistant, api, entry) -> None:
+    """A post seen for the first time fires ent_one_new_blog_post; the posts there at startup do not."""
+    events = []
+    hass.bus.async_listen("ent_one_new_blog_post", events.append)
+    await _setup(hass, entry)
+    assert events == []
+    fake = entry.runtime_data.api
+    original = fake.blog_posts
+
+    async def more(blog_id: str) -> list[dict]:
+        return [{"_id": "p2", "title": "Chorale", "author": {"username": "M. Bernard"}}, *await original(blog_id)]
+
+    fake.blog_posts = more
+    await entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert [e.data["id"] for e in events] == ["p2"]
+    assert events[0].data["blog"] == "Blog du CE2"
+    assert events[0].data["author"] == "M. Bernard"
+
+
+async def test_panel_tabs(hass: HomeAssistant, api, entry, hass_ws_client) -> None:
+    """Every tab is shown until the option is set; the choice keeps the panel's order and reaches the panel."""
+    await _setup(hass, entry)
+    last = hass.states.get(_entity(hass, "sensor", "last_update"))
+    assert last.attributes["panel_tabs"] == ["homework", "words", "messages", "news", "blog"]
+    client = await hass_ws_client(hass)
+    await client.send_json(
+        {
+            "id": 1,
+            "type": "ent_one/settings/update",
+            "entry_id": entry.entry_id,
+            "options": {"panel_tabs": ["blog", "words"]},
+        }
+    )
+    msg = await client.receive_json()
+    assert msg["result"]["options"]["panel_tabs"] == ["words", "blog"]
+    await hass.async_block_till_done()
+    last = hass.states.get(_entity(hass, "sensor", "last_update"))
+    assert last.attributes["panel_tabs"] == ["words", "blog"]
+    await client.send_json(
+        {"id": 2, "type": "ent_one/settings/update", "entry_id": entry.entry_id, "options": {"panel_tabs": ["x"]}}
+    )
+    assert not (await client.receive_json())["success"]
