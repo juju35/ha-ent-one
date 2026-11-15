@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1 (2026-11-15)
+
+### Maintenance
+- Added a README screenshot of the sidebar entry with its badge (light and dark), and noted that each panel tab shows its own count.
+
 ## 1.4.0 (2026-11-15)
 
 ### Added

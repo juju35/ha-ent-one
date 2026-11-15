@@ -8,6 +8,7 @@ The clock is frozen on Monday 16 November 2026 in Paris, so relative days stay t
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -17,6 +18,8 @@ ROOT = Path(__file__).resolve().parent.parent
 FRONTEND = ROOT / "custom_components/ent_one/frontend"
 CARD_JS = (FRONTEND / "ent-one-card.js").read_text()
 PANEL_JS = (FRONTEND / "ent-one-panel.js").read_text()
+# The panda pictogram of the sidebar entry, taken from the icon set so the mock sidebar shows the real icon.
+PANDA = re.search(r"const PANDA = '([^']*)'", (FRONTEND / "ent-one-icons.js").read_text()).group(1)
 NOW = "2026-11-16T09:00:00+01:00"
 WIDTH = 460
 
@@ -76,6 +79,52 @@ ICONS = {
     "post-outline": "M19 5V19H5V5H19M21 3H3V21H21V3M17 17H7V16H17V17M17 15H7V14H17V15M17 12H7V7H17V12Z",
     "comment-outline": "M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M10,16V19.08L13.08,16H20V4H4V16H10Z",
 }
+
+# Generic Material icons for the other rows of the mock Home Assistant sidebar.
+SIDEBAR_ICONS = {
+    "home": "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z",
+    "cog": "M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.98C19.47,12.66 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.66 4.57,12.98L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.98Z",
+    "bell": "M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21H14Z",
+}
+
+
+def _sidebar_row(icon, label, *, active=False, badge=None, badge_color="var(--primary-color)"):
+    text = "var(--primary-color)" if active else "var(--secondary-text-color)"
+    bg = "background:rgba(3,169,244,.12);" if active else ""
+    weight = "font-weight:500;" if active else ""
+    badge_html = (
+        f'<span style="min-width:18px;height:18px;box-sizing:border-box;padding:0 5px;display:inline-flex;'
+        f"align-items:center;justify-content:center;border-radius:9px;font-size:11px;font-weight:500;line-height:1;"
+        f'color:#fff;background:{badge_color};">{badge}</span>'
+        if badge is not None
+        else ""
+    )
+    return (
+        f'<div style="display:flex;align-items:center;height:48px;color:{text};{bg}'
+        f'border-left:3px solid {"var(--primary-color)" if active else "transparent"};">'
+        f'<svg viewBox="0 0 24 24" style="width:24px;height:24px;margin:0 12px 0 9px;fill:currentColor;flex:none;">'
+        f'<path d="{icon}"/></svg>'
+        f'<span style="flex:1;font-size:14px;{weight}">{label}</span>'
+        f"{badge_html}"
+        '<span style="width:12px;flex:none;"></span></div>'
+    )
+
+
+def sidebar_html(count):
+    """A faithful mock of the Home Assistant sidebar: the ENT ONE entry shows its panda icon and the badge, at the end
+    of the row like the Notifications count below it."""
+    rows = [
+        _sidebar_row(SIDEBAR_ICONS["home"], "Overview"),
+        _sidebar_row(ICONS["calendar-blank-outline"], "Calendar"),
+        _sidebar_row(PANDA, "ENT ONE", active=True, badge=count),
+        _sidebar_row(SIDEBAR_ICONS["cog"], "Settings"),
+        _sidebar_row(SIDEBAR_ICONS["bell"], "Notifications", badge=3, badge_color="#ff9800"),
+    ]
+    return (
+        '<div style="width:255px;background:var(--card-background-color);'
+        'border-right:1px solid var(--divider-color);padding:8px 0;">' + "".join(rows) + "</div>"
+    )
+
 
 # What the signed file URLs show: a drawn map for images, a page of text for PDFs (mock content).
 MOCK_IMAGE = (
@@ -371,6 +420,9 @@ SHOTS = [
     {"file": "panel-blog-dark", "theme": "dark", "panel": "blog", "width": 1100},
     {"file": "panel-blog-post", "theme": "light", "panel": "blog", "item": "bl1:p1", "width": 1100},
     {"file": "panel-blog-post-dark", "theme": "dark", "panel": "blog", "item": "bl1:p1", "width": 1100},
+    # The sidebar entry with its badge: 1 word to sign + 3 homework + 2 unread = 6, like the mock sensors.
+    {"file": "sidebar", "theme": "light", "sidebar": True, "count": 6, "width": 256},
+    {"file": "sidebar-dark", "theme": "dark", "sidebar": True, "count": 6, "width": 256},
 ]
 
 
@@ -426,6 +478,12 @@ def mount(context, shot):
     page = context.new_page()
     page.on("pageerror", lambda err, name=shot["file"]: print(f"{name}: page error: {err}"))
     page.clock.set_fixed_time(NOW)
+    if shot.get("sidebar"):
+        # A static mock of the sidebar: no Home Assistant element, just the rows drawn with the theme's colours.
+        page.set_content(page_html(shot["theme"], shot["width"], panel=True))
+        page.evaluate("(h) => { document.getElementById('root').innerHTML = h; }", sidebar_html(shot["count"]))
+        page.wait_for_timeout(100)
+        return page
     if shot.get("panel"):
         # The panel fills the window: as wide as the shot, and the mail layout as high as the window.
         page.set_viewport_size({"width": shot["width"], "height": 800 if shot.get("item") else 2400})
@@ -476,7 +534,7 @@ def mount(context, shot):
 
 def capture(page, shot, out):
     width = shot.get("width", WIDTH)
-    pad = 0 if shot.get("panel") else 32
+    pad = 0 if shot.get("panel") or shot.get("sidebar") else 32
     box = page.locator("#root").bounding_box()
     clip = {"x": 0, "y": 0, "width": width + pad, "height": int(box["height"] + 0.999) + pad}
     page.screenshot(path=str(out), clip=clip, animations="disabled")

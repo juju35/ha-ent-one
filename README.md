@@ -218,7 +218,13 @@ The mini card:
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card.png" alt="mini card" width="260"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-dark.png" alt="mini card dark" width="260"> |
 
-The panel, Home and Homework tabs:
+The sidebar entry, with a badge counting what there is to deal with (words to sign, homework to do and unread messages):
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/sidebar.png" alt="sidebar badge" width="240"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/sidebar-dark.png" alt="sidebar badge dark" width="240"> |
+
+The panel, Home and Homework tabs (each tab shows its own count):
 
 | Light | Dark |
 |---|---|
