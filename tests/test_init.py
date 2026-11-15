@@ -494,6 +494,8 @@ async def test_panel_uses_the_panda_icon_set(hass: HomeAssistant, api, entry, st
     await _setup(hass, entry)
     assert hass.data[frontend.DATA_PANELS][PANEL_URL_PATH].sidebar_icon == "ent_one:panda"
     assert any("/ent_one_static/ent-one-icons.js?v=" in str(c.args[1]) for c in stub_frontend.call_args_list)
+    # The sidebar badge module is loaded on every page too.
+    assert any("/ent_one_static/ent-one-badge.js?v=" in str(c.args[1]) for c in stub_frontend.call_args_list)
 
 
 async def test_word_attachments_in_attributes(hass: HomeAssistant, api, entry) -> None:

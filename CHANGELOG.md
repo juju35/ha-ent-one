@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0 (2026-11-15)
+
+### Added
+- A badge on the ENT ONE sidebar item showing how many things there are to deal with — words to sign, homework to do and unread messages, summed over every child account — in the accent colour, like the notifications count. It disappears when there is nothing, and is read from the account sensors for every administrator, even with the panel closed.
+
 ## 1.3.1 (2026-11-15)
 
 - Panel: choose the tabs shown (option *Tabs shown in the panel*, in Settings or the integration options). A hidden tab also leaves the home page (its count and its box); Home and Settings always stay.

@@ -31,6 +31,7 @@ from .const import (
     ATTR_CHILD_ID,
     ATTR_CONFIG_ENTRY_ID,
     ATTR_WORD_ID,
+    BADGE_FILENAME,
     CARD_FILENAME,
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
@@ -76,6 +77,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # The panda icon set, on every page: the sidebar entry of the panel uses it before any dashboard loads the card.
     _base, icons_url = await _file_url(hass, ICONS_FILENAME)
     add_extra_js_url(hass, icons_url)
+    # The sidebar badge, on every page: the number of things to deal with on the panel's sidebar item.
+    _base, badge_url = await _file_url(hass, BADGE_FILENAME)
+    add_extra_js_url(hass, badge_url)
 
     websocket_api.async_register_command(hass, ws_settings)
     websocket_api.async_register_command(hass, ws_update_settings)
