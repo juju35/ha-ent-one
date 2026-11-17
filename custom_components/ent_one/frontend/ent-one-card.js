@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.5.0';
+var ENT_ONE_CARD_VERSION = '1.5.1';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -2938,11 +2938,11 @@ var ENT_ONE_BANNER_STYLES = [
   '.brand svg { width: 14px; height: 14px; }',
   // The header buttons: 24 px round glass buttons on the top line, the detail button in the corner, the others at its left.
   '.hbtns { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; gap: 4px; }',
-  '.hbtns ha-icon-button, .hbtns .detail { --mdc-icon-button-size: 24px; --mdc-icon-size: 16px; width: 24px !important; height: 24px !important; margin: 0; border-radius: 50%;' +
+  '.hbtns .hbtn, .hbtns .detail { width: 24px; height: 24px; border-radius: 50%;' +
     ' color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }',
-  '.night .hbtns ha-icon-button, .night .hbtns .detail { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }',
-  '.hbtns ha-icon-button:hover, .hbtns .detail:hover { background: rgba(255,255,255,.75); color: #33506b; }',
-  '.night .hbtns ha-icon-button:hover, .night .hbtns .detail:hover { background: rgba(255,255,255,.22); color: #fff; }',
+  '.night .hbtns .hbtn, .night .hbtns .detail { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }',
+  '.hbtns .hbtn:hover, .hbtns .detail:hover { background: rgba(255,255,255,.75); color: #33506b; }',
+  '.night .hbtns .hbtn:hover, .night .hbtns .detail:hover { background: rgba(255,255,255,.22); color: #fff; }',
   '.eo-pen { animation: eo-write 1s ease-in-out infinite; }',
   '.eo-bob { animation: eo-write 2s ease-in-out infinite; }',
   '.eo-dot { animation: eo-blink 1.6s ease-in-out infinite; }',
@@ -3149,10 +3149,10 @@ class EntOneCard extends HTMLElement {
     var buttons = '';
     if (data && !this._compact()) {
       if (c.show_refresh) {
-        buttons += '<ha-icon-button class="refresh-btn' + (this._refreshing ? ' spinning' : '') + '" data-action="refresh" label="' + entOneEsc(t.refresh) + '" title="' + entOneEsc(t.refresh) + '"><ha-icon icon="mdi:refresh"></ha-icon></ha-icon-button>';
+        buttons += '<button class="hbtn refresh-btn' + (this._refreshing ? ' spinning' : '') + '" data-action="refresh" aria-label="' + entOneEsc(t.refresh) + '" title="' + entOneEsc(t.refresh) + '"><ha-icon icon="mdi:refresh"></ha-icon></button>';
       }
       if (data.url) {
-        buttons += '<ha-icon-button data-action="open" label="' + entOneEsc(t.open_ent) + '" title="' + entOneEsc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></ha-icon-button>';
+        buttons += '<button class="hbtn" data-action="open" aria-label="' + entOneEsc(t.open_ent) + '" title="' + entOneEsc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></button>';
       }
     }
     var sub = this._error
@@ -3407,7 +3407,13 @@ class EntOneCard extends HTMLElement {
       '.status.bad { --c: var(--error-color, #db4437); }',
       '.status-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }',
       '.buttons { display: flex; align-items: center; flex: none; }',
-      '.buttons ha-icon-button { --mdc-icon-button-size: 28px; --mdc-icon-size: 16px; color: var(--secondary-text-color); }',
+      // Plain round buttons (not ha-icon-button, whose inner 40 px button overflows a shrunk host and offsets the icon
+      // and its hover ring).
+      '.hbtn { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: grid; place-items: center; width: 28px; height: 28px;' +
+        ' border-radius: 50%; color: var(--secondary-text-color); --mdc-icon-size: 16px; transition: background-color .15s, color .15s; }',
+      '.hbtn ha-icon { display: flex; }',
+      '.buttons .hbtn:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }',
+      '.hbtn:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 1px; }',
       '.spinning ha-icon { animation: ent-one-spin 1s linear infinite; }',
       '@keyframes ent-one-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }',
       '@container (max-width: 320px) { .header { gap: 4px; } .logo { display: none; } }',
