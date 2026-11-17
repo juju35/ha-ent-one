@@ -2921,17 +2921,20 @@ var ENT_ONE_BANNER_STYLES = [
   '.banner .titles { min-width: 0; }',
   '.banner .name { color: var(--eo-text); }',
   '.banner .sub { color: var(--eo-muted); }',
-  '.banner .sub .state { font-weight: 500; }',
-  '.banner .sub .state.warn { color: color-mix(in srgb, var(--warning-color, #ffa600) 70%, var(--eo-text)); }',
-  '.banner .sub .state.bad { color: color-mix(in srgb, var(--error-color, #db4437) 75%, var(--eo-text)); }',
+  '.banner .status.active { --c: #2f80ed; } .banner .status.idle { --c: #8a96a3; } .banner.night .status.idle { --c: #9aa5b1; }',
+  '.banner .status { background: color-mix(in srgb, var(--c) 18%, rgba(255,255,255,.78)); color: color-mix(in srgb, var(--c) 45%, #0d2a45); }',
+  '.banner.night .status { background: color-mix(in srgb, var(--c) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c) 35%, #ffffff); }',
   // The brand: the ONE panda on a white tile at the icon's bottom right.
   '.brand { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 5px; padding: 2px; box-sizing: border-box; display: grid; place-items: center;' +
     ' background: #fff; color: ' + ENT_ONE_ACCENT + '; box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }',
   '.brand svg { width: 14px; height: 14px; }',
-  '.hbtns { position: absolute; z-index: 2; top: 4px; right: 4px; display: flex; gap: 2px; }',
-  '.hbtns ha-icon-button, .hbtns .detail { --mdc-icon-button-size: 24px; --mdc-icon-size: 15px; width: 24px !important; height: 24px !important; margin: 0; border-radius: 50%; color: #10283f; background: rgba(255,255,255,.6); }',
-  '.night .hbtns ha-icon-button, .night .hbtns .detail { color: #fff; background: rgba(10,20,40,.45); }',
-  '.hbtns .detail:hover { background: rgba(255,255,255,.85); color: #10283f; } .night .hbtns .detail:hover { background: rgba(10,20,40,.7); color: #fff; }',
+  // The header buttons: 24 px round glass buttons on the top line, the detail button in the corner, the others at its left.
+  '.hbtns { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; gap: 4px; }',
+  '.hbtns ha-icon-button, .hbtns .detail { --mdc-icon-button-size: 24px; --mdc-icon-size: 16px; width: 24px !important; height: 24px !important; margin: 0; border-radius: 50%;' +
+    ' color: #33506b; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }',
+  '.night .hbtns ha-icon-button, .night .hbtns .detail { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }',
+  '.hbtns ha-icon-button:hover, .hbtns .detail:hover { background: rgba(255,255,255,.75); color: #33506b; }',
+  '.night .hbtns ha-icon-button:hover, .night .hbtns .detail:hover { background: rgba(255,255,255,.22); color: #fff; }',
   '.eo-pen { animation: eo-write 1s ease-in-out infinite; }',
   '.eo-bob { animation: eo-write 2s ease-in-out infinite; }',
   '.eo-dot { animation: eo-blink 1.6s ease-in-out infinite; }',
@@ -3081,12 +3084,18 @@ class EntOneCard extends HTMLElement {
       who = names.length ? names.join(' · ') : (data.account.classes || []).join(', ');
     }
     var updated = data?.updated ? entOneFormat(t.last_update, { time: this._time(data.updated) }) : '';
+    // The status pill, right after the title: green (classic header) or in the header icon's colour (banner). On a
+    // narrow title block it takes a line of its own under the subtitle (the copy in .pill-line), and on a very
+    // narrow card only its dot stays (its text stays in its title and aria-label).
+    var st = entOneHeaderState(data, c);
     var pill = '';
-    if (data && !this._compact()) {
-      var kind = data.unavailable ? 'bad' : data.stale.length ? 'warn' : 'ok';
+    if (data) {
+      var kind = c.illustration === false ? (data.unavailable ? 'bad' : data.stale.length ? 'warn' : 'ok') : st.status;
       var text = data.unavailable ? t.offline : data.stale.length ? t.partial : t.up_to_date;
-      pill = '<span class="status ' + kind + '" title="' + entOneEsc(updated || text) + '"><span class="status-text">' + entOneEsc(text) + '</span></span>';
+      pill = '<span class="status ' + kind + '" title="' + entOneEsc(updated || text) + '" aria-label="' + entOneEsc(text) + '"><span class="dot"></span><span class="status-text">' + entOneEsc(text) + '</span></span>';
     }
+    var titles = (s) => '<div class="titles"><div class="title-row"><div class="name">' + entOneEsc(title) + '</div>' + pill + '</div>' + s +
+      (pill ? '<div class="pill-line">' + pill + '</div>' : '') + '</div>';
     var buttons = '';
     if (data && !this._compact()) {
       if (c.show_refresh) {
@@ -3103,25 +3112,20 @@ class EntOneCard extends HTMLElement {
       header.className = 'header';
       header.innerHTML =
         '<div class="title"><div class="logo" aria-hidden="true">' + ENT_ONE_ICON + '</div>' +
-        '<div class="titles"><div class="name">' + entOneEsc(title) + '</div>' + sub + '</div></div>' +
-        pill + (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
+        titles(sub) + '</div>' +
+        (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
       return;
     }
-    // The illustrated header: the school corner at the right, the status in the icon's colour, the state (when it is
-    // not up to date) after the names, the buttons at the top right.
+    // The illustrated header: the school corner at the right, the status in the icon's colour (and in the pill), the
+    // buttons at the top right.
     this._uid = this._uid || ++entOneUid;
-    var st = entOneHeaderState(data, c);
-    if (!this._error && data && st.status !== 'idle' && st.status !== 'active') {
-      var label = data.unavailable ? t.offline : t.partial;
-      sub = '<div class="sub">' + (who ? entOneEsc(who) + ' · ' : '') + '<span class="state ' + st.status + '">' + entOneEsc(label) + '</span></div>';
-    }
     var tools = buttons + this._detailButton(t);
     header.className = 'banner' + (entOneIsNight(this._hass, c) ? ' night' : '');
     header.innerHTML =
       entOneSceneSvg(st, header.classList.contains('night'), this._uid, !!tools) + '<div class="eo-ground"></div>' +
       '<div class="htext"><div class="logo ' + st.status + '" title="' + entOneEsc(updated || title) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="' + ENT_ONE_SCHOOL_PATH + '"/></svg>' +
       '<span class="brand" aria-hidden="true">' + ENT_ONE_ICON + '</span></div>' +
-      '<div class="titles"><div class="name">' + entOneEsc(title) + '</div>' + sub + '</div></div>' +
+      titles(sub) + '</div>' +
       (tools ? '<div class="hbtns">' + tools + '</div>' : '');
   }
 
@@ -3322,21 +3326,27 @@ class EntOneCard extends HTMLElement {
     return [
       ':host { display: block; }',
       ':host::before { content: ""; display: grid; grid-template-columns: minmax(0, 360px); height: 0; }',
-      'ha-card { padding: 0 0 10px; overflow: hidden; container-type: inline-size; }',
+      'ha-card { padding: 0 0 10px; overflow: hidden; container: eo-card / inline-size; }',
       '.header { display: flex; align-items: center; gap: 10px; padding: 12px 10px 8px 12px; min-height: 40px; }',
       '.title { flex: 1 1 0; min-width: calc(5ch + 50px); display: flex; align-items: center; gap: 10px; }',
       '.logo { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
       '.logo svg { width: 24px; height: 24px; }',
-      '.titles { flex: 1 1 0; min-width: 5ch; overflow: hidden; }',
-      ':host([hide-title]) .titles > .name { display: none; }',
+      '.titles { flex: 1 1 0; min-width: 5ch; overflow: hidden; container: eo-titles / inline-size; }',
+      ':host([hide-title]) .title-row > .name { display: none; }',
+      // The title line: the title, then the status pill, which keeps its whole label (the title gives way first).
+      '.title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }',
+      '.title-row .name { flex: 0 1 auto; min-width: 4ch; }',
+      '.title-row .status { flex: none; max-width: 51%; }',
+      '.pill-line { display: none; }',
       '.name { font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.sub.error { display: flex; align-items: flex-start; gap: 4px; white-space: normal; color: color-mix(in srgb, var(--error-color, #db4437) 55%, var(--primary-text-color)); }',
       '.dismiss { all: unset; cursor: pointer; flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; --mdc-icon-size: 14px; }',
       '.dismiss:hover { background: color-mix(in srgb, var(--error-color, #db4437) 14%, transparent); }',
       '.dismiss:focus-visible { outline: 2px solid var(--primary-color); }',
-      '.status { --c: var(--success-color, #43a047); flex: 0 1 auto; min-width: 0; max-width: 45%; display: flex; align-items: center; overflow: hidden; font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap;' +
-        ' border-radius: 12px; padding: 5px 10px; color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); background: color-mix(in srgb, var(--c) 15%, transparent); }',
+      '.status { --c: var(--success-color, #43a047); display: inline-flex; align-items: center; gap: 4px; min-width: 0; box-sizing: border-box; overflow: hidden; font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap;' +
+        ' border-radius: 12px; padding: 1px 8px; color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); background: color-mix(in srgb, var(--c) 15%, transparent); }',
+      '.status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); flex: none; }',
       '.status.warn { --c: var(--warning-color, #ffa600); }',
       '.status.bad { --c: var(--error-color, #db4437); }',
       '.status-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }',
@@ -3344,9 +3354,12 @@ class EntOneCard extends HTMLElement {
       '.buttons ha-icon-button { --mdc-icon-button-size: 28px; --mdc-icon-size: 16px; color: var(--secondary-text-color); }',
       '.spinning ha-icon { animation: ent-one-spin 1s linear infinite; }',
       '@keyframes ent-one-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }',
-      '@container (max-width: 320px) { .header { gap: 4px; } .logo { display: none; } .status { padding: 5px 8px; } }',
-      '@container (max-width: 240px) { .status { padding: 5px; } .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }' +
-        ' .status-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } }',
+      '@container (max-width: 320px) { .header { gap: 4px; } .logo { display: none; } }',
+      // Narrow title block: the pill leaves the title line for a line of its own under the subtitle; very narrow card:
+      // only its dot stays, on the title line.
+      '@container eo-titles (max-width: 180px) { .title-row .status { display: none; } .pill-line { display: flex; min-width: 0; margin-top: 3px; } .pill-line .status { max-width: 100%; } }',
+      '@container eo-card (max-width: 260px) { .title-row .status { display: none; } .pill-line { display: flex; min-width: 0; margin-top: 3px; } .pill-line .status { max-width: 100%; } }',
+      '@container eo-card (max-width: 200px) { .title-row .status { display: inline-flex; padding: 4px; } .status-text, .pill-line { display: none; } }',
       '.pad { padding: 4px 16px; }',
       '.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0 12px; }',
       '.tile { all: unset; box-sizing: border-box; cursor: pointer; display: block; min-width: 0; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, var(--primary-text-color) 5%, transparent); }',
@@ -3370,8 +3383,11 @@ class EntOneCard extends HTMLElement {
       '.popup-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }',
       '.act.ghost { color: var(--secondary-text-color); border-color: var(--divider-color, rgba(0,0,0,.2)); }',
       ':host([mini])::before { grid-template-columns: minmax(0, 260px); }',
-      '.detail { all: unset; flex: none; cursor: pointer; width: 24px; height: 24px; margin-right: 4px; border-radius: 50%; align-self: flex-start;' +
-        ' display: grid; place-items: center; color: var(--secondary-text-color); --mdc-icon-size: 16px; }',
+      '.header { position: relative; }',
+      '.header:has(> .detail) { padding-right: 34px; }',
+      '.detail { all: unset; position: absolute; z-index: 2; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%;' +
+        ' display: grid; place-items: center; color: var(--secondary-text-color); --mdc-icon-size: 16px; box-shadow: inset 0 0 0 1px var(--divider-color, rgba(127,127,127,.3)); }',
+      '.hbtns .detail { position: static; }',
       '.detail:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }',
       '.detail:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 1px; }',
       '@container (max-width: 320px) { ha-card.mini .logo { display: grid; } }',
