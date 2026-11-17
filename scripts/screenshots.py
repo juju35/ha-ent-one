@@ -405,6 +405,9 @@ SHOTS = [
     {"file": "card-message-dark", "theme": "dark", "config": {}, "click": '[data-toggle="message:m1"]'},
     {"file": "mini-card", "theme": "light", "element": "ent-one-mini-card", "width": 300, "config": {}},
     {"file": "mini-card-dark", "theme": "dark", "element": "ent-one-mini-card", "width": 300, "config": {}},
+    # The mini card expanded by its detail button: the full card, at the full card's width.
+    {"file": "mini-card-zoom", "theme": "light", "element": "ent-one-mini-card", "config": {}, "click": ".detail"},
+    {"file": "mini-card-zoom-dark", "theme": "dark", "element": "ent-one-mini-card", "config": {}, "click": ".detail"},
     {"file": "panel", "theme": "light", "panel": "home", "width": 960},
     {"file": "panel-dark", "theme": "dark", "panel": "home", "width": 960},
     {"file": "panel-homework", "theme": "light", "panel": "homework", "width": 960},

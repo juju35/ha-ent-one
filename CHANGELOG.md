@@ -8,6 +8,9 @@
 - Status pill (Up to date, Partly updated, Unavailable) right after the title on both cards, the mini card included, in the header icon's colour on the illustrated header; it takes a line of its own under the names when the title block is narrow, and only its dot stays below 200 px. The header buttons are 24 px round glass buttons on the top line, the mini card's detail button in the corner and the others at its left.
 - New options `illustration` (`false` keeps the classic header) and `illustration_theme` (`auto` follows `sun.sun`, then the dark theme; `day` or `night` to force), in the visual editor of both cards. Animations stop with `prefers-reduced-motion`.
 
+### Documentation
+- README: screenshots of the mini card expanded to the full card, light and dark.
+
 ## 1.4.1 (2026-11-15)
 
 ### Maintenance

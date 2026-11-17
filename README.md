@@ -220,6 +220,12 @@ The mini card:
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card.png" alt="mini card" width="260"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-dark.png" alt="mini card dark" width="260"> |
 
+The mini card expanded by its detail button: the full card.
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-zoom.png" alt="mini card expanded" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-zoom-dark.png" alt="mini card expanded dark" width="400"> |
+
 The sidebar entry, with a badge counting what there is to deal with (words to sign, homework to do and unread messages):
 
 | Light | Dark |
