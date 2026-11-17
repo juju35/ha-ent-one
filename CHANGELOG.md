@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 - 2026-11-17
+
+### Features
+- Cards: an illustrated, animated 90 px header on the card and the mini card — a school corner on the right (schoolbag and exercise books on a shelf, the sheet with a writing pen when there is homework or a word to sign, the envelope with the count of unread messages, a ticked sheet when everything is done) above a 10 px parquet strip, with day and night variants.
+- The header icon (`mdi:school`, with the ONE panda as brand badge) takes the status colour: blue when there are things to deal with, grey when everything is done, amber when partly updated, red when unavailable.
+- New options `illustration` (`false` keeps the classic header) and `illustration_theme` (`auto` follows `sun.sun`, then the dark theme; `day` or `night` to force), in the visual editor of both cards. Animations stop with `prefers-reduced-motion`.
+
 ## 1.4.1 (2026-11-15)
 
 ### Maintenance

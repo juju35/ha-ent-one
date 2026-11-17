@@ -493,8 +493,8 @@ def mount(context, shot):
     if shot.get("panel"):
         page.add_script_tag(content=PANEL_JS)
     page.evaluate(
-        """({config, states, element, tab, item, mockImage, mockPdf}) => {
-          const hass = {states, language: "en", locale: {language: "en", time_format: "24"}, user: {is_admin: true},
+        """({config, states, element, tab, item, mockImage, mockPdf, dark}) => {
+          const hass = {states, themes: {darkMode: dark}, language: "en", locale: {language: "en", time_format: "24"}, user: {is_admin: true},
                         callService: () => Promise.resolve(),
                         callWS: (msg) => Promise.resolve(msg.type === "ent_one/message" ? {
                           id: msg.message_id, sender: "Ms Martin", date: "2026-11-16T07:45:00+01:00",
@@ -522,6 +522,8 @@ def mount(context, shot):
             "item": shot.get("item"),
             "mockImage": MOCK_IMAGE,
             "mockPdf": MOCK_PDF,
+            # The illustrated header follows the dark theme (no sun.sun in the mock), so dark twins show the night.
+            "dark": shot["theme"] == "dark",
         },
     )
     if shot.get("click"):
