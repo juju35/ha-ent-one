@@ -115,6 +115,8 @@ type: custom:ent-one-card
 | `show_blog` | `false` | Show the latest blog posts |
 | `show_empty` | `false` | Keep the sections with nothing to show (the homework section always stays) |
 | `max_items` | `5` | Items per section |
+| `illustration` | `true` | Illustrated header: a school corner (schoolbag, exercise books, the sheet of the homework or the envelope of the unread messages) on the card's background, the school icon in the status colour (blue: things to deal with, grey: all done, amber: partly updated, red: unavailable); `false` keeps the classic header |
+| `illustration_theme` | `auto` | `auto` (night when `sun.sun` is below the horizon or Home Assistant's theme is dark, even with the sun up), `day` or `night` |
 | `language` | Auto | Force language: `en`, `fr`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
 Click a row with a chevron to unfold it: the start of a word, the text of a homework or a news item, the description of an event, with their attachments (images as thumbnails, other files as buttons); a click elsewhere folds it back. With the panel, a message opens in the panel's reading pane, and an unfolded word has a *Read* link to it; without the panel, a message unfolds to its start (loaded when unfolded, which marks it read in the ENT). Attachments, and links to the ENT's documents in a text, are fetched through Home Assistant with a signed link; a click opens them in a new tab (PDF and images shown, other files downloaded). A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
@@ -217,6 +219,12 @@ The mini card:
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card.png" alt="mini card" width="260"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-dark.png" alt="mini card dark" width="260"> |
+
+The mini card expanded by its detail button: the full card.
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-zoom.png" alt="mini card expanded" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/mini-card-zoom-dark.png" alt="mini card expanded dark" width="400"> |
 
 The sidebar entry, with a badge counting what there is to deal with (words to sign, homework to do and unread messages):
 

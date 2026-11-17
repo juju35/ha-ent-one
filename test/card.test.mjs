@@ -19,7 +19,7 @@ const context = {
   Intl,
 };
 vm.createContext(context);
-vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, entOneFileKind, entOneFiles, EntOneI18n };`, context);
+vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, entOneFileKind, entOneFiles, EntOneI18n, EntOneCard };`, context);
 const E = context.e;
 
 const sensor = (id, state, attrs) => ({ entity_id: id, state: String(state), attributes: { config_entry_id: 'abc', stale: [], ...attrs } });
@@ -164,4 +164,59 @@ test('attachments are shown: images, PDF viewer in the reading pane, other files
   assert.doesNotMatch(card, /<iframe/);
   assert.match(card, /<img alt="Map"/);
   assert.equal(E.entOneFiles([], t, 'abc', true), '');
+});
+
+test('the banner turns to night when the sun is down or the theme is dark, even with the sun up', () => {
+  const night = vm.runInContext('entOneIsNight', context);
+  const hass = (sun, darkMode) => ({ states: sun ? { 'sun.sun': { state: sun } } : {}, themes: { darkMode } });
+  assert.equal(night(hass('below_horizon', false), {}), true);
+  assert.equal(night(hass('above_horizon', true), {}), true);
+  assert.equal(night(hass('above_horizon', false), {}), false);
+  assert.equal(night(hass('unavailable', true), {}), true);
+  assert.equal(night(hass(null, false), {}), false);
+  assert.equal(night(hass('above_horizon', true), { illustration_theme: 'day' }), false);
+  assert.equal(night(hass('below_horizon', true), { illustration_theme: 'day' }), false);
+  assert.equal(night(hass('above_horizon', false), { illustration_theme: 'night' }), true);
+});
+
+// The status pill: right after the title only when the whole title and its whole label fit, else under the subtitle,
+// else only its dot; decided by measure (no width threshold left in the stylesheet).
+test('the status pill is placed by measure, the title whole first', () => {
+  assert.doesNotMatch(source, /@container eo-titles|pill-line|max-width: 260px\) \{ \.title-row/);
+  assert.match(source, /\.titles\.pill-below \.title-row \{ display: contents; \}/);
+  const el = (w, extra = {}) => {
+    const cls = new Set();
+    return {
+      _w: w,
+      classList: {
+        add: (...c) => {
+          for (const x of c) cls.add(x);
+        },
+        remove: (...c) => {
+          for (const x of c) cls.delete(x);
+        },
+        has: (c) => cls.has(c),
+      },
+      getClientRects: () => [1],
+      getBoundingClientRect: () => ({ width: w, top: 10, bottom: 60 }),
+      removeAttribute() {},
+      closest: () => null,
+      ...extra,
+    };
+  };
+  const place = (titleW, pillW, blockW) => {
+    const name = el(titleW);
+    const chip = el(pillW, { querySelector: () => el(pillW - 20) });
+    chip.parentElement = {};
+    const t = el(blockW, { querySelector: (sel) => ({ '.status': chip, '.name': name, '.sub': null })[sel] });
+    context.getComputedStyle = () => ({ columnGap: '8px' });
+    context.document.createRange = () => ({ selectNodeContents(n) { this.n = n; }, getBoundingClientRect() { return { width: this.n._w }; } });
+    const card = Object.create(E.EntOneCard.prototype);
+    card._root = { querySelector: () => t };
+    card._fitPill();
+    return ['pill-below', 'pill-dot'].filter((c) => t.classList.has(c));
+  };
+  assert.deepEqual(place(100, 60, 200), [], 'whole title and pill fit: side by side');
+  assert.deepEqual(place(150, 60, 200), ['pill-below'], 'the title would be cut: the pill under the subtitle');
+  assert.deepEqual(place(150, 220, 200), ['pill-below', 'pill-dot'], 'the label does not fit its own line: only the dot');
 });
