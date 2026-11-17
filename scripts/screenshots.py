@@ -525,7 +525,7 @@ def mount(context, shot):
             "item": shot.get("item"),
             "mockImage": MOCK_IMAGE,
             "mockPdf": MOCK_PDF,
-            # The illustrated header follows the dark theme (no sun.sun in the mock), so dark twins show the night.
+            # The illustrated header follows the dark theme alone, so dark twins show the night.
             "dark": shot["theme"] == "dark",
         },
     )

@@ -166,10 +166,10 @@ test('attachments are shown: images, PDF viewer in the reading pane, other files
   assert.equal(E.entOneFiles([], t, 'abc', true), '');
 });
 
-test('the banner turns to night when the sun is down or the theme is dark, even with the sun up', () => {
+test('the banner follows the theme alone: night with a dark theme, day with a light one even after sunset', () => {
   const night = vm.runInContext('entOneIsNight', context);
   const hass = (sun, darkMode) => ({ states: sun ? { 'sun.sun': { state: sun } } : {}, themes: { darkMode } });
-  assert.equal(night(hass('below_horizon', false), {}), true);
+  assert.equal(night(hass('below_horizon', false), {}), false);
   assert.equal(night(hass('above_horizon', true), {}), true);
   assert.equal(night(hass('above_horizon', false), {}), false);
   assert.equal(night(hass('unavailable', true), {}), true);
