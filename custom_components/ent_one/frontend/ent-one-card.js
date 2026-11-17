@@ -2854,6 +2854,14 @@ var ENT_ONE_SCHOOL_PATH = 'M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-
 var entOneUid = 0;
 
 // Night picture: forced by illustration_theme, else the sun below the horizon or Home Assistant's dark theme (dark mode alone without a valid sun.sun).
+// The width of an element's whole text in fractional pixels, even while it is cut with an ellipsis (0 when hidden).
+function entOneTextWidth(el) {
+  if (!el?.getClientRects?.().length || typeof document.createRange !== 'function') return 0;
+  var range = document.createRange();
+  range.selectNodeContents(el);
+  return range.getBoundingClientRect().width;
+}
+
 function entOneIsNight(hass, config) {
   var theme = config?.illustration_theme;
   if (theme === 'night') return true;
@@ -2990,10 +2998,24 @@ class EntOneCard extends HTMLElement {
       this._render(true);
     });
     document.addEventListener('click', this._onOutside, true);
+    // A new width (or the web font loaded): the status pill is fitted again, in the next frame.
+    if (typeof ResizeObserver === 'function') {
+      this._pillResize = this._pillResize || new ResizeObserver((entries) => {
+        var w = Math.round(entries[entries.length - 1].contentRect.width);
+        if (w === this._pillWidth) return;
+        this._pillWidth = w;
+        cancelAnimationFrame(this._pillFrame);
+        this._pillFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._pillResize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
   }
 
   disconnectedCallback() {
     document.removeEventListener('click', this._onOutside, true);
+    this._pillResize?.disconnect();
+    this._pillWidth = null;
     // Leaving the page (view change, conditional card hidden) closes the popup without doing anything.
     if (this._confirm || Object.keys(this._open || {}).length) {
       this._confirm = null;
@@ -3052,6 +3074,7 @@ class EntOneCard extends HTMLElement {
     this._data = data;
     this._root.querySelector('ha-card').classList.toggle('mini', this._compact());
     this._renderHeader(t, data);
+    this._fitPill();
     this._renderPopup(t, data);
     var body = this._root.querySelector('.body');
     if (!data) {
@@ -3073,6 +3096,34 @@ class EntOneCard extends HTMLElement {
     return entOneTime(iso, this._locale());
   }
 
+  // The status pill goes on the title row, right after the title, only when the whole title and the pill's whole
+  // label fit there; otherwise it takes its own line under the subtitle (.pill-below) and the title keeps its row
+  // (cut only when it does not fit alone). The subtitle then keeps one line (its whole text in its tooltip), and when
+  // the block still runs out of the banner or into its ground strip, or the label does not fit its own line, the pill
+  // keeps its dot alone (.pill-dot, the label in its tooltip and aria-label). Measured after each render and on each
+  // new width, never by a fixed width, so that every language fits.
+  _fitPill() {
+    var t = this._root?.querySelector?.('.titles');
+    var chip = t?.querySelector('.status');
+    if (!chip?.getBoundingClientRect) return;
+    t.classList.remove('pill-below', 'pill-dot');
+    var sub = t.querySelector('.sub');
+    sub?.removeAttribute('title');
+    if (!chip.querySelector('.status-text')?.getClientRects().length) return;
+    var avail = t.getBoundingClientRect().width;
+    var gap = parseFloat(getComputedStyle(chip.parentElement).columnGap) || 0;
+    var width = chip.getBoundingClientRect().width;
+    if (entOneTextWidth(t.querySelector('.name')) + gap + width <= avail + 0.01) return;
+    t.classList.add('pill-below');
+    if (sub && sub.scrollWidth > sub.clientWidth) sub.title = sub.textContent.trim();
+    var banner = t.closest('.banner');
+    var box = banner?.getBoundingClientRect();
+    var floor = banner?.querySelector('.eo-ground')?.getBoundingClientRect().top ?? box?.bottom;
+    var r = t.getBoundingClientRect();
+    var out = box && (r.top < box.top - 0.5 || r.bottom > floor + 0.5);
+    if (out || width > avail + 0.01) t.classList.add('pill-dot');
+  }
+
   _renderHeader(t, data) {
     var c = this._config;
     var header = this._root.querySelector('[data-head]');
@@ -3084,9 +3135,9 @@ class EntOneCard extends HTMLElement {
       who = names.length ? names.join(' · ') : (data.account.classes || []).join(', ');
     }
     var updated = data?.updated ? entOneFormat(t.last_update, { time: this._time(data.updated) }) : '';
-    // The status pill, right after the title: green (classic header) or in the header icon's colour (banner). On a
-    // narrow title block it takes a line of its own under the subtitle (the copy in .pill-line), and on a very
-    // narrow card only its dot stays (its text stays in its title and aria-label).
+    // The status pill, right after the title: green (classic header) or in the header icon's colour (banner). It goes
+    // on a line of its own under the subtitle when the whole title and its label do not fit side by side (see
+    // _fitPill), and on a very narrow card only its dot stays (its text stays in its title and aria-label).
     var st = entOneHeaderState(data, c);
     var pill = '';
     if (data) {
@@ -3094,8 +3145,7 @@ class EntOneCard extends HTMLElement {
       var text = data.unavailable ? t.offline : data.stale.length ? t.partial : t.up_to_date;
       pill = '<span class="status ' + kind + '" title="' + entOneEsc(updated || text) + '" aria-label="' + entOneEsc(text) + '"><span class="dot"></span><span class="status-text">' + entOneEsc(text) + '</span></span>';
     }
-    var titles = (s) => '<div class="titles"><div class="title-row"><div class="name">' + entOneEsc(title) + '</div>' + pill + '</div>' + s +
-      (pill ? '<div class="pill-line">' + pill + '</div>' : '') + '</div>';
+    var titles = (s) => '<div class="titles"><div class="title-row"><div class="name">' + entOneEsc(title) + '</div>' + pill + '</div>' + s + '</div>';
     var buttons = '';
     if (data && !this._compact()) {
       if (c.show_refresh) {
@@ -3333,11 +3383,17 @@ class EntOneCard extends HTMLElement {
       '.logo svg { width: 24px; height: 24px; }',
       '.titles { flex: 1 1 0; min-width: 5ch; overflow: hidden; container: eo-titles / inline-size; }',
       ':host([hide-title]) .title-row > .name { display: none; }',
-      // The title line: the title, then the status pill, which keeps its whole label (the title gives way first).
+      // The title line: the title, then the status pill, when the whole title and its whole label fit there; otherwise
+      // the pill goes on its own line under the subtitle (kept to one line), and when even that is too tight only its
+      // dot is left (its text stays in its title and aria-label). Decided by measure (see _fitPill).
       '.title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }',
-      '.title-row .name { flex: 0 1 auto; min-width: 4ch; }',
-      '.title-row .status { flex: none; max-width: 51%; }',
-      '.pill-line { display: none; }',
+      '.title-row .name { flex: 0 1 auto; min-width: 0; }',
+      '.title-row .status { flex: none; max-width: none; }',
+      '.titles.pill-below { display: flex; flex-direction: column; }',
+      '.titles.pill-below .title-row { display: contents; }',
+      '.titles.pill-below .title-row .status { order: 3; align-self: flex-start; margin-top: 3px; max-width: 100%; }',
+      '.titles.pill-below .sub.error { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
+      '.titles.pill-dot .title-row .status { padding: 4px; } .titles.pill-dot .status-text { display: none; }',
       '.name { font-size: 16px; font-weight: 500; line-height: 1.25; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
       '.sub.error { display: flex; align-items: flex-start; gap: 4px; white-space: normal; color: color-mix(in srgb, var(--error-color, #db4437) 55%, var(--primary-text-color)); }',
@@ -3355,11 +3411,8 @@ class EntOneCard extends HTMLElement {
       '.spinning ha-icon { animation: ent-one-spin 1s linear infinite; }',
       '@keyframes ent-one-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }',
       '@container (max-width: 320px) { .header { gap: 4px; } .logo { display: none; } }',
-      // Narrow title block: the pill leaves the title line for a line of its own under the subtitle; very narrow card:
-      // only its dot stays, on the title line.
-      '@container eo-titles (max-width: 180px) { .title-row .status { display: none; } .pill-line { display: flex; min-width: 0; margin-top: 3px; } .pill-line .status { max-width: 100%; } }',
-      '@container eo-card (max-width: 260px) { .title-row .status { display: none; } .pill-line { display: flex; min-width: 0; margin-top: 3px; } .pill-line .status { max-width: 100%; } }',
-      '@container eo-card (max-width: 200px) { .title-row .status { display: inline-flex; padding: 4px; } .status-text, .pill-line { display: none; } }',
+      // Very narrow card: only the pill's dot stays, on the title line.
+      '@container eo-card (max-width: 200px) { .title-row .status { padding: 4px; } .status-text { display: none; } }',
       '.pad { padding: 4px 16px; }',
       '.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0 12px; }',
       '.tile { all: unset; box-sizing: border-box; cursor: pointer; display: block; min-width: 0; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, var(--primary-text-color) 5%, transparent); }',
