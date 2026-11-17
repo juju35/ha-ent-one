@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1 - 2026-11-18
+
+### Fixes
+- Cards: the header's refresh and open-ENT buttons are plain 24 px round buttons again — the icon sat off-centre from its glass circle and spilled past the card's edge, and the hover ring was offset (the inner button of `ha-icon-button` overflowed the shrunk host).
+
 ## 1.5.0 - 2026-11-17
 
 ### Features
