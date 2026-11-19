@@ -4,6 +4,7 @@
 
 ### Fixes
 - Panel: the tab bar takes the page background instead of the theme's header colour — with Home Assistant's default light theme the tabs showed grey text on blue. It also stays at the top while scrolling.
+- Panel home: the week strip is left out when the Homework tab is turned off (it only counted homework).
 
 ## 1.6.0 - 2026-11-19
 
