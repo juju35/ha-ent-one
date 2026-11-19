@@ -801,9 +801,13 @@ class EntOnePanel extends HTMLElement {
     return [
       ':host { display: block; min-height: 100vh; background: var(--primary-background-color); color: var(--primary-text-color); font-family: var(--paper-font-body1_-_font-family, inherit); }',
       // Illustrated header (the card's banner, see window.EntOne.banner.styles), across the page.
-      '.banner { margin: 0; --eo-scene-w: min(260px, 38%); }',
+      // The round buttons at the right edge, as on the other ha-* panels; the school corner just left of them.
+      '.banner { margin: 0; --eo-scene-w: min(260px, 38%); --eo-btns: 0px; }',
+      '.banner:has(.hbtns .hbtn) { --eo-btns: 54px; }',
+      '.banner:has(.hbtns .hbtn + .hbtn) { --eo-btns: 94px; }',
+      '.banner .eo-scene { right: var(--eo-btns); }',
       '.scene { display: contents; }',
-      '.htext { left: 8px; right: calc(var(--eo-scene-w) + 96px); top: 0; gap: 8px; }',
+      '.htext { left: 8px; right: calc(var(--eo-scene-w) + var(--eo-btns) + 16px); top: 0; gap: 8px; }',
       '.hinfo { display: flex; align-items: center; gap: 16px; min-width: 0; }',
       'ha-menu-button { flex: none; color: var(--eo-text); }',
       '.banner .logo { width: 44px; height: 44px; flex: none; border-radius: 50%; display: grid; place-items: center; margin-left: 4px; }',
@@ -815,10 +819,12 @@ class EntOnePanel extends HTMLElement {
       '.status { --c: var(--success-color, #43a047); flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; border-radius: 12px; padding: 1px 8px; }',
       '.status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); }',
       '.banner .status.warn { --c: var(--warning-color, #ffa600); } .banner .status.bad { --c: var(--error-color, #db4437); }',
-      // The buttons stand at the left of the school corner, centred on the header (not over the scene).
-      '.hbtns { top: calc((100% - var(--eo-g)) / 2 - 16px); right: calc(var(--eo-scene-w) + 12px); gap: 6px; }',
-      '.hbtn { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; --mdc-icon-size: 18px; }',
-      '.hbtns .hbtn { width: 32px; height: 32px; }',
+      // Glass round buttons at the right edge, centred on the sky (the card's glass, at the panels' 34 px)
+      '.hbtns { top: calc((100% - var(--eo-g)) / 2 - 17px); right: 12px; gap: 6px; }',
+      '.hbtn { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; --mdc-icon-size: 20px; }',
+      '.hbtns .hbtn { width: 34px; height: 34px; }',
+      '.hbtns .hbtn:hover { background: rgba(255,255,255,.82); }',
+      '.night .hbtns .hbtn:hover { background: rgba(255,255,255,.22); }',
       '.hbtn ha-icon { display: flex; }',
       '.hbtn:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 1px; }',
       '.spinning ha-icon { animation: ent-one-spin 1s linear infinite; }',
@@ -961,7 +967,7 @@ class EntOnePanel extends HTMLElement {
       '@media (max-width: 800px) { .mail { grid-template-columns: 1fr; height: auto; min-height: 0; } .mlist { border-right: none; } .mail.has-item .mlist { display: none; }' +
         ' .mail:not(.has-item) .reader { display: none; } .back { display: inline-flex; } .reader { padding: 12px 14px; } }',
       '@media (max-width: 900px) { .dgrid { grid-template-columns: 1fr; } .dgrid .todo-box { grid-column: auto; } .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }',
-      '@media (max-width: 600px) { .page { padding: 12px; } .banner { --eo-scene-w: 0px; } .eo-scene { display: none; } .htext { right: 84px; } .name { font-size: 17px; }' +
+      '@media (max-width: 600px) { .page { padding: 12px; } .banner { --eo-scene-w: 0px; } .eo-scene { display: none; } .htext { right: calc(var(--eo-btns) + 12px); } .name { font-size: 17px; }' +
         ' .hbtns { right: 12px; } .status { display: none; } .wday .wl { font-size: 11px; } .week { gap: 4px; } }',
       '@media (prefers-reduced-motion: reduce) { .spinning ha-icon { animation: none; opacity: .5; } }',
     ].join('\n');

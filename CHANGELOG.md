@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.3 - 2026-11-19
+
+### Fixes
+- **Panel, aligned with the other ha-* panels**: the header's round buttons (refresh, open the ENT) stand at the right edge, in the panels' glass at 34 px, centred on the sky; the school corner moves just left of them.
+- **Hide the top bar**: the option reads "Hide the top bar" (was "Hide the panel's top bar"), its choices No / For everyone / For non-admins, worded as on the other panels in every language.
+
 ## 1.6.2 - 2026-11-19
 
 ### Fixes

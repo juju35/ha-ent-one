@@ -73,7 +73,7 @@
           "notify_services": "Akce oznámení",
           "show_panel": "Zobrazit tento panel v postranním panelu",
           "panel_tabs": "Karty zobrazené v panelu",
-          "hide_header": "Skrýt horní lištu panelu"
+          "hide_header": "Skrýt horní lištu"
         },
         "data_description": {
           "scan_interval": "ENT používá celá škola: minimálně 10 minut.",

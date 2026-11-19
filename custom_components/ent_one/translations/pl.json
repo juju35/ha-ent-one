@@ -73,7 +73,7 @@
           "notify_services": "Akcje powiadomień",
           "show_panel": "Pokaż ten panel na pasku bocznym",
           "panel_tabs": "Karty widoczne w panelu",
-          "hide_header": "Ukryj górny pasek panelu"
+          "hide_header": "Ukryj górny pasek"
         },
         "data_description": {
           "scan_interval": "Z ENT korzysta cała szkoła: co najmniej 10 minut.",
@@ -186,7 +186,7 @@
       "options": {
         "off": "Nie",
         "all": "Dla wszystkich",
-        "non_admin": "Dla nieadministratorów"
+        "non_admin": "Dla nie-administratorów"
       }
     }
   }

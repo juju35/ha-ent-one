@@ -73,7 +73,7 @@
           "notify_services": "Notifikationshandlinger",
           "show_panel": "Vis dette panel i sidebjælken",
           "panel_tabs": "Faner vist i panelet",
-          "hide_header": "Skjul panelets øverste bjælke"
+          "hide_header": "Skjul den øverste bjælke"
         },
         "data_description": {
           "scan_interval": "ENT deles af hele skolen: mindst 10 minutter.",
