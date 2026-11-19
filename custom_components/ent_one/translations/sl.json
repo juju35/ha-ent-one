@@ -72,12 +72,14 @@
           "homework_days": "Obdobje nalog",
           "notify_services": "Dejanja obvestil",
           "show_panel": "Prikaži ta panel v stranski vrstici",
-          "panel_tabs": "Zavihki na plošči"
+          "panel_tabs": "Zavihki na plošči",
+          "hide_header": "Skrij zgornjo vrstico plošče"
         },
         "data_description": {
           "scan_interval": "ENT uporablja vsa šola: najmanj 10 minut.",
           "homework_days": "Prikazane so naloge z rokom v tem številu dni.",
-          "notify_services": "Nova sporočila, obvestila za podpis, domače naloge in objave na blogu se pošljejo tem dejanjem."
+          "notify_services": "Nova sporočila, obvestila za podpis, domače naloge in objave na blogu se pošljejo tem dejanjem.",
+          "hide_header": "Ilustrirana glava nad zavihki; zavihki ostanejo, na telefonu pa se gumb menija premakne poleg njih."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Sporočila",
         "news": "Novice",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Ne",
+        "all": "Za vse",
+        "non_admin": "Za neskrbnike"
       }
     }
   }

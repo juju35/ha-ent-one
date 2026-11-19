@@ -72,12 +72,14 @@
           "homework_days": "Janela dos trabalhos",
           "notify_services": "Ações de notificação",
           "show_panel": "Mostrar este painel na barra lateral",
-          "panel_tabs": "Separadores mostrados no painel"
+          "panel_tabs": "Separadores mostrados no painel",
+          "hide_header": "Ocultar a barra superior do painel"
         },
         "data_description": {
           "scan_interval": "O ENT é partilhado por toda a escola: 10 minutos no mínimo.",
           "homework_days": "São mostrados os trabalhos de casa para dentro deste número de dias.",
-          "notify_services": "As novas mensagens, recados a assinar, trabalhos de casa e publicações do blog são enviados para estas ações."
+          "notify_services": "As novas mensagens, recados a assinar, trabalhos de casa e publicações do blog são enviados para estas ações.",
+          "hide_header": "O cabeçalho ilustrado acima dos separadores; os separadores ficam e, no telemóvel, o botão de menu passa para junto deles."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Mensagens",
         "news": "Notícias",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Não",
+        "all": "Para todos",
+        "non_admin": "Para não administradores"
       }
     }
   }

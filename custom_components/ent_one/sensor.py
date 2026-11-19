@@ -18,7 +18,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .config_flow import panel_tabs
+from .config_flow import hide_header, panel_tabs
 from .coordinator import EntConfigEntry, EntCoordinator, EntData
 from .entity import EntEntity
 
@@ -96,7 +96,7 @@ class EntLastUpdateSensor(EntEntity, SensorEntity):
 
     _attr_device_class = SensorDeviceClass.TIMESTAMP
     _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _unrecorded_attributes = frozenset({"account", "children", "events", "url", "panel_tabs"})
+    _unrecorded_attributes = frozenset({"account", "children", "events", "url", "panel_tabs", "hide_header"})
 
     def __init__(self, coordinator: EntCoordinator) -> None:
         super().__init__(coordinator, "last_update")
@@ -123,4 +123,5 @@ class EntLastUpdateSensor(EntEntity, SensorEntity):
             "children": [{"id": key, **child} for key, child in data.children.items()],
             "events": data.events,
             "panel_tabs": panel_tabs(self.coordinator.config_entry.options),
+            "hide_header": hide_header(self.coordinator.config_entry.options),
         }

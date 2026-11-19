@@ -72,12 +72,14 @@
           "homework_days": "Období úkolů",
           "notify_services": "Akce oznámení",
           "show_panel": "Zobrazit tento panel v postranním panelu",
-          "panel_tabs": "Karty zobrazené v panelu"
+          "panel_tabs": "Karty zobrazené v panelu",
+          "hide_header": "Skrýt horní lištu panelu"
         },
         "data_description": {
           "scan_interval": "ENT používá celá škola: minimálně 10 minut.",
           "homework_days": "Zobrazují se úkoly s termínem v rámci tohoto počtu dní.",
-          "notify_services": "Nové zprávy, sdělení k podpisu, domácí úkoly a příspěvky blogu se posílají těmto akcím."
+          "notify_services": "Nové zprávy, sdělení k podpisu, domácí úkoly a příspěvky blogu se posílají těmto akcím.",
+          "hide_header": "Ilustrovaná hlavička nad kartami; karty zůstanou a na telefonu se tlačítko nabídky přesune vedle nich."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Zprávy",
         "news": "Novinky",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Ne",
+        "all": "Pro všechny",
+        "non_admin": "Pro neadministrátory"
       }
     }
   }

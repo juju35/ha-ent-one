@@ -72,12 +72,14 @@
           "homework_days": "Huiswerkperiode",
           "notify_services": "Meldingsacties",
           "show_panel": "Dit paneel in de zijbalk tonen",
-          "panel_tabs": "Tabbladen in het paneel"
+          "panel_tabs": "Tabbladen in het paneel",
+          "hide_header": "Bovenbalk van het paneel verbergen"
         },
         "data_description": {
           "scan_interval": "De ENT wordt door de hele school gedeeld: minimaal 10 minuten.",
           "homework_days": "Huiswerk dat binnen zoveel dagen af moet, wordt getoond.",
-          "notify_services": "Nieuwe berichten, te ondertekenen mededelingen, huiswerk en blogberichten worden naar deze acties gestuurd."
+          "notify_services": "Nieuwe berichten, te ondertekenen mededelingen, huiswerk en blogberichten worden naar deze acties gestuurd.",
+          "hide_header": "De geïllustreerde kop boven de tabbladen; de tabbladen blijven en op een telefoon komt de menuknop ernaast."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Berichten",
         "news": "Nieuws",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nee",
+        "all": "Voor iedereen",
+        "non_admin": "Voor niet-beheerders"
       }
     }
   }

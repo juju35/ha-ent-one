@@ -72,12 +72,14 @@
           "homework_days": "Okres prac domowych",
           "notify_services": "Akcje powiadomień",
           "show_panel": "Pokaż ten panel na pasku bocznym",
-          "panel_tabs": "Karty widoczne w panelu"
+          "panel_tabs": "Karty widoczne w panelu",
+          "hide_header": "Ukryj górny pasek panelu"
         },
         "data_description": {
           "scan_interval": "Z ENT korzysta cała szkoła: co najmniej 10 minut.",
           "homework_days": "Pokazywane są prace domowe z terminem w ciągu tylu dni.",
-          "notify_services": "Nowe wiadomości, wpisy do podpisania, zadania domowe i wpisy na blogu są wysyłane do tych akcji."
+          "notify_services": "Nowe wiadomości, wpisy do podpisania, zadania domowe i wpisy na blogu są wysyłane do tych akcji.",
+          "hide_header": "Ilustrowany nagłówek nad kartami; karty zostają, a na telefonie przycisk menu przechodzi obok nich."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Wiadomości",
         "news": "Aktualności",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nie",
+        "all": "Dla wszystkich",
+        "non_admin": "Dla nieadministratorów"
       }
     }
   }

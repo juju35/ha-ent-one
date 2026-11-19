@@ -39,6 +39,7 @@ custom_components/ent_one/
 - sign_word is an admin service; the card and the panel show the Sign button only when hass.user.is_admin isn't false.
 - Rows with more to read carry data-toggle (chevron right / down); the card and the panel keep their open keys, folded by a click outside. Tiles: data-action=goto → /ent-one?tab=… when hass.panels has the panel. entOneSetTimeFormat(hass) follows hass.locale.time_format.
 - Popups (sign confirmation) at the top of the card, closed on a click outside and when the card leaves the page. No filled button.
+- Panel header = the card's illustrated banner (window.EntOne.banner: scene, state, isNight, styles, schoolPath); account select at the right of the tab bar. Option hide_header (off | all | non_admin, sensor attribute `hide_header`): host attribute `bare` hides the banner, ha-menu-button moves to the tab bar, refresh/open buttons to .tb-side. Home: child chips (2+ children, filter words, localStorage `child`), week strip (Mon–Fri, `_day` filter not remembered), chart tiles, To do / To read / Calendar. Homework: one box per due day with done/total bar.
 - Panel tabs: home, homework, words, messages, news, settings (last), `?tab=` in the URL. The Settings tab (ha-form, options flow selectors) isn't redrawn by sensor updates. Homework filters in localStorage `ent-one-panel`.
 - One translation table (`EntOneI18n`, flat keys) for card and panel; the release splits it (scripts/split-frontend.mjs).
 

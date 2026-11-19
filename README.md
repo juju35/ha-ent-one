@@ -137,19 +137,21 @@ It takes the same options as `custom:ent-one-card` (both: set in the same visual
 
 ### Panel
 
-The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, one tab per application (the tab is kept in the address):
+The **ENT ONE** entry of the sidebar opens a panel drawn for the ENT, under the card's illustrated header (school corner, status in the icon's colour, refresh and open-ENT buttons), one tab per application (the tab is kept in the address):
 
 | Tab | Content |
 |---|---|
-| Home | The three counts, words to sign, next homework, calendar and news |
-| Homework | Homework by due day, filtered by notebook, with its text; done ones can be hidden |
-| Liaison book | The recent words on the left, the one chosen on the right with its text, its attachments shown (images, PDF viewer) and the *Sign* button |
+| Home | A child filter (with two children or more), the school week (homework left per day, a dot for an event; a click keeps only that day), tiles for the liaison book, homework, messages and next event (count as badge, coloured state line), then *To do* (words to sign, homework), *To read* (unread messages, news) and the calendar |
+| Homework | One tile per due day with its progress (done / total), filtered by notebook, with its text; done ones can be hidden |
+| Liaison book | The child filter, the recent words on the left, the one chosen on the right with its text, its attachments shown (images, PDF viewer) and the *Sign* button |
 | Messages | Like a mail client: the last messages of the inbox on the left, the one chosen on the right with its text and its attachments shown (images, PDF viewer), and a link to the ENT's messaging. On a phone, the message replaces the list (*Back* returns to it) |
 | News | The school news in full |
 | Blog | Like ONE's blog: a filter per blog, a feed of post cards (start of the text, pictures, comments) and the post read in full with *Read more* |
-| Settings | The account options, including the tabs shown in the panel (Homework, Liaison book, Messages, News, Blog: a hidden tab also leaves the home page); only administrators can change them |
+| Settings | The account options, including the tabs shown in the panel (Homework, Liaison book, Messages, News, Blog: a hidden tab also leaves the home page) and who its top bar is hidden for; only administrators can change them |
 
-With several accounts, a menu in the header bar switches between them. The Homework filters are remembered in the browser, the Home rows unfold like the card's, and the tabs can be browsed with the arrow keys.
+**Hide the panel's top bar** (*No*, *For everyone*, *For non-admins*; in the integration options or the Settings tab) leaves the tabs alone at the top: the refresh and open-ENT buttons move to the right of the tabs, and on a phone the menu button to their left.
+
+With several accounts, a menu at the right of the tabs switches between them. The child and Homework filters are remembered in the browser, the Home rows unfold like the card's, and the tabs can be browsed with the arrow keys.
 
 ### Actions
 
@@ -189,6 +191,24 @@ actions:
 **Settings → Devices & services → ENT ONE → ⋮ → Download diagnostics** gives the options and the number of items of each kind. Username, password, names and contents are never included: the ENT holds children's data.
 
 ## Screenshots
+
+### Animations
+
+The illustrated header of the card and of the panel plays what is waiting: with unread messages the envelope bobs and its count blinks; with homework left or a word to sign (every message read), the pen writes on the sheet. When everything is done, the ticked sheet stays still. Animations stop when the system asks for reduced motion.
+
+Card header, unread messages and homework left:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-header-messages.gif" alt="card header, unread messages" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-header-messages-dark.gif" alt="card header, unread messages, dark" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-header-homework.gif" alt="card header, homework left" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-header-homework-dark.gif" alt="card header, homework left, dark" width="400"> |
+
+Panel header, unread messages and homework left:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-header-messages.gif" alt="panel header, unread messages" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-header-messages-dark.gif" alt="panel header, unread messages, dark" width="480"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-header-homework.gif" alt="panel header, homework left" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-header-homework-dark.gif" alt="panel header, homework left, dark" width="480"> |
 
 While the ENT is read, the refresh button spins until the update finishes.
 
@@ -232,11 +252,12 @@ The sidebar entry, with a badge counting what there is to deal with (words to si
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/sidebar.png" alt="sidebar badge" width="240"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/sidebar-dark.png" alt="sidebar badge dark" width="240"> |
 
-The panel, Home and Homework tabs (each tab shows its own count):
+The panel: Home (child filter, week, tiles, To do / To read), the same with the top bar hidden, and Homework (one tile per day with its progress):
 
 | Light | Dark |
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel.png" alt="panel" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-dark.png" alt="panel dark" width="480"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-bare.png" alt="panel, top bar hidden" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-bare-dark.png" alt="panel, top bar hidden, dark" width="480"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-homework.png" alt="panel homework" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-homework-dark.png" alt="panel homework dark" width="480"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-messages.png" alt="panel messages" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-messages-dark.png" alt="panel messages dark" width="480"> |
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-words.png" alt="panel liaison book" width="480"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/panel-words-dark.png" alt="panel liaison book dark" width="480"> |
@@ -253,7 +274,7 @@ The integration logs in like the ENT's web page (`POST /auth/login`, session coo
 pip install -r requirements_test.txt && pytest
 node --test test/*.test.mjs
 pip install playwright==1.64.1 pillow && playwright install chromium
-python scripts/screenshots.py   # renders the card, mini card and panel stills and the refreshing GIFs (needs ffmpeg) into screenshots/
+python scripts/screenshots.py   # renders the card, mini card and panel stills and the GIFs of the header animations and of the refresh (needs ffmpeg) into screenshots/
 ```
 
 ### Releasing

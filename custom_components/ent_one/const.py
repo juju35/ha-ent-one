@@ -48,6 +48,10 @@ DEFAULT_SHOW_PANEL: Final = True
 # Tabs of the panel (and sections of its home page) shown; Home and Settings always are.
 CONF_PANEL_TABS: Final = "panel_tabs"
 PANEL_TABS: Final = ("homework", "words", "messages", "news", "blog")
+# Who the panel's top bar (the illustrated header) is hidden for; the tabs stay.
+CONF_HIDE_HEADER: Final = "hide_header"
+HIDE_HEADER_OFF: Final = "off"
+HIDE_HEADER_CHOICES: Final = (HIDE_HEADER_OFF, "all", "non_admin")
 
 FRONTEND_URL: Final = "/ent_one_static"
 CARD_FILENAME: Final = "ent-one-card.js"

@@ -18,6 +18,10 @@ class EntOnePanel extends HTMLElement {
     this._book = typeof saved.book === 'string' ? saved.book : '';
     this._hideDone = saved.hideDone === true;
     this._blogFilter = typeof saved.blog === 'string' ? saved.blog : '';
+    // Child chosen in the filter row (Home and Liaison book), '' = all of them.
+    this._child = typeof saved.child === 'string' ? saved.child : '';
+    // Day picked in the week strip of the home page ('' = the whole week), not remembered.
+    this._day = '';
     this._entry = this._entry || '';
     this._open = {};
     // Messages read in full, by id (not `_messages`: that is the tab method).
@@ -108,7 +112,7 @@ class EntOnePanel extends HTMLElement {
 
   _saveFilters() {
     try {
-      window.localStorage.setItem('ent-one-panel', JSON.stringify({ book: this._book, hideDone: this._hideDone, blog: this._blogFilter }));
+      window.localStorage.setItem('ent-one-panel', JSON.stringify({ book: this._book, hideDone: this._hideDone, blog: this._blogFilter, child: this._child }));
     } catch (_e) {
       /* private mode, quota: not remembered */
     }
@@ -130,10 +134,12 @@ class EntOnePanel extends HTMLElement {
   _ensureShell() {
     if (this._root) return;
     this._root = this.attachShadow({ mode: 'open' });
+    var E = window.EntOne;
+    // The illustrated header of the card (school corner, ground bar, status in the icon's colour), across the page.
     this._root.innerHTML =
-      '<style>' + EntOnePanel._styles(window.EntOne.accent) + window.EntOne.itemStyles(window.EntOne.accent) + '</style>' +
-      '<div class="toolbar"><ha-menu-button></ha-menu-button><div class="logo">' + window.EntOne.icon + '</div>' +
-      '<div class="tb-title"></div><div class="tb-side"></div></div><div class="tabs" role="tablist"></div><div class="content"></div>';
+      '<style>' + (E.banner ? E.banner.styles : '') + EntOnePanel._styles(E.accent) + E.itemStyles(E.accent) + '</style>' +
+      '<div class="banner"><div class="scene"></div><div class="eo-ground"></div><div class="htext"><ha-menu-button></ha-menu-button><div class="hinfo"></div></div>' +
+      '<div class="hbtns"></div></div><div class="tabbar"><div class="tabs" role="tablist"></div><div class="tb-side"></div></div><div class="content"></div>';
     this._root.addEventListener('click', this._onClick.bind(this));
     this._root.addEventListener('change', this._onChange.bind(this));
     this._root.addEventListener('keydown', (ev) => {
@@ -184,22 +190,26 @@ class EntOnePanel extends HTMLElement {
     if (this._entry && ids.indexOf(this._entry) === -1) this._entry = '';
     var data = E.data(this._hass, this._entry || ids[0]);
     this._data = data;
-    this._root.querySelector('.tb-title').textContent = (data?.account.schools?.[0]) || t.default_title;
-    var side = this._root.querySelector('.tb-side');
-    side.innerHTML =
-      (ids.length > 1
-        ? '<select class="account" aria-label="' + E.esc(t.account) + '">' +
-          ids.map((id) => {
-            var d = E.data(this._hass, id);
-            var name = (d.account.schools?.[0]) || d.account.name || id;
-            return '<option value="' + E.esc(id) + '"' + (id === (data?.entryId) ? ' selected' : '') + '>' + E.esc(name) + '</option>';
-          }).join('') + '</select>'
-        : '') +
-      (data?.updated ? '<span class="updated">' + E.esc(E.format(t.last_update, { time: this._time(data.updated) })) + '</span>' : '') +
-      (data ? '<ha-icon-button class="' + (this._refreshing ? 'spinning' : '') + '" data-action="refresh" label="' + E.esc(t.refresh) + '"><ha-icon icon="mdi:refresh"></ha-icon></ha-icon-button>' : '') +
-      (data?.url ? '<ha-icon-button data-action="open" label="' + E.esc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></ha-icon-button>' : '');
     // Tabs hidden in the options are left out, with their part of the home page.
     var shown = ENT_ONE_PANEL_TABS.filter((tab) => tab === 'home' || tab === 'settings' || !data || data.panelTabs.indexOf(tab) !== -1);
+    // The top bar hidden (option): the tabs stay, with the menu button at their left and the buttons at their right.
+    var mode = data?.hideHeader || 'off';
+    var bare = mode === 'all' || (mode === 'non_admin' && this._hass.user?.is_admin === false);
+    this._root.host.toggleAttribute('bare', bare);
+    var tabbar = this._root.querySelector('.tabbar');
+    if (bare && menu.parentElement !== tabbar) tabbar.prepend(menu);
+    else if (!bare && menu.parentElement === tabbar) this._root.querySelector('.htext').prepend(menu);
+    this._renderHeader(t, data, shown);
+    var hbtns = this._root.querySelector('.hbtns');
+    this._root.querySelector('.tb-side').innerHTML = (bare ? hbtns.innerHTML : '') + (ids.length > 1
+      ? '<select class="account" aria-label="' + E.esc(t.account) + '">' +
+        ids.map((id) => {
+          var d = E.data(this._hass, id);
+          var name = (d.account.schools?.[0]) || d.account.name || id;
+          return '<option value="' + E.esc(id) + '"' + (id === (data?.entryId) ? ' selected' : '') + '>' + E.esc(name) + '</option>';
+        }).join('') + '</select>'
+      : '');
+    if (bare) hbtns.innerHTML = '';
     this._shownTabs = shown;
     if (shown.indexOf(this._tab) === -1) this._tab = 'home';
     this._root.querySelector('.tabs').innerHTML = shown.map((tab) => {
@@ -223,7 +233,7 @@ class EntOnePanel extends HTMLElement {
     }
     var html = { home: this._home, homework: this._homework, words: this._words, messages: this._messages, news: this._news, blog: this._blog }[this._tab].call(this, t, data);
     var mail = this._tab === 'messages' || this._tab === 'words';
-    content.innerHTML = '<div class="page' + (mail ? ' wide' : '') + '">' + (this._error ? '<div class="error-text banner">' + E.esc(this._error) + '</div>' : '') + this._popup(t, data) + html + '</div>';
+    content.innerHTML = '<div class="page' + (mail ? ' wide' : '') + '">' + (this._error ? '<div class="error-text errbar">' + E.esc(this._error) + '</div>' : '') + this._popup(t, data) + html + '</div>';
     E.hydrate(content, this._hass, data.entryId);
   }
 
@@ -246,32 +256,137 @@ class EntOnePanel extends HTMLElement {
     return rows.length ? rows.join('') : '<div class="empty">' + window.EntOne.esc(empty) + '</div>';
   }
 
+  // The card's illustrated header: the school corner and its ground bar, the school icon in the status colour with
+  // the ONE panda as badge, the title with its status pill, the children's names, and round glass buttons.
+  _renderHeader(t, data, shown) {
+    var E = window.EntOne;
+    var B = E.banner;
+    var banner = this._root.querySelector('.banner');
+    var night = B ? B.isNight(this._hass, {}) : false;
+    banner.classList.toggle('night', night);
+    var on = (tab) => shown.indexOf(tab) !== -1;
+    var st = B ? B.state(data, { show_messages: on('messages'), show_homework: on('homework'), show_words: on('words') }) : { status: 'idle', kind: 'done', unread: 0 };
+    this._uid = this._uid || 'p' + Math.floor(Math.random() * 1e6);
+    banner.querySelector('.scene').innerHTML = B ? B.scene(st, night, this._uid, false) : '';
+    var title = (data?.account.schools?.[0]) || t.default_title;
+    var updated = data?.updated ? E.format(t.last_update, { time: this._time(data.updated) }) : '';
+    var names = data ? data.children.map((ch) => ch.first_name).filter(Boolean) : [];
+    var who = names.length ? names.join(' · ') : (data?.account.classes || []).join(', ');
+    var pill = '';
+    if (data) {
+      var text = data.unavailable ? t.offline : data.stale.length ? t.partial : t.up_to_date;
+      pill = '<span class="status ' + st.status + '" title="' + E.esc(updated || text) + '"><span class="dot"></span>' + E.esc(text) + '</span>';
+    }
+    banner.querySelector('.hinfo').innerHTML =
+      '<div class="logo ' + st.status + '" title="' + E.esc(updated || title) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="' + (B ? B.schoolPath : '') + '"/></svg>' +
+      '<span class="brand" aria-hidden="true">' + E.icon + '</span></div>' +
+      '<div class="titles"><div class="title-row"><div class="name">' + E.esc(title) + '</div>' + pill + '</div>' +
+      '<div class="sub">' + E.esc([who, updated].filter(Boolean).join(' · ')) + '</div></div>';
+    banner.querySelector('.hbtns').innerHTML =
+      (data ? '<button class="hbtn' + (this._refreshing ? ' spinning' : '') + '" data-action="refresh" aria-label="' + E.esc(t.refresh) + '" title="' + E.esc(t.refresh) + '"><ha-icon icon="mdi:refresh"></ha-icon></button>' : '') +
+      (data?.url ? '<button class="hbtn" data-action="open" aria-label="' + E.esc(t.open_ent) + '" title="' + E.esc(t.open_ent) + '"><ha-icon icon="mdi:open-in-new"></ha-icon></button>' : '');
+  }
+
+  // Children of the account, the chosen one dropped when it is gone.
+  _children(data) {
+    var kids = data.children.filter((ch) => ch.id || ch.first_name);
+    if (this._child && !kids.some((ch) => String(ch.id) === this._child)) this._child = '';
+    return kids;
+  }
+
+  // The filter row: All, then one chip per child (initial, first name, words left to sign). Only with 2+ children.
+  _childChips(t, data) {
+    var E = window.EntOne;
+    var kids = this._children(data);
+    if (kids.length < 2) return '';
+    var left = (id) => data.words.filter((w) => !w.signed && (!id || String(w.child_id) === id)).length;
+    var chip = (id, label, i) => {
+      var n = left(id);
+      return '<button class="kid' + (this._child === id ? ' on' : '') + '" data-child="' + E.esc(id) + '" aria-pressed="' + (this._child === id) + '">' +
+        (id ? '<span class="avatar c' + (i % 4) + '">' + E.esc((label || '?').charAt(0).toUpperCase()) + '</span>' : '') +
+        E.esc(label) + (n ? '<span class="badge">' + n + '</span>' : '') + '</button>';
+    };
+    return '<div class="kids">' + chip('', t.all, 0) + kids.map((ch, i) => chip(String(ch.id), ch.first_name || ch.last_name, i)).join('') + '</div>';
+  }
+
+  _myWords(data) {
+    return data.words.filter((w) => !this._child || String(w.child_id) === this._child);
+  }
+
+  // The school week: Monday to Friday (Saturday and Sunday when something falls on them), the next week from
+  // Saturday on. Each day carries the homework left for it and a dot for an event; a click keeps only that day.
+  _week(t, data) {
+    var E = window.EntOne;
+    var locale = E.locale(this._hass);
+    var iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    var now = new Date();
+    var today = iso(now);
+    var monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7) + (now.getDay() === 6 || now.getDay() === 0 ? 7 : 0));
+    var days = [];
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+      var key = iso(d);
+      var hw = data.homework.filter((h) => !h.done && String(h.date).slice(0, 10) === key).length;
+      var ev = data.events.some((e) => String(e.start || '').slice(0, 10) === key);
+      if (i < 5 || hw || ev) days.push({ key: key, d: d, hw: hw, ev: ev });
+    }
+    if (this._day && !days.some((x) => x.key === this._day)) this._day = '';
+    var label = (d) => {
+      try {
+        return d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric' });
+      } catch (_e) {
+        return d.toDateString().slice(0, 10);
+      }
+    };
+    return '<div class="week" role="group" aria-label="' + E.esc(t.this_week) + '">' + days.map((x) =>
+      '<button class="wday' + (x.hw ? ' hw' : '') + (x.key === today ? ' today' : '') + (x.key === this._day ? ' on' : '') + (x.key < today ? ' past' : '') + '" data-day="' + x.key + '" aria-pressed="' + (x.key === this._day) + '">' +
+      '<span class="wl">' + E.esc(label(x.d)) + '</span>' + (x.hw ? '<span class="wn">' + x.hw + '</span>' : '') + (x.ev ? '<span class="wev" aria-hidden="true"></span>' : '') + '</button>').join('') + '</div>';
+  }
+
+  // A tile of the chart: neutral surface, round tinted pastille (count as badge), name and a coloured state line.
+  _tile(tab, icon, color, name, state, count) {
+    var E = window.EntOne;
+    return '<button class="tile ' + (count ? color : 'rest') + '" data-tab="' + tab + '"><span class="pastille"><ha-icon icon="' + icon + '"></ha-icon>' +
+      (count ? '<span class="pbadge">' + (count > 99 ? '99+' : count) + '</span>' : '') + '</span>' +
+      '<span class="tl"><span class="tn">' + E.esc(name) + '</span><span class="ts">' + E.esc(state) + '</span></span></button>';
+  }
+
   _home(t, data) {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
     var R = E.rows;
     var isOpen = (key) => !!this._open[key];
-    var toSign = data.words.filter((w) => !w.signed);
-    var todo = E.sortedHomework(data.homework, false).slice(0, 6);
     var on = (tab) => data.panelTabs.indexOf(tab) !== -1;
-    var tileList = [
-      [data.unread, t.tile_messages, 'mdi:email-outline', 'messages'],
-      [toSign.length, t.tile_words, 'mdi:notebook-edit-outline', 'words'],
-      [data.homework.filter((h) => !h.done).length, t.tile_homework, 'mdi:pencil-outline', 'homework'],
-    ].filter((x) => on(x[3]));
-    var tiles = !tileList.length
-      ? ''
-      : '<div class="tiles" style="grid-template-columns: repeat(' + tileList.length + ', minmax(0, 1fr))">' +
-      tileList.map((x) => '<button class="tile' + (x[3] === 'words' && x[0] ? ' hot' : '') + '" data-tab="' + x[3] + '"><span class="v"><ha-icon icon="' + x[2] + '"></ha-icon>' + x[0] + '</span><span class="l">' + E.esc(x[1]) + '</span></button>').join('') +
-      '</div>';
-    return tiles + '<div class="grid">' +
-      (on('words') ? this._box(t.section_words, this._list(toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen, reader: true, entryId: data.entryId })), t.no_words)) : '') +
-      (on('homework') ? this._box(t.section_homework, this._list(todo.map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_homework)) : '') +
-      this._box(t.section_events, this._list(E.upcomingEvents(data.events).slice(0, 6).map((e) => R.event(e, t, locale, { isOpen: isOpen })), t.no_events)) +
-      (on('news') ? this._box(t.section_news, this._list(data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })), t.no_news)) : '') +
+    var day = this._day;
+    var toSign = this._myWords(data).filter((w) => !w.signed);
+    var todo = E.sortedHomework(data.homework, false).filter((h) => !day || String(h.date).slice(0, 10) === day);
+    var events = E.upcomingEvents(data.events).filter((e) => !day || String(e.start || '').slice(0, 10) === day);
+    var unread = data.messages.filter((m) => m.unread);
+    var next = events[0];
+    var tiles = [
+      on('words') ? this._tile('words', 'mdi:notebook-edit-outline', 'red', t.section_words, toSign.length ? toSign.length + ' ' + t.tile_words : t.no_words, toSign.length) : '',
+      on('homework') ? this._tile('homework', 'mdi:pencil-outline', 'amber', t.section_homework, todo.length ? todo.length + ' ' + t.tile_homework : t.no_homework, todo.length) : '',
+      on('messages') ? this._tile('messages', 'mdi:email-outline', 'blue', t.section_messages, data.unread ? data.unread + ' ' + t.tile_messages : t.no_messages, data.unread) : '',
+      '<div class="tile rest static"><span class="pastille"><ha-icon icon="mdi:calendar-blank-outline"></ha-icon></span><span class="tl"><span class="tn">' + E.esc(t.section_events) + '</span>' +
+        '<span class="ts">' + E.esc(next ? [next.title, E.day(next.start, t, locale)].filter(Boolean).join(' · ') : t.no_events) + '</span></span></div>',
+    ].filter(Boolean);
+    var see = (tab) => (on(tab) ? '<button class="see" data-tab="' + tab + '">' + E.esc(t.see_all) + ' ›</button>' : '');
+    var todoRows = (on('words') ? toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen, reader: true, entryId: data.entryId })) : [])
+      .concat(on('homework') ? todo.slice(0, 6).map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId })) : []);
+    var readRows = (on('messages') ? unread.slice(0, 4).map((m) => R.message(m, t, locale, { reader: true, entryId: data.entryId })) : [])
+      .concat(on('news') ? data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })) : []);
+    var box = (cls, title, side, rows, empty) =>
+      '<section class="box ' + cls + '"><div class="bh"><h2>' + E.esc(title) + '</h2>' + side + '</div>' + this._list(rows, empty) + '</section>';
+    return this._childChips(t, data) + this._week(t, data) +
+      '<div class="tiles" style="grid-template-columns: repeat(' + tiles.length + ', minmax(0, 1fr))">' + tiles.join('') + '</div>' +
+      '<div class="dgrid">' +
+      (on('words') || on('homework') ? box('todo-box', t.section_todo, see(on('homework') ? 'homework' : 'words'), todoRows, t.nothing_to_do) : '') +
+      (on('messages') || on('news') ? box('read-box', t.section_to_read, see(on('messages') ? 'messages' : 'news'), readRows, t.nothing_to_read) : '') +
+      box('agenda-box', t.section_events, '', events.slice(0, 6).map((e) => R.event(e, t, locale, { isOpen: isOpen })), t.no_events) +
       '</div>';
   }
 
+  // Homework: the notebook chips, then one tile per due day with how much of it is done.
   _homework(t, data) {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
@@ -281,27 +396,32 @@ class EntOnePanel extends HTMLElement {
       '<div class="filters">' +
       [['', t.all]].concat(books.map((b) => [b, data.books[b]])).map((b) => '<button class="filter' + (this._book === b[0] ? ' on' : '') + '" data-book="' + E.esc(b[0]) + '">' + E.esc(b[1]) + '</button>').join('') +
       '<label class="toggle"><input type="checkbox" data-action="hide-done"' + (this._hideDone ? ' checked' : '') + '> ' + E.esc(t.hide_done) + '</label></div>';
-    var items = E.sortedHomework(data.homework.filter((h) => !this._book || h.book_id === this._book), !this._hideDone)
-      .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+    var mine = data.homework.filter((h) => !this._book || h.book_id === this._book);
     var days = [];
-    items.forEach((h) => {
+    mine.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).forEach((h) => {
       var last = days[days.length - 1];
-      if (!last || last.date !== h.date) days.push({ date: h.date, items: [h] });
-      else last.items.push(h);
+      if (!last || last.date !== h.date) days.push({ date: h.date, all: [h] });
+      else last.all.push(h);
     });
-    var body = days.length
-      ? days.map((d) => '<h3>' + E.esc(E.day(d.date, t, locale)) + '</h3>' + d.items.map((h) => E.rows.homework(h, t, locale, { full: true, entryId: data.entryId })).join('')).join('')
-      : '<div class="empty">' + E.esc(t.no_homework) + '</div>';
-    return chips + this._box('', body, true);
+    var tiles = days.map((d) => {
+      var done = d.all.filter((h) => h.done).length;
+      var items = E.sortedHomework(d.all, !this._hideDone);
+      if (!items.length) return '';
+      var full = done === d.all.length;
+      return '<section class="box day' + (full ? ' full' : '') + '"><div class="bh"><h2>' + E.esc(E.day(d.date, t, locale)) + '</h2><span class="ratio">' + done + ' / ' + d.all.length + '</span></div>' +
+        '<div class="bar"><span style="width:' + Math.round((done / d.all.length) * 100) + '%"></span></div>' +
+        items.map((h) => E.rows.homework(h, t, locale, { full: true, entryId: data.entryId })).join('') + '</section>';
+    }).join('');
+    return chips + (tiles ? '<div class="days">' + tiles + '</div>' : this._box('', '<div class="empty">' + E.esc(t.no_homework) + '</div>', true));
   }
 
   // Liaison book and Messages: a list on the left and a reading pane on the right, like a mail client. On a narrow
   // screen the list fills the page, and the item opened replaces it (Back returns to the list).
-  _mail(list, reader, empty, placeholder, icon) {
+  _mail(list, reader, empty, placeholder, icon, short) {
     var E = window.EntOne;
     var t = E.t(this._hass);
     var open = !!reader;
-    return '<div class="mail' + (open ? ' has-item' : '') + '">' +
+    return '<div class="mail' + (open ? ' has-item' : '') + (short ? ' short' : '') + '">' +
       '<div class="mlist" role="listbox">' + (list.length ? list.join('') : '<div class="empty pad">' + E.esc(empty) + '</div>') + '</div>' +
       '<div class="reader">' + (open
         ? '<button class="back" data-action="back"><ha-icon icon="mdi:arrow-left"></ha-icon>' + E.esc(t.back) + '</button>' + reader
@@ -330,7 +450,7 @@ class EntOnePanel extends HTMLElement {
   _words(t, data) {
     var E = window.EntOne;
     var locale = E.locale(this._hass);
-    var words = data.words.slice().sort((a, b) => (a.signed === b.signed ? 0 : a.signed ? 1 : -1));
+    var words = this._myWords(data).slice().sort((a, b) => (a.signed === b.signed ? 0 : a.signed ? 1 : -1));
     var canSign = E.canSign(this._hass);
     var key = (w) => w.id + ':' + w.child_id;
     var sel = words.find((w) => key(w) === this._item);
@@ -348,7 +468,8 @@ class EntOnePanel extends HTMLElement {
       reader = this._readerHead(sel.title || sel.category || '—', [sel.child, sel.author, this._when(sel.date, t, locale)].filter(Boolean).join(' · '), side) +
         (sel.text ? '<div class="rbody">' + E.esc(sel.text) + '</div>' : '') + E.files(sel.attachments, t, data.entryId, true);
     }
-    return this._mail(list, reader, t.no_words, t.select_word, 'mdi:notebook-outline');
+    var chips = this._childChips(t, data);
+    return chips + this._mail(list, reader, t.no_words, t.select_word, 'mdi:notebook-outline', !!chips);
   }
 
   _messages(t, data) {
@@ -457,8 +578,8 @@ class EntOnePanel extends HTMLElement {
         '<div class="url">' + E.esc(acc.url) + '</div><div class="form" data-entry="' + E.esc(acc.entry_id) + '"></div>' +
         (s.admin ? '<div class="popup-actions"><span class="msg"></span><button class="act" data-action="save" data-entry="' + E.esc(acc.entry_id) + '">' + E.esc(t.save) + '</button></div>' : ''),
         true)).join('') + '</div>';
-    var labels = { scan_interval: t.settings_scan, homework_days: t.settings_days, notify_services: t.settings_notify, show_panel: t.settings_panel, panel_tabs: t.settings_tabs };
-    var helpers = { scan_interval: t.settings_scan_hint, notify_services: t.settings_notify_hint };
+    var labels = { scan_interval: t.settings_scan, homework_days: t.settings_days, notify_services: t.settings_notify, show_panel: t.settings_panel, panel_tabs: t.settings_tabs, hide_header: t.settings_hide_header };
+    var helpers = { scan_interval: t.settings_scan_hint, notify_services: t.settings_notify_hint, hide_header: t.settings_hide_header_hint };
     s.accounts.forEach((acc) => {
       var form = document.createElement('ha-form');
       var notify = s.notify_services.concat(acc.options.notify_services.filter((n) => s.notify_services.indexOf(n) === -1));
@@ -478,6 +599,10 @@ class EntOnePanel extends HTMLElement {
               options: ['homework', 'words', 'messages', 'news', 'blog'].map((tab) => ({ value: tab, label: t[ENT_ONE_TAB_KEYS[tab]] })),
             },
           },
+        },
+        {
+          name: 'hide_header',
+          selector: { select: { mode: 'list', options: ['off', 'all', 'non_admin'].map((v) => ({ value: v, label: t['hide_header_' + v] })) } },
         },
       ];
       form.data = this._drafts[acc.entry_id] || acc.options;
@@ -508,6 +633,7 @@ class EntOnePanel extends HTMLElement {
           notify_services: options.notify_services || [],
           show_panel: !!options.show_panel,
           panel_tabs: options.panel_tabs || [],
+          hide_header: options.hide_header || 'off',
         },
       })
       .then((res) => {
@@ -558,6 +684,21 @@ class EntOnePanel extends HTMLElement {
     if (readEl) {
       this._setTab(readEl.getAttribute('data-tab'));
       this._select(readEl.getAttribute('data-item'));
+      return;
+    }
+    var childEl = ev.target.closest('[data-child]:not([data-action])');
+    if (childEl) {
+      this._child = childEl.getAttribute('data-child');
+      this._item = '';
+      this._saveFilters();
+      this._render();
+      return;
+    }
+    var dayEl = ev.target.closest('[data-day]');
+    if (dayEl) {
+      var picked = dayEl.getAttribute('data-day');
+      this._day = this._day === picked ? '' : picked;
+      this._render();
       return;
     }
     var tabEl = ev.target.closest('[data-tab]');
@@ -657,40 +798,103 @@ class EntOnePanel extends HTMLElement {
   static _styles(A) {
     return [
       ':host { display: block; min-height: 100vh; background: var(--primary-background-color); color: var(--primary-text-color); font-family: var(--paper-font-body1_-_font-family, inherit); }',
-      '.toolbar { display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 12px; background: var(--app-header-background-color, var(--primary-background-color));' +
-        ' color: var(--app-header-text-color, var(--primary-text-color)); border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
-      '.logo { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
-      '.logo svg { width: 20px; height: 20px; }',
-      '.tb-title { flex: 1; min-width: 0; font-size: 20px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
-      '.tb-side { display: flex; align-items: center; gap: 4px; flex: none; }',
-      '.tb-side ha-icon-button { --mdc-icon-button-size: 40px; color: var(--secondary-text-color); }',
-      '.updated { font-size: 12px; color: var(--secondary-text-color); margin-right: 4px; }',
-      '.account { font: inherit; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--divider-color); background: var(--card-background-color); color: var(--primary-text-color); }',
+      // Illustrated header (the card's banner, see window.EntOne.banner.styles), across the page.
+      '.banner { margin: 0; --eo-scene-w: min(260px, 38%); }',
+      '.scene { display: contents; }',
+      '.htext { left: 8px; right: calc(var(--eo-scene-w) + 96px); top: 0; gap: 8px; }',
+      '.hinfo { display: flex; align-items: center; gap: 16px; min-width: 0; }',
+      'ha-menu-button { flex: none; color: var(--eo-text); }',
+      '.banner .logo { width: 44px; height: 44px; flex: none; border-radius: 50%; display: grid; place-items: center; margin-left: 4px; }',
+      '.banner .logo svg { width: 26px; height: 26px; }',
+      '.titles { min-width: 0; }',
+      '.title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }',
+      '.name { font-size: 20px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }',
+      '.sub { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }',
+      '.status { --c: var(--success-color, #43a047); flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; border-radius: 12px; padding: 1px 8px; }',
+      '.status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); }',
+      '.banner .status.warn { --c: var(--warning-color, #ffa600); } .banner .status.bad { --c: var(--error-color, #db4437); }',
+      // The buttons stand at the left of the school corner, centred on the header (not over the scene).
+      '.hbtns { top: calc((100% - var(--eo-g)) / 2 - 16px); right: calc(var(--eo-scene-w) + 12px); gap: 6px; }',
+      '.hbtn { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; --mdc-icon-size: 18px; }',
+      '.hbtns .hbtn { width: 32px; height: 32px; }',
+      '.hbtn ha-icon { display: flex; }',
+      '.hbtn:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 1px; }',
       '.spinning ha-icon { animation: ent-one-spin 1s linear infinite; }',
       '@keyframes ent-one-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }',
-      // Text tabs under the header bar, the active one underlined (same logic as the other panels).
-      '.tabs { display: flex; gap: 4px; padding: 0 12px; overflow-x: auto; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: var(--app-header-background-color, var(--primary-background-color)); }',
+      // Text tabs under the header, the active one underlined; the account choice at their right.
+      // Top bar hidden: the tabs alone, the menu button at their left (shown by Home Assistant on a narrow screen).
+      ':host([bare]) .banner { display: none; }',
+      '.tabbar ha-menu-button { flex: none; margin-left: -8px; color: var(--primary-text-color); }',
+      '.tb-side { display: flex; align-items: center; gap: 4px; }',
+      '.tb-side .hbtn { width: 36px; height: 36px; border-radius: 50%; color: var(--secondary-text-color); }',
+      '.tb-side .hbtn:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }',
+      '.tabbar { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: var(--app-header-background-color, var(--primary-background-color)); }',
+      '.tabs { flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; }',
+      '.tb-side { flex: none; }',
+      '.account { font: inherit; font-size: 13px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--divider-color); background: var(--card-background-color); color: var(--primary-text-color); }',
       '.tab { all: unset; cursor: pointer; padding: 12px 10px 10px; font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--secondary-text-color); border-bottom: 2px solid transparent; }',
       '.tab.on { color: var(--primary-text-color); border-bottom-color: ' + A + '; }',
       '.tab:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }',
-      '.badge { display: inline-block; min-width: 18px; padding: 1px 5px; margin-left: 4px; border-radius: 9px; font-size: 11px; text-align: center;' +
+      '.badge { display: inline-block; min-width: 18px; padding: 1px 5px; margin-left: 4px; border-radius: 9px; font-size: 11px; text-align: center; box-sizing: border-box;' +
         ' color: color-mix(in srgb, ' + A + ' 60%, var(--primary-text-color)); background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
-      '.page { max-width: 1100px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }',
-      // Each box keeps its own height: a box with one item no longer stretches to its neighbour's.
-      '.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: start; }',
+      '.page { max-width: 1100px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }',
+      '.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; align-items: start; }',
       '.box { background: var(--card-background-color, #fff); border-radius: var(--ha-card-border-radius, 12px); border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)); padding: 12px 16px; min-width: 0; }',
       '.box h2 { margin: 0 0 6px; font-size: 14px; font-weight: 500; color: var(--secondary-text-color); }',
       '.box h3 { margin: 12px 0 2px; font-size: 13px; font-weight: 500; color: var(--secondary-text-color); }',
       '.box h3:first-child { margin-top: 0; }',
-      '.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }',
-      '.tile { all: unset; cursor: pointer; padding: 12px 16px; border-radius: 12px; background: var(--card-background-color, #fff); border: 1px solid var(--divider-color, #e0e0e0); }',
-      '.tile.hot { background: color-mix(in srgb, ' + A + ' 12%, var(--card-background-color, #fff)); }',
-      '.tile:hover { border-color: var(--secondary-text-color); }',
+      '.bh { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }',
+      '.see { all: unset; cursor: pointer; font-size: 12px; color: var(--secondary-text-color); }',
+      '.see:hover { color: var(--primary-text-color); } .see:focus-visible { outline: 2px solid var(--primary-color); }',
+      // Child filter: All, then a chip per child with its initial.
+      '.kids { display: flex; flex-wrap: wrap; gap: 8px; }',
+      '.kid { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; border-radius: 18px; font-size: 13px;' +
+        ' color: var(--secondary-text-color); background: var(--card-background-color, #fff); border: 1px solid var(--divider-color, #e0e0e0); box-sizing: border-box; }',
+      '.kid:has(.avatar) { padding-left: 3px; }',
+      '.kid.on { color: var(--primary-text-color); border: 1.5px solid ' + A + '; }',
+      '.kid:focus-visible { outline: 2px solid var(--primary-color); }',
+      '.kid .badge { margin-left: 0; }',
+      '.avatar { --c: ' + A + '; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 500;' +
+        ' color: color-mix(in srgb, var(--c) 60%, var(--primary-text-color)); background: color-mix(in srgb, var(--c) 18%, transparent); }',
+      '.avatar.c1 { --c: #8e6bd8; } .avatar.c2 { --c: #1d9e75; } .avatar.c3 { --c: #2f80ed; }',
+      // Week strip: Monday to Friday, homework left in amber, a dot for an event, today outlined.
+      '.week { display: flex; gap: 6px; }',
+      '.wday { all: unset; cursor: pointer; flex: 1; min-width: 0; position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 4px; border-radius: 10px;' +
+        ' font-size: 12px; color: var(--secondary-text-color); background: var(--card-background-color, #fff); border: 1px solid var(--divider-color, #e0e0e0); box-sizing: border-box; }',
+      '.wday .wl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
+      '.wday.past { opacity: .6; }',
+      '.wday.today { color: var(--primary-text-color); border: 1.5px solid ' + A + '; }',
+      '.wday.hw { --c: #f5a623; color: color-mix(in srgb, var(--c) 55%, var(--primary-text-color)); background: color-mix(in srgb, var(--c) 14%, var(--card-background-color, #fff)); }',
+      '.wday .wn { font-weight: 500; }',
+      '.wday .wev { position: absolute; top: 4px; right: 5px; width: 5px; height: 5px; border-radius: 50%; background: #2f80ed; }',
+      '.wday.on { box-shadow: 0 0 0 2px ' + A + '; }',
+      '.wday:focus-visible { outline: 2px solid var(--primary-color); }',
+      // Tiles of the chart: neutral surface, round tinted pastille with the count as badge, name + coloured state line.
+      '.tiles { display: grid; gap: 12px; }',
+      '.tile { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; min-width: 0; padding: 12px 14px; border-radius: 12px;' +
+        ' background: var(--card-background-color, #fff); border: 1px solid var(--divider-color, #e0e0e0); --c: #8a96a3; }',
+      '.tile:not(.static):hover { border-color: color-mix(in srgb, var(--c) 55%, var(--divider-color, #e0e0e0)); }',
       '.tile:focus-visible { outline: 2px solid var(--primary-color); }',
-      '.tile .v { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 500; --mdc-icon-size: 20px; }',
-      '.tile .v ha-icon { color: var(--secondary-text-color); }',
-      '.tile.hot .v ha-icon { color: ' + A + '; }',
-      '.tile .l { display: block; font-size: 13px; color: var(--secondary-text-color); }',
+      '.tile.static { cursor: default; }',
+      '.tile.red { --c: var(--error-color, #e5484d); } .tile.amber { --c: #f5a623; } .tile.blue { --c: #2f80ed; }',
+      '.pastille { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; --mdc-icon-size: 22px;' +
+        ' color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }',
+      '.pbadge { position: absolute; top: -3px; right: -5px; min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; border-radius: 9px; font-size: 11px; font-weight: 600;' +
+        ' line-height: 18px; text-align: center; color: #fff; background: var(--c); box-shadow: 0 0 0 2px var(--card-background-color, #fff); }',
+      '.tl { display: flex; flex-direction: column; min-width: 0; }',
+      '.tn { font-size: 14px; font-weight: 500; color: var(--primary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
+      '.ts { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: color-mix(in srgb, var(--c) 65%, var(--primary-text-color)); }',
+      '.tile.rest .ts { color: var(--secondary-text-color); }',
+      // Home: To do (two columns wide) and To read, the calendar under them.
+      '.dgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }',
+      '.dgrid .todo-box { grid-column: span 2; } .dgrid .agenda-box { grid-column: 1 / -1; }',
+      // Homework: one tile per day, its progress under the title.
+      '.days { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; align-items: start; }',
+      '.ratio { font-size: 12px; font-weight: 500; color: color-mix(in srgb, #f5a623 60%, var(--primary-text-color)); }',
+      '.day.full .ratio { color: color-mix(in srgb, var(--success-color, #43a047) 60%, var(--primary-text-color)); }',
+      '.bar { height: 4px; border-radius: 2px; margin: 2px 0 6px; background: color-mix(in srgb, var(--primary-text-color) 8%, transparent); overflow: hidden; }',
+      '.bar span { display: block; height: 100%; border-radius: 2px; background: #f5a623; }',
+      '.day.full .bar span { background: var(--success-color, #43a047); }',
       '.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }',
       '.filter { all: unset; cursor: pointer; font-size: 13px; padding: 4px 12px; border-radius: 14px; border: 1px solid var(--divider-color, #e0e0e0); color: var(--secondary-text-color); }',
       '.filter.on { color: color-mix(in srgb, ' + A + ' 60%, var(--primary-text-color)); border-color: color-mix(in srgb, ' + A + ' 50%, transparent); background: color-mix(in srgb, ' + A + ' 10%, transparent); }',
@@ -701,14 +905,16 @@ class EntOnePanel extends HTMLElement {
       '.popup-text { font-size: 13px; color: var(--secondary-text-color); margin-top: 2px; }',
       '.popup-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 8px; }',
       '.act.ghost { color: var(--secondary-text-color); border-color: var(--divider-color, rgba(0,0,0,.2)); }',
-      '.banner { padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--error-color, #db4437) 10%, transparent); }',
+      '.errbar { padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--error-color, #db4437) 10%, transparent); }',
       '.url { font-size: 12px; color: var(--secondary-text-color); margin-bottom: 8px; }',
       '.msg { font-size: 13px; margin-right: auto; }',
       '.msg.ok { color: color-mix(in srgb, var(--success-color, #43a047) 55%, var(--primary-text-color)); }',
       '.page.wide { max-width: 1400px; }',
       // Mail layout: list and reading pane side by side, each scrolling on its own.
-      '.mail { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); height: calc(100vh - 56px - 46px - 32px); min-height: 360px;' +
+      '.mail { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); height: calc(100vh - 90px - 46px - 32px); min-height: 360px;' +
         ' background: var(--card-background-color, #fff); border-radius: var(--ha-card-border-radius, 12px); border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, #e0e0e0)); overflow: hidden; }',
+      '.mail.short { height: calc(100vh - 90px - 46px - 32px - 46px); }',
+      ':host([bare]) .mail { height: calc(100vh - 46px - 32px); } :host([bare]) .mail.short { height: calc(100vh - 46px - 32px - 46px); }',
       '.mlist { overflow-y: auto; border-right: 1px solid var(--divider-color, rgba(0,0,0,.12)); }',
       '.mrow { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.08)); border-left: 3px solid transparent; }',
       '.mrow:hover { background: color-mix(in srgb, var(--primary-text-color) 4%, transparent); }',
@@ -751,7 +957,9 @@ class EntOnePanel extends HTMLElement {
       '.bdot img { width: 100%; height: 100%; object-fit: cover; }',
       '@media (max-width: 800px) { .mail { grid-template-columns: 1fr; height: auto; min-height: 0; } .mlist { border-right: none; } .mail.has-item .mlist { display: none; }' +
         ' .mail:not(.has-item) .reader { display: none; } .back { display: inline-flex; } .reader { padding: 12px 14px; } }',
-      '@media (max-width: 600px) { .updated { display: none; } .page { padding: 12px; } .tile .v { font-size: 22px; } }',
+      '@media (max-width: 900px) { .dgrid { grid-template-columns: 1fr; } .dgrid .todo-box { grid-column: auto; } .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }',
+      '@media (max-width: 600px) { .page { padding: 12px; } .banner { --eo-scene-w: 0px; } .eo-scene { display: none; } .htext { right: 84px; } .name { font-size: 17px; }' +
+        ' .hbtns { right: 12px; } .status { display: none; } .wday .wl { font-size: 11px; } .week { gap: 4px; } }',
       '@media (prefers-reduced-motion: reduce) { .spinning ha-icon { animation: none; opacity: .5; } }',
     ].join('\n');
   }

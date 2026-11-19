@@ -72,12 +72,14 @@
           "homework_days": "Läxperiod",
           "notify_services": "Aviseringsåtgärder",
           "show_panel": "Visa den här panelen i sidofältet",
-          "panel_tabs": "Flikar som visas i panelen"
+          "panel_tabs": "Flikar som visas i panelen",
+          "hide_header": "Dölj panelens övre fält"
         },
         "data_description": {
           "scan_interval": "ENT delas av hela skolan: minst 10 minuter.",
           "homework_days": "Läxor med deadline inom så många dagar visas.",
-          "notify_services": "Nya meddelanden, anteckningar att skriva under, läxor och blogginlägg skickas till dessa åtgärder."
+          "notify_services": "Nya meddelanden, anteckningar att skriva under, läxor och blogginlägg skickas till dessa åtgärder.",
+          "hide_header": "Den illustrerade rubriken ovanför flikarna; flikarna finns kvar och på en telefon flyttas menyknappen bredvid dem."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Meddelanden",
         "news": "Nyheter",
         "blog": "Blogg"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nej",
+        "all": "För alla",
+        "non_admin": "För icke-administratörer"
       }
     }
   }

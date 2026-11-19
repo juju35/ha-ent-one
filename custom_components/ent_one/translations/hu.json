@@ -72,12 +72,14 @@
           "homework_days": "Házi feladatok időszaka",
           "notify_services": "Értesítési műveletek",
           "show_panel": "A panel megjelenítése az oldalsávon",
-          "panel_tabs": "A panelen látható lapok"
+          "panel_tabs": "A panelen látható lapok",
+          "hide_header": "A panel felső sávjának elrejtése"
         },
         "data_description": {
           "scan_interval": "Az ENT-et az egész iskola használja: legalább 10 perc.",
           "homework_days": "Az ennyi napon belül esedékes házi feladatok jelennek meg.",
-          "notify_services": "Az új üzenetek, aláírandó bejegyzések, házi feladatok és blogbejegyzések ezekhez a műveletekhez kerülnek."
+          "notify_services": "Az új üzenetek, aláírandó bejegyzések, házi feladatok és blogbejegyzések ezekhez a műveletekhez kerülnek.",
+          "hide_header": "A fülek feletti illusztrált fejléc; a fülek megmaradnak, telefonon a menügomb melléjük kerül."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Üzenetek",
         "news": "Hírek",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nem",
+        "all": "Mindenkinek",
+        "non_admin": "Nem rendszergazdáknak"
       }
     }
   }

@@ -72,12 +72,14 @@
           "homework_days": "Lektieperiode",
           "notify_services": "Notifikationshandlinger",
           "show_panel": "Vis dette panel i sidebjælken",
-          "panel_tabs": "Faner vist i panelet"
+          "panel_tabs": "Faner vist i panelet",
+          "hide_header": "Skjul panelets øverste bjælke"
         },
         "data_description": {
           "scan_interval": "ENT deles af hele skolen: mindst 10 minutter.",
           "homework_days": "Lektier med frist inden for så mange dage vises.",
-          "notify_services": "Nye beskeder, meddelelser til underskrift, lektier og blogindlæg sendes til disse handlinger."
+          "notify_services": "Nye beskeder, meddelelser til underskrift, lektier og blogindlæg sendes til disse handlinger.",
+          "hide_header": "Den illustrerede overskrift over fanerne; fanerne bliver, og på en telefon flytter menuknappen ved siden af dem."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Beskeder",
         "news": "Nyheder",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nej",
+        "all": "For alle",
+        "non_admin": "For ikke-administratorer"
       }
     }
   }

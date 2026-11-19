@@ -72,12 +72,14 @@
           "homework_days": "Perioada temelor",
           "notify_services": "Acțiuni de notificare",
           "show_panel": "Afișează acest panou în bara laterală",
-          "panel_tabs": "File afișate în panou"
+          "panel_tabs": "File afișate în panou",
+          "hide_header": "Ascunde bara de sus a panoului"
         },
         "data_description": {
           "scan_interval": "ENT-ul este folosit de toată școala: minimum 10 minute.",
           "homework_days": "Sunt afișate temele cu termen în acest număr de zile.",
-          "notify_services": "Mesajele noi, notele de semnat, temele și postările de pe blog sunt trimise acestor acțiuni."
+          "notify_services": "Mesajele noi, notele de semnat, temele și postările de pe blog sunt trimise acestor acțiuni.",
+          "hide_header": "Antetul ilustrat de deasupra filelor; filele rămân, iar pe telefon butonul de meniu trece lângă ele."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Mesaje",
         "news": "Noutăți",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nu",
+        "all": "Pentru toți",
+        "non_admin": "Pentru non-administratori"
       }
     }
   }
