@@ -357,6 +357,8 @@ class EntOnePanel extends HTMLElement {
     var R = E.rows;
     var isOpen = (key) => !!this._open[key];
     var on = (tab) => data.panelTabs.indexOf(tab) !== -1;
+    // The week strip counts homework: left out with the Homework tab, its day filter cleared.
+    if (!on('homework')) this._day = '';
     var day = this._day;
     var toSign = this._myWords(data).filter((w) => !w.signed);
     var todo = E.sortedHomework(data.homework, false).filter((h) => !day || String(h.date).slice(0, 10) === day);
@@ -377,7 +379,7 @@ class EntOnePanel extends HTMLElement {
       .concat(on('news') ? data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })) : []);
     var box = (cls, title, side, rows, empty) =>
       '<section class="box ' + cls + '"><div class="bh"><h2>' + E.esc(title) + '</h2>' + side + '</div>' + this._list(rows, empty) + '</section>';
-    return this._childChips(t, data) + this._week(t, data) +
+    return this._childChips(t, data) + (on('homework') ? this._week(t, data) : '') +
       '<div class="tiles" style="grid-template-columns: repeat(' + tiles.length + ', minmax(0, 1fr))">' + tiles.join('') + '</div>' +
       '<div class="dgrid">' +
       (on('words') || on('homework') ? box('todo-box', t.section_todo, see(on('homework') ? 'homework' : 'words'), todoRows, t.nothing_to_do) : '') +
@@ -828,7 +830,8 @@ class EntOnePanel extends HTMLElement {
       '.tb-side { display: flex; align-items: center; gap: 4px; }',
       '.tb-side .hbtn { width: 36px; height: 36px; border-radius: 50%; color: var(--secondary-text-color); }',
       '.tb-side .hbtn:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }',
-      '.tabbar { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: var(--app-header-background-color, var(--primary-background-color)); }',
+      // The page's own background: the theme's header colour (blue in the default light theme) would put grey tab text on blue.
+      '.tabbar { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: var(--primary-background-color); position: sticky; top: 0; z-index: 2; }',
       '.tabs { flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; }',
       '.tb-side { flex: none; }',
       '.account { font: inherit; font-size: 13px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--divider-color); background: var(--card-background-color); color: var(--primary-text-color); }',
