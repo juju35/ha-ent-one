@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.6.0';
+var ENT_ONE_CARD_VERSION = '1.6.1';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.

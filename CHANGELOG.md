@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1 - 2026-11-19
+
+### Fixes
+- Panel: the tab bar takes the page background instead of the theme's header colour — with Home Assistant's default light theme the tabs showed grey text on blue. It also stays at the top while scrolling.
+
 ## 1.6.0 - 2026-11-19
 
 ### Features

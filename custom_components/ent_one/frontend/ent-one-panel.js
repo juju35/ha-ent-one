@@ -828,7 +828,8 @@ class EntOnePanel extends HTMLElement {
       '.tb-side { display: flex; align-items: center; gap: 4px; }',
       '.tb-side .hbtn { width: 36px; height: 36px; border-radius: 50%; color: var(--secondary-text-color); }',
       '.tb-side .hbtn:hover { background: color-mix(in srgb, var(--secondary-text-color) 14%, transparent); color: var(--primary-text-color); }',
-      '.tabbar { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: var(--app-header-background-color, var(--primary-background-color)); }',
+      // The page's own background: the theme's header colour (blue in the default light theme) would put grey tab text on blue.
+      '.tabbar { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid var(--divider-color, rgba(0,0,0,.12)); background: var(--primary-background-color); position: sticky; top: 0; z-index: 2; }',
       '.tabs { flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; }',
       '.tb-side { flex: none; }',
       '.account { font: inherit; font-size: 13px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--divider-color); background: var(--card-background-color); color: var(--primary-text-color); }',
