@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.6.0 - 2026-11-19
+
+### Features
+- Panel redesign: the card's illustrated header across the page (school corner, ground bar, status in the icon's colour, ONE panda badge, round glass buttons), the account choice moved to the right of the tabs.
+- Panel home: a child filter (All, then one chip per child with the words left to sign), a week strip (homework left per day, a dot for an event, a click keeps only that day), chart tiles (tinted pastille with its count, coloured state line) for the liaison book, homework, messages and calendar, then To do, To read and Calendar boxes.
+- Panel Liaison book: the same child filter, remembered in the browser.
+- Panel Homework: one tile per due day with its progress (done / total and a bar).
+- Panel: option *Hide the panel's top bar* (No, For everyone, For non-admins), in the integration options and the Settings tab — the tabs stay, with the refresh and open-ENT buttons at their right and the menu button at their left on a phone.
+- Screenshots: one GIF per header animation (unread messages, homework left) for the card and the panel, light and dark, shown in the README.
+
+### Fixes
+- Screenshots: the GIFs really move — frames were captured with animations disabled, which reset them (the refresh GIF showed a still spinner).
+
 ## 1.5.2 - 2026-11-18
 
 ### Fixes

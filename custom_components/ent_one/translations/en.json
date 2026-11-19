@@ -72,12 +72,14 @@
           "homework_days": "Homework window",
           "notify_services": "Notify actions",
           "show_panel": "Show the ENT ONE panel in the sidebar",
-          "panel_tabs": "Tabs shown in the panel"
+          "panel_tabs": "Tabs shown in the panel",
+          "hide_header": "Hide the panel's top bar"
         },
         "data_description": {
           "scan_interval": "The ENT is shared by the whole school: 10 minutes minimum.",
           "homework_days": "Homework due within this many days is shown.",
-          "notify_services": "Tell these actions (notify.mobile_app_…) about new messages, words to sign, homework and blog posts. Leave empty for none."
+          "notify_services": "Tell these actions (notify.mobile_app_…) about new messages, words to sign, homework and blog posts. Leave empty for none.",
+          "hide_header": "The illustrated header above the tabs; the tabs stay, and on a phone the menu button moves beside them."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Messages",
         "news": "News",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "No",
+        "all": "For everyone",
+        "non_admin": "For non-admins"
       }
     }
   }

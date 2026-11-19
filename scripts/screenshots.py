@@ -391,6 +391,23 @@ STATES = {
     )
 }
 
+# The same account with every message read: the header shows the homework sheet and its writing pen.
+STATES_READ = {
+    **STATES,
+    "sensor.ent_one_unread_messages": _sensor(
+        "sensor.ent_one_unread_messages", 0, messages=[{**m, "unread": False} for m in MESSAGES]
+    ),
+}
+
+# The panel's top bar hidden (Hide the panel's top bar: For everyone): the tabs alone.
+STATES_BARE = {
+    **STATES,
+    "sensor.ent_one_last_update": {
+        **STATES["sensor.ent_one_last_update"],
+        "attributes": {**STATES["sensor.ent_one_last_update"]["attributes"], "hide_header": "all"},
+    },
+}
+
 SHOTS = [
     {"file": "card", "theme": "light", "config": {"show_news": True}},
     {"file": "card-dark", "theme": "dark", "config": {"show_news": True}},
@@ -410,6 +427,8 @@ SHOTS = [
     {"file": "mini-card-zoom-dark", "theme": "dark", "element": "ent-one-mini-card", "config": {}, "click": ".detail"},
     {"file": "panel", "theme": "light", "panel": "home", "width": 960},
     {"file": "panel-dark", "theme": "dark", "panel": "home", "width": 960},
+    {"file": "panel-bare", "theme": "light", "panel": "home", "width": 960, "states": STATES_BARE},
+    {"file": "panel-bare-dark", "theme": "dark", "panel": "home", "width": 960, "states": STATES_BARE},
     {"file": "panel-homework", "theme": "light", "panel": "homework", "width": 960},
     {"file": "panel-homework-dark", "theme": "dark", "panel": "homework", "width": 960},
     # Messages and liaison book read like a mail client: the list, and the item chosen in the reading pane with
@@ -519,7 +538,7 @@ def mount(context, shot):
         }""",
         {
             "config": shot.get("config", {}),
-            "states": STATES,
+            "states": shot.get("states", STATES),
             "element": "ent-one-panel" if shot.get("panel") else shot.get("element", "ent-one-card"),
             "tab": shot.get("panel"),
             "item": shot.get("item"),
@@ -537,29 +556,45 @@ def mount(context, shot):
     return page
 
 
-def capture(page, shot, out):
+def capture(page, shot, out, animations="disabled"):
+    # Stills disable the animations; a GIF frame keeps them as paused at its time (disabled would reset them).
     width = shot.get("width", WIDTH)
     pad = 0 if shot.get("panel") or shot.get("sidebar") else 32
+    if shot.get("crop"):
+        # Only one element (the illustrated header), with the page's margin at the top and sides of a card's.
+        box = page.locator(shot["crop"]).first.bounding_box()
+        m = pad // 2
+        # Nothing under it: the card's content starts right below the header.
+        clip = {
+            "x": box["x"] - m,
+            "y": box["y"] - m,
+            "width": box["width"] + 2 * m,
+            "height": int(box["height"] + 0.999) + m,
+        }
+        page.screenshot(path=str(out), clip=clip, animations=animations)
+        return clip
     box = page.locator("#root").bounding_box()
     clip = {"x": 0, "y": 0, "width": width + pad, "height": int(box["height"] + 0.999) + pad}
-    page.screenshot(path=str(out), clip=clip, animations="disabled")
+    page.screenshot(path=str(out), clip=clip, animations=animations)
     return clip
 
 
-def animate(context, shot, *, fps=20, seconds=2):
-    """Record the refresh spinner as a looping screenshots/<file>.gif (needs ffmpeg). Every animation is paused and
+def animate(context, shot, *, fps=20, seconds=2, refreshing=True):
+    """Record an animation as a looping screenshots/<file>.gif (needs ffmpeg): the refresh spinner, or with
+    refreshing=False what the page plays by itself (the header's envelope, pen). Every animation is paused and
     stepped frame by frame, so the GIF is identical whatever the machine's speed."""
     page = mount(context, shot)
-    page.evaluate(
-        """() => { const el = document.getElementById("root").firstElementChild; el._refreshing = true; el._render(); }"""
-    )
+    if refreshing:
+        page.evaluate(
+            """() => { const el = document.getElementById("root").firstElementChild; el._refreshing = true; el._render(); }"""
+        )
     page.wait_for_timeout(200)
     frames = round(fps * seconds)
     with tempfile.TemporaryDirectory() as frame_dir:
         clip = None
         for i in range(frames):
             page.evaluate(f"(t) => ({PAUSE_ANIMATIONS})(t)", (i * 1000) / fps)
-            clip = capture(page, shot, f"{frame_dir}/f{i:03d}.png")
+            clip = capture(page, shot, f"{frame_dir}/f{i:03d}.png", animations="allow")
         page.close()
         out = f"{frame_dir}/{shot['file']}.gif"
         subprocess.run(
@@ -607,6 +642,27 @@ def main():
         # The refresh spinner in both themes: the light GIF gets a -dark twin with the exact same setup.
         for theme, suffix in (("light", ""), ("dark", "-dark")):
             animate(context, {"file": f"refreshing{suffix}", "theme": theme, "config": {}})
+        # The illustrated header, one GIF per animation, card and panel, day and night: unread messages (the
+        # envelope bobs, its count blinks: 2 s and 1.6 s, looped over 8 s) and homework left (the pen writes, 1 s).
+        headers = (
+            ("card-header", {"config": {}, "crop": ".banner"}),
+            ("panel-header", {"panel": "home", "width": 960, "crop": ".banner"}),
+        )
+        for name, base in headers:
+            for theme, suffix in (("light", ""), ("dark", "-dark")):
+                animate(
+                    context,
+                    {**base, "file": f"{name}-messages{suffix}", "theme": theme},
+                    fps=12.5,
+                    seconds=8,
+                    refreshing=False,
+                )
+                animate(
+                    context,
+                    {**base, "file": f"{name}-homework{suffix}", "theme": theme, "states": STATES_READ},
+                    seconds=2,
+                    refreshing=False,
+                )
         browser.close()
 
 

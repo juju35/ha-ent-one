@@ -72,12 +72,14 @@
           "homework_days": "Zeitraum für Hausaufgaben",
           "notify_services": "Benachrichtigungsaktionen",
           "show_panel": "Dieses Panel in der Seitenleiste anzeigen",
-          "panel_tabs": "Im Panel angezeigte Reiter"
+          "panel_tabs": "Im Panel angezeigte Reiter",
+          "hide_header": "Obere Leiste des Panels ausblenden"
         },
         "data_description": {
           "scan_interval": "Das ENT wird von der ganzen Schule genutzt: mindestens 10 Minuten.",
           "homework_days": "Hausaufgaben, die innerhalb so vieler Tage fällig sind, werden angezeigt.",
-          "notify_services": "Neue Nachrichten, zu unterschreibende Mitteilungen, Hausaufgaben und Blogbeiträge werden an diese Aktionen gesendet."
+          "notify_services": "Neue Nachrichten, zu unterschreibende Mitteilungen, Hausaufgaben und Blogbeiträge werden an diese Aktionen gesendet.",
+          "hide_header": "Der illustrierte Kopfbereich über den Tabs; die Tabs bleiben, auf dem Telefon rückt die Menütaste neben sie."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Nachrichten",
         "news": "Neuigkeiten",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nein",
+        "all": "Für alle",
+        "non_admin": "Für Nicht-Admins"
       }
     }
   }

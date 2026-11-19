@@ -72,12 +72,14 @@
           "homework_days": "Ventana de deberes",
           "notify_services": "Acciones de notificación",
           "show_panel": "Mostrar este panel en la barra lateral",
-          "panel_tabs": "Pestañas mostradas en el panel"
+          "panel_tabs": "Pestañas mostradas en el panel",
+          "hide_header": "Ocultar la barra superior del panel"
         },
         "data_description": {
           "scan_interval": "El ENT lo comparte toda la escuela: 10 minutos como mínimo.",
           "homework_days": "Se muestran los deberes para dentro de este número de días.",
-          "notify_services": "Los nuevos mensajes, notas por firmar, deberes y entradas del blog se envían a estas acciones."
+          "notify_services": "Los nuevos mensajes, notas por firmar, deberes y entradas del blog se envían a estas acciones.",
+          "hide_header": "La cabecera ilustrada sobre las pestañas; las pestañas se mantienen y, en el móvil, el botón de menú pasa junto a ellas."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Mensajes",
         "news": "Noticias",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "No",
+        "all": "Para todos",
+        "non_admin": "Para no administradores"
       }
     }
   }

@@ -72,12 +72,14 @@
           "homework_days": "Mājasdarbu periods",
           "notify_services": "Paziņojumu darbības",
           "show_panel": "Rādīt šo paneli sānjoslā",
-          "panel_tabs": "Panelī rādītās cilnes"
+          "panel_tabs": "Panelī rādītās cilnes",
+          "hide_header": "Paslēpt paneļa augšējo joslu"
         },
         "data_description": {
           "scan_interval": "ENT izmanto visa skola: vismaz 10 minūtes.",
           "homework_days": "Tiek rādīti mājasdarbi, kuru termiņš ir šajā dienu skaitā.",
-          "notify_services": "Jaunie ziņojumi, parakstāmie ieraksti, mājasdarbi un emuāra ieraksti tiek nosūtīti šīm darbībām."
+          "notify_services": "Jaunie ziņojumi, parakstāmie ieraksti, mājasdarbi un emuāra ieraksti tiek nosūtīti šīm darbībām.",
+          "hide_header": "Ilustrētā galvene virs cilnēm; cilnes paliek, un tālrunī izvēlnes poga pārvietojas blakus tām."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Ziņojumi",
         "news": "Jaunumi",
         "blog": "Emuārs"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Nē",
+        "all": "Visiem",
+        "non_admin": "Ne-administratoriem"
       }
     }
   }

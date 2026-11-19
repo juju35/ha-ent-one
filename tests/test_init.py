@@ -647,3 +647,28 @@ async def test_panel_tabs(hass: HomeAssistant, api, entry, hass_ws_client) -> No
         {"id": 2, "type": "ent_one/settings/update", "entry_id": entry.entry_id, "options": {"panel_tabs": ["x"]}}
     )
     assert not (await client.receive_json())["success"]
+
+
+async def test_hide_header(hass: HomeAssistant, api, entry, hass_ws_client) -> None:
+    """The top bar is shown until the option is set; the choice reaches the panel, an unknown one is refused."""
+    await _setup(hass, entry)
+    last = hass.states.get(_entity(hass, "sensor", "last_update"))
+    assert last.attributes["hide_header"] == "off"
+    client = await hass_ws_client(hass)
+    await client.send_json(
+        {
+            "id": 1,
+            "type": "ent_one/settings/update",
+            "entry_id": entry.entry_id,
+            "options": {"hide_header": "non_admin"},
+        }
+    )
+    msg = await client.receive_json()
+    assert msg["result"]["options"]["hide_header"] == "non_admin"
+    await hass.async_block_till_done()
+    last = hass.states.get(_entity(hass, "sensor", "last_update"))
+    assert last.attributes["hide_header"] == "non_admin"
+    await client.send_json(
+        {"id": 2, "type": "ent_one/settings/update", "entry_id": entry.entry_id, "options": {"hide_header": "x"}}
+    )
+    assert not (await client.receive_json())["success"]

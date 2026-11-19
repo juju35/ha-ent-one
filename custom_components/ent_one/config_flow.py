@@ -27,6 +27,7 @@ from homeassistant.helpers.selector import (
 
 from .api import EntActionRequiredError, EntApi, EntAuthError, EntError, normalize_url
 from .const import (
+    CONF_HIDE_HEADER,
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
     CONF_PANEL_TABS,
@@ -39,6 +40,8 @@ from .const import (
     DEFAULT_SHOW_PANEL,
     DEFAULT_URL,
     DOMAIN,
+    HIDE_HEADER_CHOICES,
+    HIDE_HEADER_OFF,
     MIN_SCAN_INTERVAL,
     PANEL_TABS,
 )
@@ -274,7 +277,14 @@ def clean_options(options: dict[str, Any]) -> dict[str, Any]:
         ),
         CONF_SHOW_PANEL: bool(options.get(CONF_SHOW_PANEL, DEFAULT_SHOW_PANEL)),
         CONF_PANEL_TABS: panel_tabs(options),
+        CONF_HIDE_HEADER: hide_header(options),
     }
+
+
+def hide_header(options: Mapping[str, Any]) -> str:
+    """Who the panel's top bar is hidden for: off (no one, the default), all, or non_admin."""
+    value = options.get(CONF_HIDE_HEADER)
+    return value if value in HIDE_HEADER_CHOICES else HIDE_HEADER_OFF
 
 
 def panel_tabs(options: Mapping[str, Any]) -> list[str]:
@@ -321,6 +331,13 @@ def options_schema(hass: HomeAssistant, options: Mapping[str, Any]) -> vol.Schem
                     options=list(PANEL_TABS),
                     multiple=True,
                     translation_key=CONF_PANEL_TABS,
+                    mode=SelectSelectorMode.LIST,
+                )
+            ),
+            vol.Required(CONF_HIDE_HEADER, default=hide_header(options)): SelectSelector(
+                SelectSelectorConfig(
+                    options=list(HIDE_HEADER_CHOICES),
+                    translation_key=CONF_HIDE_HEADER,
                     mode=SelectSelectorMode.LIST,
                 )
             ),

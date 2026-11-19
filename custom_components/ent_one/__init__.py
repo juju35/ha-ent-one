@@ -33,6 +33,7 @@ from .const import (
     ATTR_WORD_ID,
     BADGE_FILENAME,
     CARD_FILENAME,
+    CONF_HIDE_HEADER,
     CONF_HOMEWORK_DAYS,
     CONF_NOTIFY,
     CONF_PANEL_TABS,
@@ -41,6 +42,7 @@ from .const import (
     DEFAULT_SHOW_PANEL,
     DOMAIN,
     FRONTEND_URL,
+    HIDE_HEADER_CHOICES,
     ICONS_FILENAME,
     PANEL_FILENAME,
     PANEL_ICON,
@@ -277,6 +279,7 @@ def ws_settings(hass: HomeAssistant, connection: websocket_api.ActiveConnection,
                 vol.Optional(CONF_NOTIFY): [str],
                 vol.Optional(CONF_SHOW_PANEL): bool,
                 vol.Optional(CONF_PANEL_TABS): [vol.In(PANEL_TABS)],
+                vol.Optional(CONF_HIDE_HEADER): vol.In(HIDE_HEADER_CHOICES),
             }
         ),
     }

@@ -72,12 +72,14 @@
           "homework_days": "Period domaćih zadataka",
           "notify_services": "Radnje obaveštenja",
           "show_panel": "Prikaži ovaj panel na bočnoj traci",
-          "panel_tabs": "Kartice prikazane na panelu"
+          "panel_tabs": "Kartice prikazane na panelu",
+          "hide_header": "Sakrij gornju traku panela"
         },
         "data_description": {
           "scan_interval": "ENT koristi cela škola: najmanje 10 minuta.",
           "homework_days": "Prikazuju se domaći zadaci sa rokom u okviru ovog broja dana.",
-          "notify_services": "Nove poruke, beleške za potpis, domaći zadaci i objave na blogu šalju se ovim radnjama."
+          "notify_services": "Nove poruke, beleške za potpis, domaći zadaci i objave na blogu šalju se ovim radnjama.",
+          "hide_header": "Ilustrovano zaglavlje iznad kartica; kartice ostaju, a na telefonu dugme menija prelazi pored njih."
         }
       }
     }
@@ -178,6 +180,13 @@
         "messages": "Poruke",
         "news": "Vesti",
         "blog": "Blog"
+      }
+    },
+    "hide_header": {
+      "options": {
+        "off": "Ne",
+        "all": "Za sve",
+        "non_admin": "Za neadministratore"
       }
     }
   }
