@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.4 - 2026-11-19
+
+### Fixes
+- **Sidebar badge**: with the sidebar collapsed, the count now sits over the top-right corner of the ONE icon, like Home Assistant's own badges, instead of beside it at the sidebar's edge (a custom panel's icon is an `<ha-icon>`, which Home Assistant's badge rule does not place).
+
 ## 1.6.3 - 2026-11-19
 
 ### Fixes
