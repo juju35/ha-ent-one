@@ -73,7 +73,7 @@
           "notify_services": "Notify actions",
           "show_panel": "Show the ENT ONE panel in the sidebar",
           "panel_tabs": "Tabs shown in the panel",
-          "hide_header": "Hide the panel's top bar"
+          "hide_header": "Hide the top bar"
         },
         "data_description": {
           "scan_interval": "The ENT is shared by the whole school: 10 minutes minimum.",

@@ -73,7 +73,7 @@
           "notify_services": "Dejanja obvestil",
           "show_panel": "Prikaži ta panel v stranski vrstici",
           "panel_tabs": "Zavihki na plošči",
-          "hide_header": "Skrij zgornjo vrstico plošče"
+          "hide_header": "Skrij zgornjo vrstico"
         },
         "data_description": {
           "scan_interval": "ENT uporablja vsa šola: najmanj 10 minut.",

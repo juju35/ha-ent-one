@@ -73,7 +73,7 @@
           "notify_services": "Paziņojumu darbības",
           "show_panel": "Rādīt šo paneli sānjoslā",
           "panel_tabs": "Panelī rādītās cilnes",
-          "hide_header": "Paslēpt paneļa augšējo joslu"
+          "hide_header": "Paslēpt augšējo joslu"
         },
         "data_description": {
           "scan_interval": "ENT izmanto visa skola: vismaz 10 minūtes.",

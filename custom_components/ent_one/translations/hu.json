@@ -73,7 +73,7 @@
           "notify_services": "Értesítési műveletek",
           "show_panel": "A panel megjelenítése az oldalsávon",
           "panel_tabs": "A panelen látható lapok",
-          "hide_header": "A panel felső sávjának elrejtése"
+          "hide_header": "Felső sáv elrejtése"
         },
         "data_description": {
           "scan_interval": "Az ENT-et az egész iskola használja: legalább 10 perc.",
