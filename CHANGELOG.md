@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.2 - 2026-11-19
+
+### Fixes
+- Panel and card header: the ONE panda badge keeps its size at the school icon's bottom right — the icon's size rule also caught the badge's pictogram, which overflowed its white tile.
+
 ## 1.6.1 - 2026-11-19
 
 ### Fixes

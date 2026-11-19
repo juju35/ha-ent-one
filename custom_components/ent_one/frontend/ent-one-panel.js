@@ -807,7 +807,7 @@ class EntOnePanel extends HTMLElement {
       '.hinfo { display: flex; align-items: center; gap: 16px; min-width: 0; }',
       'ha-menu-button { flex: none; color: var(--eo-text); }',
       '.banner .logo { width: 44px; height: 44px; flex: none; border-radius: 50%; display: grid; place-items: center; margin-left: 4px; }',
-      '.banner .logo svg { width: 26px; height: 26px; }',
+      '.banner .logo > svg { width: 26px; height: 26px; }',
       '.titles { min-width: 0; }',
       '.title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }',
       '.name { font-size: 20px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }',

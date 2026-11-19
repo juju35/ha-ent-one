@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.6.1';
+var ENT_ONE_CARD_VERSION = '1.6.2';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -3178,7 +3178,7 @@ var ENT_ONE_BANNER_STYLES = [
   // The brand: the ONE panda on a white tile at the icon's bottom right.
   '.brand { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 5px; padding: 2px; box-sizing: border-box; display: grid; place-items: center;' +
     ' background: #fff; color: ' + ENT_ONE_ACCENT + '; box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }',
-  '.brand svg { width: 14px; height: 14px; }',
+  '.logo .brand svg { width: 14px; height: 14px; }',
   // The header buttons: 24 px round glass buttons on the top line, the detail button in the corner, the others at its left.
   '.hbtns { position: absolute; z-index: 2; top: 5px; right: 5px; display: flex; gap: 4px; }',
   '.hbtns .hbtn, .hbtns .detail { width: 24px; height: 24px; border-radius: 50%;' +
@@ -3626,7 +3626,7 @@ class EntOneCard extends HTMLElement {
       '.header { display: flex; align-items: center; gap: 10px; padding: 12px 10px 8px 12px; min-height: 40px; }',
       '.title { flex: 1 1 0; min-width: calc(5ch + 50px); display: flex; align-items: center; gap: 10px; }',
       '.logo { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; color: ' + A + '; background: color-mix(in srgb, ' + A + ' 16%, transparent); }',
-      '.logo svg { width: 24px; height: 24px; }',
+      '.logo > svg { width: 24px; height: 24px; }',
       '.titles { flex: 1 1 0; min-width: 5ch; overflow: hidden; container: eo-titles / inline-size; }',
       ':host([hide-title]) .title-row > .name { display: none; }',
       // The title line: the title, then the status pill, when the whole title and its whole label fit there; otherwise
