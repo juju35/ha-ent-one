@@ -121,7 +121,7 @@ type: custom:ent-one-card
 
 Click a row with a chevron to unfold it: the start of a word, the text of a homework or a news item, the description of an event, with their attachments (images as thumbnails, other files as buttons); a click elsewhere folds it back. With the panel, a message opens in the panel's reading pane, and an unfolded word has a *Read* link to it; without the panel, a message unfolds to its start (loaded when unfolded, which marks it read in the ENT). Attachments, and links to the ENT's documents in a text, are fetched through Home Assistant with a signed link; a click opens them in a new tab (PDF and images shown, other files downloaded). A count opens the panel on its tab (or, without the panel, scrolls the card to its section). Times follow the 12 / 24 h setting of your Home Assistant profile.
 
-**Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. It is shown to administrators only (a child with a Home Assistant account must not sign their own words); other users see the words to sign without the button. The check box of a homework marks it done (or not done) in the ENT.
+**Sign** opens a confirmation at the top of the card, with the word's text: signing cannot be undone in the ENT. It is shown to administrators only (a child with a Home Assistant account must not sign their own words); other users see the words to sign without the button. The check box of a homework marks it done (or not done) in the ENT. Ticking homework, reading a message in full and opening attachments use the parent's ENT session, so they are reserved to administrators too: other users see the lists, with the check box greyed out.
 
 ### Mini card
 

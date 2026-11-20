@@ -672,3 +672,42 @@ async def test_hide_header(hass: HomeAssistant, api, entry, hass_ws_client) -> N
         {"id": 2, "type": "ent_one/settings/update", "entry_id": entry.entry_id, "options": {"hide_header": "x"}}
     )
     assert not (await client.receive_json())["success"]
+
+
+async def test_ent_actions_are_admin_only(
+    hass: HomeAssistant, api, entry, hass_ws_client, hass_read_only_access_token, hass_client
+) -> None:
+    """Reading a message, ticking homework and fetching files act with the parent's session: administrators only."""
+    await _setup(hass, entry)
+    client = await hass_ws_client(hass, hass_read_only_access_token)
+    await client.send_json({"id": 1, "type": "ent_one/message", "config_entry_id": entry.entry_id, "message_id": "m1"})
+    msg = await client.receive_json()
+    assert not msg["success"] and msg["error"]["code"] == "unauthorized"
+    await client.send_json(
+        {
+            "id": 2,
+            "type": "ent_one/homework_done",
+            "config_entry_id": entry.entry_id,
+            "book_id": "b1",
+            "homework_id": "e1",
+            "done": True,
+        }
+    )
+    msg = await client.receive_json()
+    assert not msg["success"] and msg["error"]["code"] == "unauthorized"
+    # The settings: no ENT address for a non-administrator.
+    await client.send_json({"id": 3, "type": "ent_one/settings"})
+    msg = await client.receive_json()
+    assert msg["result"]["admin"] is False
+    assert all("url" not in a for a in msg["result"]["accounts"])
+    assert entry.runtime_data.api.calls.get("message", 0) == 0
+    # The file view: forbidden with a non-administrator's token, served with an administrator's.
+    http = await hass_client(hass_read_only_access_token)
+    path = {"path": "/workspace/document/d1"}
+    forbidden = await http.get(f"/api/ent_one/file/{entry.entry_id}", params=path)
+    assert forbidden.status == 403
+    assert entry.runtime_data.api.calls.get("download", 0) == 0
+    admin_client = await hass_ws_client(hass)
+    await admin_client.send_json({"id": 1, "type": "ent_one/settings"})
+    assert all("url" in a for a in (await admin_client.receive_json())["result"]["accounts"])
+
