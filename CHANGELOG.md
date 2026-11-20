@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.5 - 2026-11-20
+
+### Fixes
+- **Security, ENT files**: a file path with encoded dot segments or slashes (`%2e%2e`, `%2f`) is refused. The HTTP client resolves them, so such a path could leave the document and attachment routes and fetch any other ENT page with the account's session through `/api/ent_one/file`.
+
 ## 1.6.4 - 2026-11-19
 
 ### Fixes
