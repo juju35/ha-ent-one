@@ -19,5 +19,5 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/juju35/ha-ent-one/issues",
   "requirements": [],
-  "version": "1.6.5"
+  "version": "1.6.6"
 }
