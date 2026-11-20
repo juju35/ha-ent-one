@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.6.4';
+var ENT_ONE_CARD_VERSION = '1.6.5';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -3202,6 +3202,67 @@ window.EntOne.banner = { scene: entOneSceneSvg, state: entOneHeaderState, isNigh
 // ── ent-one-card ──────────────────────────────────────────────────────────────
 var ENT_ONE_PANEL_PATH = 'ent-one';
 
+// Shadow DOM patching: a redraw updates the nodes already on the page (text, attributes, classes) instead of replacing
+// them, so that a state update never re-creates the pictures (SVG scenes, logos) nor restarts their animations, and the
+// card keeps its height (a re-created card is laid out again, which can move the dashboard under the reader's eyes).
+// An open <dialog> keeps its `open` state: it is driven by showModal() / close().
+function entOneMorphAttrs(cur, next) {
+  for (var a of Array.from(cur.attributes)) {
+    if (!next.hasAttribute(a.name) && !(a.name === 'open' && cur.localName === 'dialog')) cur.removeAttribute(a.name);
+  }
+  for (var b of Array.from(next.attributes)) {
+    if (cur.getAttribute(b.name) === b.value) continue;
+    if (b.namespaceURI) cur.setAttributeNS(b.namespaceURI, b.name, b.value);
+    else cur.setAttribute(b.name, b.value);
+  }
+}
+
+// A Home Assistant element given no content (<ha-icon>…) draws itself: what it adds to its own node is not ours to
+// remove. It is kept as long as the attributes the HTML gives it do not change, and replaced when they do.
+function entOneMorphOwnDrawn(o, n) {
+  if (!n.localName.includes('-') || n.firstChild) return false;
+  var key = Array.from(n.attributes, (a) => `${a.name}=${a.value}`).join('\n');
+  if (o.__morphKey === undefined && Array.from(n.attributes).every((a) => o.getAttribute(a.name) === a.value)) o.__morphKey = key;
+  if (o.__morphKey !== key) {
+    n.__morphKey = key;
+    o.parentNode.replaceChild(n, o);
+  }
+  return true;
+}
+
+function entOneMorphChildren(cur, next) {
+  var old = Array.from(cur.childNodes);
+  var fresh = Array.from(next.childNodes);
+  fresh.forEach((n, i) => {
+    var o = old[i];
+    var ref = cur.childNodes[i] || null;
+    if (!o || o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) {
+      cur.insertBefore(n, ref);
+      return;
+    }
+    if (o !== ref) cur.insertBefore(o, ref);
+    if (n.nodeType !== 1) {
+      if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
+    } else if (!entOneMorphOwnDrawn(o, n)) {
+      entOneMorphAttrs(o, n);
+      entOneMorphChildren(o, n);
+    }
+  });
+  while (cur.childNodes.length > fresh.length) cur.removeChild(cur.lastChild);
+}
+
+// Gives `root` (a shadow root or an element) the content of `html`, patching what is already there (a plain
+// innerHTML where there is no DOM to patch, as in the unit tests' stubs).
+function entOneMorph(root, html) {
+  var tpl = root.childNodes && typeof document !== 'undefined' && document.createElement?.('template');
+  if (!tpl?.content) {
+    root.innerHTML = html;
+    return;
+  }
+  tpl.innerHTML = html;
+  entOneMorphChildren(root, tpl.content);
+}
+
 class EntOneCard extends HTMLElement {
   static getConfigElement() {
     return document.createElement('ent-one-card-editor');
@@ -3324,17 +3385,17 @@ class EntOneCard extends HTMLElement {
     this._renderPopup(t, data);
     var body = this._root.querySelector('.body');
     if (!data) {
-      body.innerHTML = '<div class="pad empty">' + entOneEsc(t.no_entity) + '</div>';
+      entOneMorph(body, '<div class="pad empty">' + entOneEsc(t.no_entity) + '</div>');
       return;
     }
     if (data.unavailable) {
-      body.innerHTML = '<div class="pad empty">' + entOneEsc(t.unavailable) + '</div>';
+      entOneMorph(body, '<div class="pad empty">' + entOneEsc(t.unavailable) + '</div>');
       return;
     }
-    // innerHTML replaces the focused row: give the keyboard focus back to the same toggle.
+    // The rows are patched in place (entOneMorph): the focused toggle keeps the focus, or gets it back if replaced.
     var focused = this._root.activeElement?.getAttribute?.('data-toggle');
-    body.innerHTML = this._renderTiles(t, data) + (this._compact() ? '' : this._renderSections(t, data));
-    if (focused) body.querySelector(`[data-toggle="${CSS.escape(focused)}"]`)?.focus({ preventScroll: true });
+    entOneMorph(body, this._renderTiles(t, data) + (this._compact() ? '' : this._renderSections(t, data)));
+    if (focused && this._root.activeElement?.getAttribute?.('data-toggle') !== focused) body.querySelector(`[data-toggle="${CSS.escape(focused)}"]`)?.focus({ preventScroll: true });
     entOneHydrate(body, this._hass, data.entryId);
   }
 
@@ -3349,6 +3410,16 @@ class EntOneCard extends HTMLElement {
   // keeps its dot alone (.pill-dot, the label in its tooltip and aria-label). Measured after each render and on each
   // new width, never by a fixed width, so that every language fits.
   _fitPill() {
+    // Home Assistant's <ha-card> (a Lit element) shows its content only from its first update, a microtask after it
+    // is connected: measured before, everything is 0 px wide and the pill lands on the wrong line. Fitted then.
+    var haCard = this._root?.querySelector?.('ha-card');
+    if (haCard && haCard.hasUpdated === false) {
+      this._pillWait ??= (haCard.updateComplete?.then ? haCard.updateComplete : new Promise((r) => requestAnimationFrame(r))).then(() => {
+        this._pillWait = null;
+        this._fitPill();
+      });
+      return;
+    }
     var t = this._root?.querySelector?.('.titles');
     var chip = t?.querySelector('.status');
     if (!chip?.getBoundingClientRect) return;
@@ -3406,10 +3477,10 @@ class EntOneCard extends HTMLElement {
       : who ? '<div class="sub">' + entOneEsc(who) + '</div>' : '';
     if (c.illustration === false) {
       header.className = 'header';
-      header.innerHTML =
+      entOneMorph(header,
         '<div class="title"><div class="logo" aria-hidden="true">' + ENT_ONE_ICON + '</div>' +
         titles(sub) + '</div>' +
-        (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t);
+        (buttons ? '<div class="buttons">' + buttons + '</div>' : '') + this._detailButton(t));
       return;
     }
     // The illustrated header: the school corner at the right, the status in the icon's colour (and in the pill), the
@@ -3417,12 +3488,12 @@ class EntOneCard extends HTMLElement {
     this._uid = this._uid || ++entOneUid;
     var tools = buttons + this._detailButton(t);
     header.className = 'banner' + (entOneIsNight(this._hass, c) ? ' night' : '');
-    header.innerHTML =
+    entOneMorph(header,
       entOneSceneSvg(st, header.classList.contains('night'), this._uid, !!tools) + '<div class="eo-ground"></div>' +
       '<div class="htext"><div class="logo ' + st.status + '" title="' + entOneEsc(updated || title) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="' + ENT_ONE_SCHOOL_PATH + '"/></svg>' +
       '<span class="brand" aria-hidden="true">' + ENT_ONE_ICON + '</span></div>' +
       titles(sub) + '</div>' +
-      (tools ? '<div class="hbtns">' + tools + '</div>' : '');
+      (tools ? '<div class="hbtns">' + tools + '</div>' : ''));
   }
 
   // Confirmation popup at the top of the card (card convention), never centered on the screen.
@@ -3432,16 +3503,16 @@ class EntOneCard extends HTMLElement {
     if (!w) {
       this._confirm = null;
       popup.hidden = true;
-      popup.innerHTML = '';
+      entOneMorph(popup, '');
       return;
     }
     popup.hidden = false;
-    popup.innerHTML =
+    entOneMorph(popup,
       '<div class="popup-title">' + entOneEsc(t.sign_title) + '</div>' +
       '<div class="popup-text">' + entOneEsc(entOneFormat(t.sign_text, { title: w.title || '—', child: w.child || '' })) + '</div>' +
       (w.text ? '<div class="item-text quote">' + entOneEsc(w.text) + '</div>' : '') +
       '<div class="popup-actions"><button class="act ghost" data-action="cancel">' + entOneEsc(t.cancel) + '</button>' +
-      '<button class="act" data-action="confirm"' + (this._confirm.busy ? ' disabled' : '') + '>' + entOneEsc(this._confirm.busy ? t.signing : t.confirm) + '</button></div>';
+      '<button class="act" data-action="confirm"' + (this._confirm.busy ? ' disabled' : '') + '>' + entOneEsc(this._confirm.busy ? t.signing : t.confirm) + '</button></div>');
   }
 
   _renderTiles(t, data) {

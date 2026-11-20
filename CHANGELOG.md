@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.5 - 2026-11-20
+
+### Fixes
+- The status pill is placed from the card's first frame: it was measured before Home Assistant's `<ha-card>` had laid out its content (0 px wide), so for a frame it showed on the wrong line (under the title, or beside it when it belongs under it), sometimes changing the card's height, before jumping to its place. It is now fitted once the card is drawn.
+- **Security, ENT files**: a file path with encoded dot segments or slashes (`%2e%2e`, `%2f`) is refused. The HTTP client resolves them, so such a path could leave the document and attachment routes and fetch any other ENT page with the account's session through `/api/ent_one/file`.
+- Card: a state update patches the card in place instead of drawing it again — the banner's picture, the attachment thumbnails and their animations keep their nodes, an unfolded row stays as it is, and the card keeps its height: a re-created card is laid out again, which can make the dashboard jump (scroll anchoring). Updates of other entities still touch nothing.
+
 ## 1.6.4 - 2026-11-19
 
 ### Fixes
