@@ -3410,6 +3410,16 @@ class EntOneCard extends HTMLElement {
   // keeps its dot alone (.pill-dot, the label in its tooltip and aria-label). Measured after each render and on each
   // new width, never by a fixed width, so that every language fits.
   _fitPill() {
+    // Home Assistant's <ha-card> (a Lit element) shows its content only from its first update, a microtask after it
+    // is connected: measured before, everything is 0 px wide and the pill lands on the wrong line. Fitted then.
+    var haCard = this._root?.querySelector?.('ha-card');
+    if (haCard && haCard.hasUpdated === false) {
+      this._pillWait ??= (haCard.updateComplete?.then ? haCard.updateComplete : new Promise((r) => requestAnimationFrame(r))).then(() => {
+        this._pillWait = null;
+        this._fitPill();
+      });
+      return;
+    }
     var t = this._root?.querySelector?.('.titles');
     var chip = t?.querySelector('.status');
     if (!chip?.getBoundingClientRect) return;
