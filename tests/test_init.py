@@ -711,3 +711,60 @@ async def test_ent_actions_are_admin_only(
     await admin_client.send_json({"id": 1, "type": "ent_one/settings"})
     assert all("url" in a for a in (await admin_client.receive_json())["result"]["accounts"])
 
+
+async def test_reauth_with_a_stored_password(hass: HomeAssistant, api, entry) -> None:
+    """A refused stored password: the reauth form takes the new one, a wrong one says so."""
+    await _setup(hass, entry)
+    result = await entry.start_reauth_flow(hass)
+    assert result["step_id"] == "reauth_confirm"
+    bad = await hass.config_entries.flow.async_configure(result["flow_id"], {CONF_PASSWORD: "nope"})
+    assert bad["errors"] == {"base": "invalid_auth"}
+    with patch.object(FakeApi, "user_info", return_value={"userId": "someone_else"}):
+        other = await hass.config_entries.flow.async_configure(result["flow_id"], {CONF_PASSWORD: "secret"})
+    assert other["reason"] == "wrong_account"
+    result = await entry.start_reauth_flow(hass)
+    ok = await hass.config_entries.flow.async_configure(result["flow_id"], {CONF_PASSWORD: "secret"})
+    await hass.async_block_till_done()
+    assert ok["reason"] == "reauth_successful"
+    assert entry.data[CONF_PASSWORD] == "secret"
+
+
+async def test_reauth_with_a_secret(hass: HomeAssistant, api) -> None:
+    await hass.async_add_executor_job(_secrets, hass, "ent_one_password: old\n")
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={CONF_URL: URL, CONF_USERNAME: "parent", "password_secret": "ent_one_password"},
+        unique_id="ent.example.fr_u1",
+    )
+    entry.add_to_hass(hass)
+    result = await entry.start_reauth_flow(hass)
+    assert result["step_id"] == "reauth_secret"
+    bad = await hass.config_entries.flow.async_configure(result["flow_id"], {})
+    assert bad["errors"] == {"base": "invalid_auth"}
+    await hass.async_add_executor_job(_secrets, hass, "other: x\n")
+    gone = await hass.config_entries.flow.async_configure(result["flow_id"], {})
+    assert gone["errors"] == {"base": "secret_not_found"}
+    await hass.async_add_executor_job(_secrets, hass, "ent_one_password: secret\n")
+    ok = await hass.config_entries.flow.async_configure(result["flow_id"], {})
+    await hass.async_block_till_done()
+    assert ok["reason"] == "reauth_successful"
+    # The config folder outlives the test: leave no secret behind for the others.
+    await hass.async_add_executor_job(_secrets, hass, "")
+
+
+async def test_reconfigure_refused_and_options(hass: HomeAssistant, api, entry) -> None:
+    await _setup(hass, entry)
+    result = await entry.start_reconfigure_flow(hass)
+    bad = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_USERNAME: "parent", CONF_PASSWORD: "nope"}
+    )
+    assert bad["errors"] == {"base": "invalid_auth"}
+    options = await hass.config_entries.options.async_init(entry.entry_id)
+    assert options["step_id"] == "init"
+    done = await hass.config_entries.options.async_configure(
+        options["flow_id"], {"scan_interval": 30, "homework_days": 60, "show_panel": True}
+    )
+    await hass.async_block_till_done()
+    assert done["type"] is FlowResultType.CREATE_ENTRY
+    assert entry.options["homework_days"] == 60
+    assert entry.options["show_panel"] is True
