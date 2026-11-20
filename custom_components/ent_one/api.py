@@ -71,8 +71,13 @@ def segment(value: Any) -> str:
 
 def file_path(path: str) -> str:
     """An ENT file path the integration may fetch, or EntError: no other route, no other host, no way out."""
-    if not _SAFE_PATH.match(path or "") or ".." in path or "//" in path or not path.startswith(FILE_PREFIXES):
+    if not _SAFE_PATH.match(path or "") or not path.startswith(FILE_PREFIXES):
         raise EntError(f"Not an ENT file: {path!r}")
+    # Checked once decoded too: the HTTP client resolves %2e%2e as "..", which would leave the allowed routes.
+    route = path.split("?", 1)[0]
+    for text in (route, unquote(route)):
+        if ".." in text or "//" in text or "\\" in text or not text.startswith(FILE_PREFIXES):
+            raise EntError(f"Not an ENT file: {path!r}")
     return path
 
 

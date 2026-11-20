@@ -172,7 +172,19 @@ async def test_download_relogs_and_names_the_file(ent) -> None:
 
 def test_file_paths_and_attachments() -> None:
     assert file_path("/workspace/document/abc?thumbnail=120x120") == "/workspace/document/abc?thumbnail=120x120"
-    for bad in ("/auth/logout", "/workspace/document/../../auth", "//evil.com/workspace/document/x", "https://x/y", ""):
+    for bad in (
+        "/auth/logout",
+        "/workspace/document/../../auth",
+        "//evil.com/workspace/document/x",
+        "https://x/y",
+        "",
+        # Encoded dot segments and slashes: the HTTP client would resolve them out of the allowed routes.
+        "/workspace/document/%2e%2e/%2e%2e/auth/oauth2/userinfo",
+        "/workspace/document/%2E%2E/x",
+        "/workspace/document/.%2e/x",
+        "/workspace/document/x%2f%2fy",
+        "/workspace/document/x%5c..%5cy",
+    ):
         with pytest.raises(EntError):
             file_path(bad)
     html = (
