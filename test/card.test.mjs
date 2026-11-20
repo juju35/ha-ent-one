@@ -19,7 +19,7 @@ const context = {
   Intl,
 };
 vm.createContext(context);
-vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, entOneFileKind, entOneFiles, EntOneI18n, EntOneCard };`, context);
+vm.runInContext(`${source}\nthis.e = { entOneEsc, entOneLang, entOneLocale, entOneT, entOneData, entOneDay, entOneDue, entOneSortedHomework, entOneSetDone, entOneSign, entOneCanSign, entOneWordRow, entOneHomeworkRow, entOneMessageRow, entOneTime, entOneSetTimeFormat, entOneFileKind, entOneFiles, EntOneI18n, EntOneCard };`, context);
 const E = context.e;
 
 const sensor = (id, state, attrs) => ({ entity_id: id, state: String(state), attributes: { config_entry_id: 'abc', stale: [], ...attrs } });
@@ -379,4 +379,12 @@ test("the status pill is measured only once <ha-card> has drawn its content", as
   const once = asked.length;
   card._fitPill();
   assert.equal(asked.length, once * 2, "then measured right away, with no wait");
+});
+
+test('only administrators can tick homework (the server refuses the others)', () => {
+  const t = E.entOneT({ language: 'en' });
+  const h = { id: 'h1', book_id: 'b1', title: 'Lire', done: false };
+  assert.doesNotMatch(E.entOneHomeworkRow(h, t, 'en', { canEdit: true }), /data-action="homework"[^>]*disabled/);
+  assert.doesNotMatch(E.entOneHomeworkRow(h, t, 'en', {}), /data-action="homework"[^>]*disabled/);
+  assert.match(E.entOneHomeworkRow(h, t, 'en', { canEdit: E.entOneCanSign({ user: { is_admin: false } }) }), /data-action="homework"[^>]*disabled/);
 });

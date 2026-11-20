@@ -374,7 +374,7 @@ class EntOnePanel extends HTMLElement {
     ].filter(Boolean);
     var see = (tab) => (on(tab) ? '<button class="see" data-tab="' + tab + '">' + E.esc(t.see_all) + ' ›</button>' : '');
     var todoRows = (on('words') ? toSign.map((w) => R.word(w, t, locale, { canSign: E.canSign(this._hass), isOpen: isOpen, reader: true, entryId: data.entryId })) : [])
-      .concat(on('homework') ? todo.slice(0, 6).map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId })) : []);
+      .concat(on('homework') ? todo.slice(0, 6).map((h) => R.homework(h, t, locale, { isOpen: isOpen, entryId: data.entryId, canEdit: E.canSign(this._hass) })) : []);
     var readRows = (on('messages') ? unread.slice(0, 4).map((m) => R.message(m, t, locale, { reader: true, entryId: data.entryId })) : [])
       .concat(on('news') ? data.news.slice(0, 3).map((n) => R.news(n, t, locale, { isOpen: isOpen, entryId: data.entryId })) : []);
     var box = (cls, title, side, rows, empty) =>
@@ -412,7 +412,7 @@ class EntOnePanel extends HTMLElement {
       var full = done === d.all.length;
       return '<section class="box day' + (full ? ' full' : '') + '"><div class="bh"><h2>' + E.esc(E.day(d.date, t, locale)) + '</h2><span class="ratio">' + done + ' / ' + d.all.length + '</span></div>' +
         '<div class="bar"><span style="width:' + Math.round((done / d.all.length) * 100) + '%"></span></div>' +
-        items.map((h) => E.rows.homework(h, t, locale, { full: true, entryId: data.entryId })).join('') + '</section>';
+        items.map((h) => E.rows.homework(h, t, locale, { full: true, entryId: data.entryId, canEdit: E.canSign(this._hass) })).join('') + '</section>';
     }).join('');
     return chips + (tiles ? '<div class="days">' + tiles + '</div>' : this._box('', '<div class="empty">' + E.esc(t.no_homework) + '</div>', true));
   }
@@ -577,7 +577,7 @@ class EntOnePanel extends HTMLElement {
     // Home Assistant's own form, with the selectors of the options flow: same look and checks as everywhere else.
     content.innerHTML = '<div class="page">' + (s.admin ? '' : '<div class="empty">' + E.esc(t.admin_only) + '</div>') +
       s.accounts.map((acc) => this._box(acc.title,
-        '<div class="url">' + E.esc(acc.url) + '</div><div class="form" data-entry="' + E.esc(acc.entry_id) + '"></div>' +
+        (acc.url ? '<div class="url">' + E.esc(acc.url) + '</div>' : '') + '<div class="form" data-entry="' + E.esc(acc.entry_id) + '"></div>' +
         (s.admin ? '<div class="popup-actions"><span class="msg"></span><button class="act" data-action="save" data-entry="' + E.esc(acc.entry_id) + '">' + E.esc(t.save) + '</button></div>' : ''),
         true)).join('') + '</div>';
     var labels = { scan_interval: t.settings_scan, homework_days: t.settings_days, notify_services: t.settings_notify, show_panel: t.settings_panel, panel_tabs: t.settings_tabs, hide_header: t.settings_hide_header };
@@ -752,7 +752,7 @@ class EntOnePanel extends HTMLElement {
     } else if (action === 'confirm') this._doSign(data);
     else if (action === 'homework') {
       var item = data.homework.find((h) => String(h.id) === el.getAttribute('data-id') && String(h.book_id) === el.getAttribute('data-book'));
-      if (item) E.setDone(this._hass, data.entryId, item, !item.done).catch((err) => this._fail(err));
+      if (item && E.canSign(this._hass)) E.setDone(this._hass, data.entryId, item, !item.done).catch((err) => this._fail(err));
     }
   }
 

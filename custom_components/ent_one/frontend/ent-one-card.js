@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.6.5';
+var ENT_ONE_CARD_VERSION = '1.6.6';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -2682,7 +2682,8 @@ function entOneTime(raw, locale) {
   }
 }
 
-// Signing is an admin-only action (a child's Home Assistant account must not sign): true while hass.user is unknown.
+// Signing, ticking homework, reading a message in full and fetching files are admin-only actions (a child's Home
+// Assistant account must not do them): true while hass.user is unknown.
 function entOneCanSign(hass) {
   return hass?.user?.is_admin !== false;
 }
@@ -2921,7 +2922,7 @@ function entOneHomeworkRow(h, t, locale, opts) {
   var tg = opts?.full ? { attrs: '', chevron: '' } : entOneToggle(key, open, more);
   return '<div class="item hw' + (h.done ? ' done' : '') + '">' +
     '<button class="check" role="checkbox" aria-checked="' + !!h.done + '" aria-label="' + entOneEsc(label) + '" title="' + entOneEsc(label) + '"' +
-    ' data-action="homework" data-id="' + entOneEsc(h.id) + '" data-book="' + entOneEsc(h.book_id) + '">' +
+    ' data-action="homework" data-id="' + entOneEsc(h.id) + '" data-book="' + entOneEsc(h.book_id) + '"' + (opts?.canEdit === false ? ' disabled' : '') + '>' +
     '<ha-icon icon="' + (h.done ? 'mdi:checkbox-marked-outline' : 'mdi:checkbox-blank-outline') + '"></ha-icon></button>' +
     '<div class="item-main"' + tg.attrs + '><div class="item-title">' + entOneEsc(h.title || (h.text || '').split('\n')[0] || h.book) + '</div>' +
     '<div class="item-meta">' + entOneEsc([h.book, entOneDue(h.date, t, locale)].filter(Boolean).join(' · ')) + '</div>' +
@@ -3009,6 +3010,7 @@ function entOneItemStyles(accent) {
     // 40 px touch target around the 20 px box, without moving the row's text.
     '.check { all: unset; cursor: pointer; flex: none; display: grid; place-items: center; width: 40px; height: 40px; margin: -8px -8px -8px -10px; border-radius: 10px; color: var(--secondary-text-color); --mdc-icon-size: 20px; }',
     '.check:hover { background: color-mix(in srgb, var(--primary-text-color) 6%, transparent); }',
+    '.check:disabled { cursor: default; background: none; opacity: .6; }',
     '[data-toggle] { cursor: pointer; }',
     '[data-toggle]:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }',
     // Collapsed: chevron to the right; open: down (like the other cards).
@@ -3558,7 +3560,7 @@ class EntOneCard extends HTMLElement {
     }
     if (c.show_homework) {
       var hw = limit(entOneSortedHomework(data.homework, c.show_done));
-      html += this._section('homework', t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale, { isOpen: isOpen, entryId: entryId })), t.no_homework, more(hw.rest));
+      html += this._section('homework', t.section_homework, hw.shown.map((h) => entOneHomeworkRow(h, t, locale, { isOpen: isOpen, entryId: entryId, canEdit: entOneCanSign(this._hass) })), t.no_homework, more(hw.rest));
     }
     if (c.show_messages) {
       var msgs = limit(data.messages.filter((m) => m.unread || this._open['message:' + m.id]));
@@ -3671,6 +3673,7 @@ class EntOneCard extends HTMLElement {
   }
 
   _toggleHomework(item) {
+    if (!entOneCanSign(this._hass)) return;
     this._error = '';
     entOneSetDone(this._hass, this._data.entryId, item, !item.done).catch((err) => this._fail(err));
   }

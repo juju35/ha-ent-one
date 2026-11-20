@@ -15,7 +15,7 @@ import voluptuous as vol
 from aiohttp import web
 from homeassistant.components import frontend, panel_custom, websocket_api
 from homeassistant.components.frontend import add_extra_js_url
-from homeassistant.components.http import KEY_HASS, HomeAssistantView, StaticPathConfig
+from homeassistant.components.http import KEY_HASS, KEY_HASS_USER, HomeAssistantView, StaticPathConfig
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_URL, EVENT_HOMEASSISTANT_STARTED, Platform
 from homeassistant.core import Event, HassJob, HomeAssistant, ServiceCall, callback
@@ -251,20 +251,19 @@ def _get_coordinator(hass: HomeAssistant, entry_id: str | None) -> EntCoordinato
 @websocket_api.websocket_command({vol.Required("type"): "ent_one/settings"})
 @callback
 def ws_settings(hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]) -> None:
-    """The accounts and their options, for the panel's Settings tab."""
+    """The accounts and their options, for the panel's Settings tab (the ENT's address for administrators only)."""
+    admin = connection.user.is_admin
     accounts = [
         {
             "entry_id": e.entry_id,
             "title": e.title,
-            "url": e.data[CONF_URL],
+            **({"url": e.data[CONF_URL]} if admin else {}),
             "options": clean_options(dict(e.options)),
         }
         for e in _loaded_entries(hass)
     ]
     notify = notify_choices(hass, [])
-    connection.send_result(
-        msg["id"], {"accounts": accounts, "notify_services": notify, "admin": connection.user.is_admin}
-    )
+    connection.send_result(msg["id"], {"accounts": accounts, "notify_services": notify, "admin": admin})
 
 
 @websocket_api.require_admin
@@ -296,6 +295,9 @@ def ws_update_settings(hass: HomeAssistant, connection: websocket_api.ActiveConn
     connection.send_result(msg["id"], {"options": options})
 
 
+# Ticking homework and reading a message in full act on the ENT with the parent's session (a message read is marked
+# read there): administrators only, like signing a word.
+@websocket_api.require_admin
 @websocket_api.websocket_command(
     {
         vol.Required("type"): "ent_one/homework_done",
@@ -319,6 +321,7 @@ async def ws_homework_done(
     connection.send_result(msg["id"])
 
 
+@websocket_api.require_admin
 @websocket_api.websocket_command(
     {vol.Required("type"): "ent_one/message", vol.Required("config_entry_id"): str, vol.Required("message_id"): str}
 )
@@ -379,7 +382,7 @@ class EntFileView(HomeAssistantView):
 
     The browser has no ENT session of its own: the card asks Home Assistant for a signed URL of this view
     (auth/sign_path) and shows it (image, PDF) or downloads it. Only the ENT's document and attachment routes
-    can be fetched.
+    can be fetched, by administrators only (a signed URL carries the user who signed it).
     """
 
     url = "/api/ent_one/file/{entry_id}"
@@ -388,6 +391,9 @@ class EntFileView(HomeAssistantView):
 
     async def get(self, request: web.Request, entry_id: str) -> web.Response:
         hass: HomeAssistant = request.app[KEY_HASS]
+        user = request.get(KEY_HASS_USER)
+        if user is None or not user.is_admin:
+            return web.Response(status=HTTPStatus.FORBIDDEN, text="Administrators only")
         try:
             path = file_path(request.query.get("path", ""))
             coordinator = _get_coordinator(hass, entry_id)

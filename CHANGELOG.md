@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.6 - 2026-11-20
+
+### Fixes
+- Security: reading a message in full (`ent_one/message`), ticking homework (`ent_one/homework_done`) and the file view (attachments, workspace documents) are reserved to administrators, like signing a word: they act with the parent's ENT session. The Settings tab no longer sends the ENT's address to other users. In the card and the panel, the homework check box is greyed out for them.
+
+### Maintenance
+- Tests: reauthentication (stored password and secret), refused reconfiguration and the options flow are covered.
+
 ## 1.6.5 - 2026-11-20
 
 ### Fixes
