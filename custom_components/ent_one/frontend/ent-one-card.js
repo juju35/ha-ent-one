@@ -3217,6 +3217,19 @@ function entOneMorphAttrs(cur, next) {
   }
 }
 
+// A Home Assistant element given no content (<ha-icon>…) draws itself: what it adds to its own node is not ours to
+// remove. It is kept as long as the attributes the HTML gives it do not change, and replaced when they do.
+function entOneMorphOwnDrawn(o, n) {
+  if (!n.localName.includes('-') || n.firstChild) return false;
+  var key = Array.from(n.attributes, (a) => `${a.name}=${a.value}`).join('\n');
+  if (o.__morphKey === undefined && Array.from(n.attributes).every((a) => o.getAttribute(a.name) === a.value)) o.__morphKey = key;
+  if (o.__morphKey !== key) {
+    n.__morphKey = key;
+    o.parentNode.replaceChild(n, o);
+  }
+  return true;
+}
+
 function entOneMorphChildren(cur, next) {
   var old = Array.from(cur.childNodes);
   var fresh = Array.from(next.childNodes);
@@ -3228,10 +3241,12 @@ function entOneMorphChildren(cur, next) {
       return;
     }
     if (o !== ref) cur.insertBefore(o, ref);
-    if (n.nodeType === 1) {
+    if (n.nodeType !== 1) {
+      if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
+    } else if (!entOneMorphOwnDrawn(o, n)) {
       entOneMorphAttrs(o, n);
       entOneMorphChildren(o, n);
-    } else if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
+    }
   });
   while (cur.childNodes.length > fresh.length) cur.removeChild(cur.lastChild);
 }
