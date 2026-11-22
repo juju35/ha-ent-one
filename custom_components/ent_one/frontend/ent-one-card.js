@@ -1,4 +1,4 @@
-var ENT_ONE_CARD_VERSION = '1.7.0';
+var ENT_ONE_CARD_VERSION = '1.7.1';
 
 // ── Header icon: the panda pictogram in MDI style (supplied with the project), in the tinted round pastille of
 // the other cards. Accent: the orange of the "e" of the ONE logo.
@@ -3934,7 +3934,7 @@ if (!customElements.get('ent-one-card')) {
     type: 'ent-one-card',
     name: 'ENT ONE',
     description: 'Liaison book, homework, messages, calendar and news of an ENT ONE account.',
-    preview: true,
+    preview: false,
     documentationURL: 'https://github.com/juju35/ha-ent-one',
   });
 }
@@ -3946,7 +3946,7 @@ if (!customElements.get('ent-one-mini-card')) {
     type: 'ent-one-mini-card',
     name: 'ENT ONE mini',
     description: 'Unread messages, words to sign and homework, with a button to show the full ENT ONE card.',
-    preview: true,
+    preview: false,
     documentationURL: 'https://github.com/juju35/ha-ent-one',
   });
 }
