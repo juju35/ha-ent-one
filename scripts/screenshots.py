@@ -16,6 +16,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 FRONTEND = ROOT / "custom_components/ent_one/frontend"
+# The card and panel files are assembled from their ES modules in src/ (build output, not committed).
+subprocess.run(["node", "scripts/build-frontend.mjs"], cwd=ROOT, check=True)
 CARD_JS = (FRONTEND / "ent-one-card.js").read_text()
 PANEL_JS = (FRONTEND / "ent-one-panel.js").read_text()
 # The panda pictogram of the sidebar entry, taken from the icon set so the mock sidebar shows the real icon.
