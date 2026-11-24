@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.3 - 2026-11-24
+
+### Maintenance
+- The card and panel sources are split into ES modules (`src/ent-one-card/`, `src/ent-one-panel/`, translations one file per language), assembled at build by `scripts/build-frontend.mjs` into the same single files, which are no longer committed. No behaviour change.
+
 ## 1.7.2 - 2026-11-22
 
 ### Performance

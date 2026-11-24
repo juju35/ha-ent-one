@@ -19,6 +19,7 @@
 ## Before opening a PR — run the checks locally
 CI mirrors these; running them first avoids round-trips:
 ```sh
+npm install --no-save --no-package-lock acorn@8.19.0 && node scripts/build-frontend.mjs
 pre-commit run -a
 vulture custom_components .vulture_whitelist.py --min-confidence 60
 npx --yes jscpd@5.4.2 .
@@ -38,7 +39,7 @@ This is an **INTEGRATION** repo. A bump is complete only when **every** file bel
 carries the new version, updated together in one commit:
 1. `CHANGELOG.md` → add a "## X.Y.Z - YYYY-MM-DD" section at the top (`### Features` | `Fixes` | `Performance` | `Maintenance`).
 2. `custom_components/ent_one/manifest.json` → `"version": "X.Y.Z"`.
-3. `custom_components/ent_one/frontend/ent-one-card.js` → `ENT_ONE_CARD_VERSION = 'X.Y.Z'`.
+3. `src/ent-one-card/card-picker.js` → `ENT_ONE_CARD_VERSION = 'X.Y.Z'`.
 - Bump rule: `fix` → patch, `feat` → minor, breaking change → major.
 - The PR/commit title carries the version in parentheses, e.g. `feat: new option (X.Y.Z)`.
 
@@ -56,6 +57,15 @@ carries the new version, updated together in one commit:
 
 ## Supported integrations
 This builds on other Home Assistant integrations, so keep the `## Supported integrations` section (title verbatim) listing the HA integrations it works on top of, with a link to each.
+
+## Source layout
+- The card and the panel are written as ES modules in `src/ent-one-card/` and `src/ent-one-panel/` (entry `index.js`,
+  translations one file per language in `src/ent-one-card/i18n/`). `scripts/build-frontend.mjs` assembles each into
+  `custom_components/ent_one/frontend/<stem>.js` (scripts/bundle.mjs, needs acorn); those files are build output,
+  git-ignored and **not committed** — build before pytest, the screenshots or `scripts/split-frontend.mjs`.
+- The modules share one scope once assembled (a classic script): keep top-level names unique across them. A new module
+  must be listed in its `index.js`, in load order. Smaller frontend files (`ent-one-badge.js`, `ent-one-icons.js`)
+  stay committed as they are.
 
 ## Translations
 - English is the source. Keep every language in sync when a user-facing string changes.

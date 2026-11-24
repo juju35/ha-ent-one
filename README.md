@@ -270,7 +270,10 @@ The integration logs in like the ENT's web page (`POST /auth/login`, session coo
 
 ## Development
 
+The card and the panel are written as ES modules in `src/ent-one-card/` and `src/ent-one-panel/` (entry `index.js`, translations one file per language in `i18n/`). `scripts/build-frontend.mjs` assembles them into `custom_components/ent_one/frontend/ent-one-card.js` and `ent-one-panel.js`, which are not committed: build them before running Home Assistant or the tests. The modules share one scope once assembled, so top-level names stay unique; a new module must be listed in its `index.js`.
+
 ```bash
+npm install --no-save --no-package-lock acorn@8.19.0 && node scripts/build-frontend.mjs
 pip install -r requirements_test.txt && pytest
 node --test test/*.test.mjs
 pip install playwright==1.64.1 pillow && playwright install chromium
@@ -279,7 +282,7 @@ python scripts/screenshots.py   # renders the card, mini card and panel stills a
 
 ### Releasing
 
-1. Bump the version in `custom_components/ent_one/manifest.json` and `ENT_ONE_CARD_VERSION` in the card
+1. Bump the version in `custom_components/ent_one/manifest.json` and `ENT_ONE_CARD_VERSION` in `src/ent-one-card/card-picker.js`
 2. Add a `## <version>` section at the top of [CHANGELOG.md](https://github.com/juju35/ha-ent-one/blob/main/CHANGELOG.md)
 3. Merge to `main`: the **Release** workflow creates the tag and the GitHub release with the changelog section as notes
 

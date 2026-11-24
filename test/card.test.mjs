@@ -1,13 +1,14 @@
 // Unit tests for the card logic: the card file is evaluated with stubs, no browser needed.
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import vm from 'node:vm';
+import { bundle } from '../scripts/bundle.mjs';
 
 // West of UTC: a date-only "YYYY-MM-DD" read as UTC midnight would show the day before.
 process.env.TZ = 'America/New_York';
 
-const source = readFileSync(new URL('../custom_components/ent_one/frontend/ent-one-card.js', import.meta.url), 'utf8');
+// The card file as scripts/build-frontend.mjs assembles it from its ES modules in src/ent-one-card/.
+const source = bundle('src/ent-one-card/index.js');
 const context = {
   HTMLElement: class {},
   customElements: { get: () => true, define() {} },

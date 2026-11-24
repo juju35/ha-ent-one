@@ -34,7 +34,7 @@ jobs:
       - name: Same version everywhere, and in the changelog
         run: |
           VERSION="$(jq -r .version custom_components/ent_one/manifest.json)"
-          grep -q "ENT_ONE_CARD_VERSION = '$VERSION'" custom_components/ent_one/frontend/ent-one-card.js || { echo "::error file=custom_components/ent_one/frontend/ent-one-card.js::version $VERSION not found in custom_components/ent_one/frontend/ent-one-card.js"; exit 1; }
+          grep -q "ENT_ONE_CARD_VERSION = '$VERSION'" src/ent-one-card/card-picker.js || { echo "::error file=src/ent-one-card/card-picker.js::version $VERSION not found in src/ent-one-card/card-picker.js"; exit 1; }
           grep -q "^## $VERSION " CHANGELOG.md || { echo "::error file=CHANGELOG.md::no '## $VERSION' entry in CHANGELOG.md"; exit 1; }
           echo "Version $VERSION everywhere"
 
@@ -67,6 +67,10 @@ jobs:
       - name: Home Assistant version
         run: python -c 'from homeassistant.const import __version__; print(f"::notice::Home Assistant {__version__}")'
 
+      # The frontend files are assembled from their ES modules in src/ (build output, not committed).
+      - name: Build the frontend
+        uses: ./.github/actions/build-frontend
+
       - name: Run tests
         run: pytest
         env:
@@ -96,6 +100,10 @@ jobs:
       - name: Install dependencies
         run: pip install pytest-homeassistant-custom-component==0.13.190 "pycares<4.9"
 
+      # The frontend files are assembled from their ES modules in src/ (build output, not committed).
+      - name: Build the frontend
+        uses: ./.github/actions/build-frontend
+
       - name: Run tests
         run: pytest
 
@@ -106,10 +114,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "22"
+      # The frontend files are assembled from their ES modules in src/ (build output, not committed).
+      - name: Build the frontend
+        uses: ./.github/actions/build-frontend
 
       - name: Run card tests
         run: node --test test/*.test.mjs
@@ -121,13 +128,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "22"
+      # The frontend files are assembled from their ES modules in src/ (build output, not committed).
+      - name: Build the frontend
+        uses: ./.github/actions/build-frontend
 
       # Splits a copy of the frontend as the release does, and rebuilds every table to check it.
       - name: Check the translation split
         run: |
-          npm install --no-save --no-package-lock acorn@8.19.0
           node scripts/split-frontend.mjs --check
