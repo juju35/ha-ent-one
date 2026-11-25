@@ -222,6 +222,12 @@ A word unfolded to its text:
 |---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-unfolded.png" alt="unfolded word" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-unfolded-dark.png" alt="unfolded word dark" width="400"> |
 
+A message unfolded: its text and attachments, read on demand:
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-message.png" alt="unfolded message" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-ent-one/main/screenshots/card-message-dark.png" alt="unfolded message dark" width="400"> |
+
 The card, with the news shown:
 
 | Light | Dark |
