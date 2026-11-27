@@ -352,6 +352,8 @@ export function entOneOpenFile(hass, entryId, path, name) {
     return Promise.resolve();
   }
   var tab = window.open('', '_blank');
+  // The file opens in that tab later: cut its link back to this page (reverse tabnabbing).
+  if (tab) tab.opener = null;
   return entOneFileUrl(hass, entryId, path, name)
     .then((url) => {
       if (tab) tab.location.href = url;
